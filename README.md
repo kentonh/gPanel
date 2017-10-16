@@ -1,3 +1,3 @@
 # gPanel
 
-A web-hosting control panel written in Go inspired by cPanel.
+A web-hosting control panel written in Go. Inspired by cPanel.
