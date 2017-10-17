@@ -54,4 +54,9 @@ func main() {
 
 	log.Print("Listening on localhost:2082")
 	http.ListenAndServe("localhost:2082", g)
+
+	// This entire program can be replaced with the following:
+	/*
+		log.Fatal(http.ListenAndServe('localhost:2082', http.FileServer(http.Dir('private/'))));
+	*/
 }
