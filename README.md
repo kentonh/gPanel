@@ -4,7 +4,7 @@ A web-hosting control panel written in Go.
 
 # Stack
 
-Backend: Go
+Backend: __[Go](https://golang.org/)__  
 Frontend: ?
 
 # Deployment
