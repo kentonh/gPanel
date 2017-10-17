@@ -2,12 +2,12 @@
 
 A web-hosting control panel written in Go.
 
-# Stack
+## Stack
 
 Backend: __[Go](https://golang.org/)__  
 Frontend: ?
 
-# Deployment
+## Deployment
 
 ```shell
 # Clone the Repo
