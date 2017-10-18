@@ -10,6 +10,8 @@ As this project is open source we do encourage commenting wherever may be necess
 
 ### Examples of Well-documented Code
 
+#### Function Blocks
+
 ```go
 /*
   A function used to add two integers who must be positive
