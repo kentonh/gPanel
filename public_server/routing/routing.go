@@ -2,7 +2,7 @@ package publicRouting
 
 import (
 	"bufio"
-	"log"
+	"gPanel/public_server/logging"
 	"net/http"
 	"os"
 	"strings"
@@ -24,7 +24,7 @@ func (pub *publicWeb) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	path := req.URL.Path[1:]
 	path = (pub.Directory + path)
 
-	publicLog(path)
+	publicLogging.Console(1, path)
 	f, err := os.Open(path)
 
 	if err == nil {
@@ -51,11 +51,6 @@ func (pub *publicWeb) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		w.WriteHeader(404)
 		w.Write([]byte("404 - " + http.StatusText(404)))
 
-		publicLog("Path: " + path)
-		publicLog(http.StatusText(404))
+		publicLogging.Console(2, "Path \""+path+"\" rendered a 404 error: "+http.StatusText(404))
 	}
-}
-
-func publicLog(msg string) {
-	log.Println("PUBLIC (PORT 3000):: " + msg)
 }
