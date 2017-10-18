@@ -2,7 +2,7 @@ package privateRouting
 
 import (
 	"bufio"
-	"log"
+	"gPanel/private_server/logging"
 	"net/http"
 	"os"
 	"strings"
@@ -23,15 +23,16 @@ func NewPrivateHost() privateHost {
 }
 
 func (priv *privateHost) ServeHTTP(w http.ResponseWriter, req *http.Request) {
+	path := req.URL.Path[1:]
+	path = (priv.Directory + path)
+
 	if priv.Auth != 1 {
 		w.WriteHeader(401)
 		w.Write([]byte("401 - " + http.StatusText(401)))
-		privateLog(http.StatusText(401))
-	} else {
-		path := req.URL.Path[1:]
-		path = (priv.Directory + path)
 
-		privateLog(path)
+		privateLogging.Console(2, "Path \""+path+"\" rendered a 401 error: "+http.StatusText(401))
+	} else {
+		privateLogging.Console(1, path)
 		f, err := os.Open(path)
 
 		if err == nil {
@@ -58,12 +59,7 @@ func (priv *privateHost) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 			w.WriteHeader(404)
 			w.Write([]byte("404 - " + http.StatusText(404)))
 
-			privateLog("Path: " + path)
-			privateLog(http.StatusText(404))
+			privateLogging.Console(2, "Path \""+path+"\" rendered a 404 error: "+http.StatusText(404))
 		}
 	}
-}
-
-func privateLog(msg string) {
-	log.Println("PRIVATE (PORT 2082):: " + msg)
 }
