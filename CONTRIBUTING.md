@@ -46,9 +46,15 @@ This is how a typical function block comment should look. A short description of
 
 ## <a name="wiki_guidelines_anchor"></a>Internal Wiki Conventions & Guidelines
 
-To-do...
+To-do conventions and guidelines...
 
-## <a name="features_list_anchor"></a>Features list
+Wiki pages that don't exist but need to:  
+* Supported content types
+
+Wiki pages that exist but need more content:  
+* N/A
+
+## <a name="features_list_anchor"></a>Features
 
 Feel free to edit this document in your own fork and submit a pull request to add to, subtract from, or make minor adjustments to existing features on the list.
 
@@ -56,56 +62,60 @@ Key: __Implemented__ | __*Implemented, but needs work*__ | *Unimplemented* | ~~R
 
 * Administrative Web Hosting Panel
   * Accessibility
-    * Using a special port
-    * Authentication
-    * User system
+    * *Using a special port*
+    * *Authentication*
+    * *User system*
   * Clients
-    * Multi-client support
-    * Configuration of new clients
-    * Configuration of existing hosts
+    * *Multi-client support*
+    * *Configuration of new clients*
+    * *Configuration of existing hosts*
 * Client Web Hosting Panel
   * Accessibility
-    * Using port 2082
-    * Authentication
-    * User system
+    * __Using port 2082__
+    * *Authentication*
+    * *User system*
   * Public Website Control
-    * Turning access on/off
-    * Graceful shutdown
-    * Maintenance mode
-    * IP Filtering
+    * *Turning access on/off*
+    * *Graceful shutdown*
+    * *Maintenance mode*
+    * *IP Filtering*
   * Statistics
-    * Various graphs for usage, bandwidth, etc
-    * Click heat maps
+    * *Various graphs for usage, bandwidth, etc*
+    * *Click heat maps*
   * Diagnostics
-    * Smart logging
-    * Alert system for fatal errors
+    * *Smart logging*
+    * *Alert system for fatal errors*
   * Mail Servers
   * Domains
-    * Configuration of domains
-    * Configuration of sub-domains
-    * TLS/SSL certificate support
-    * Multi-domain support
+    * *Configuration of domains*
+    * *Configuration of sub-domains*
+    * *TLS/SSL certificate support*
+    * *Multi-domain support*
   * Remote Access
-    * SSH Access
+    * *SSH Access*
   * File Manager
-    * CRUD
-    * Inline Editor
-    * Managing Permissions
+    * *CRUD*
+    * *Inline Editor*
+    * *Managing Permissions*
 * Public Website
-  * Serve Requests (duh)
-  * Concurrent Processing
+  * Accessibility
+    * __Port 3000 for Development__
+    * *Port 80 for Production w/o SSL/TLS*
+    * *Port 443 for Production w/ SSL/TLS*
+  * __Serve Requests (duh)__
+  * *Concurrent Processing*
   * Supported content types
-    * All of the obvious ones (.jpg/.html/.css/etc)
-    * .go
-    * .php
+    * __*All of the obvious ones (.jpg/.html/.css/etc)*__
+    * *.go*
+    * *.php*
 * General
   * Deployment
-    * Binary
-    * GUI Installation Helper
+    * *Binary*
+    * *GUI Installation Helper*
   * Multi-infrastructure Support
-    * Windows
-    * Linux
-    * Mac
-    * Amazon Web Services
-    * DigitalOcean
-    * Google Cloud Platform
+    * __Windows__
+    * __Linux__
+    * __Mac__
+    * *Amazon Web Services*
+    * *DigitalOcean*
+    * *Google Cloud Platform*
