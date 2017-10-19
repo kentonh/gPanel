@@ -48,10 +48,12 @@ This is how a typical function block comment should look. A short description of
 
 To-do conventions and guidelines...
 
-Wiki pages that don't exist but need to:  
+#### Wiki pages that don't exist but need to:
+
 * Supported content types
 
-Wiki pages that exist but need more content:  
+#### Wiki pages that exist but need more content:
+
 * N/A
 
 ## <a name="features_list_anchor"></a>Features
