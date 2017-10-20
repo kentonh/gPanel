@@ -13,6 +13,7 @@ const (
 	WARNING string = "warning.log"
 )
 
+// File logs a given message to a log file
 func File(logFolder string, logFile string, msg string) (string, error) {
 	msg += "\n"
 

@@ -18,6 +18,7 @@ const (
 	FATAL_LOG  int = 2
 )
 
+// Console logs a prefix, IP, and message all appeneded together to the console.
 func Console(prefix string, logType int, msg string) {
 	rawClientIP, _ := networking.GetClientIP()
 	clientIP := strings.TrimSpace(string(rawClientIP))
