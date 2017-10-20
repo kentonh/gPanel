@@ -4,13 +4,13 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/Ennovar/gPanel/private_server/routing"
-	"github.com/Ennovar/gPanel/public_server/routing"
+	"github.com/Ennovar/gPanel/private_server"
+	"github.com/Ennovar/gPanel/public_server"
 )
 
 func main() {
-	private := privateRouting.NewPrivateHost()
-	public := publicRouting.NewPublicWeb()
+	private := private_server.NewPrivateHost()
+	public := public_server.NewPublicWeb()
 
 	log.Printf("To Exit: CTRL+C")
 
