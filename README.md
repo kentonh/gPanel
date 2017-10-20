@@ -1,5 +1,7 @@
 # gPanel
 
+![TravisCI gPanel Build](https://travis-ci.org/Ennovar/gPanel.svg?branch=master)
+
 A web-hosting control panel written in Go.
 
 ## Stack
