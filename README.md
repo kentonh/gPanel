@@ -12,15 +12,34 @@ CSS Preprocessor: __[SASS](http://sass-lang.com/)__
 CSS Toolkit: __[Bootstrap 4](http://getbootstrap.com/)__  
 Package Manager: __[npm](https://www.npmjs.com/)__
 
-## Deployment
+## Contribution Set-up & Deployment
 
 ```shell
-# Clone the Repo
-git clone https://github.com/Ennovar/gPanel.git
+# Go get the repo and append it to your $GOPATH
+go get https://github.com/Ennovar/gPanel.git
 
-# Navigate to the directory
-cd gPanel
+# Navigate to the directory (replace $GOPATH with your actual $GOPATH)
+cd $GOPATH/github.com/Ennovar/gPanel
+```
 
-# Start the web-hosting server
+To set your repo up to contribute...
+
+```shell
+# Fork the repo and add it to the list of remotes
+git remote add fork https://github.com/Ennovar/gPanel.git
+
+# OPTIONAL: Change the names of the remotes
+git remote rename origin upstream
+git remote rename fork origin
+```
+
+To deploy...
+
+```shell
+# Starting gPanel
 go run main.go
+
+# OPTIONAL: Create binary to run
+go build main.go
+./main
 ```

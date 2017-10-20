@@ -2,10 +2,11 @@ package privateRouting
 
 import (
 	"bufio"
-	"gPanel/private_server/logging"
 	"net/http"
 	"os"
 	"strings"
+
+	"github.com/Ennovar/gPanel/private_server/logging"
 )
 
 type privateHost struct {
