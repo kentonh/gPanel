@@ -20,9 +20,6 @@ go get https://github.com/Ennovar/gPanel.git
 
 # Navigate to the directory (replace $GOPATH with your actual $GOPATH)
 cd $GOPATH/github.com/Ennovar/gPanel
-
-go get remote -v
-(orgin)
 ```
 
 To set your repo up to contribute...
