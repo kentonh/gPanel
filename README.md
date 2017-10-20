@@ -16,7 +16,7 @@ Package Manager: __[npm](https://www.npmjs.com/)__
 
 ```shell
 # Go get the repo and append it to your $GOPATH
-go get https://github.com/Ennovar/gPanel.git
+go get github.com/Ennovar/gPanel
 
 # Navigate to the directory (replace $GOPATH with your actual $GOPATH)
 cd $GOPATH/github.com/Ennovar/gPanel
