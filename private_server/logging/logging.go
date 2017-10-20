@@ -1,10 +1,11 @@
 package privateLogging
 
 import (
-	"gPanel/general/networking"
 	"log"
 	"os"
 	"strings"
+
+	"github.com/Ennovar/gPanel/general/networking"
 )
 
 const (

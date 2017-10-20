@@ -2,10 +2,11 @@ package publicRouting
 
 import (
 	"bufio"
-	"gPanel/public_server/logging"
 	"net/http"
 	"os"
 	"strings"
+
+	"github.com/Ennovar/gPanel/public_server/logging"
 )
 
 type publicWeb struct {

@@ -1,10 +1,11 @@
 package main
 
 import (
-	"gPanel/private_server/routing"
-	"gPanel/public_server/routing"
 	"log"
 	"net/http"
+
+	"github.com/Ennovar/gPanel/private_server/routing"
+	"github.com/Ennovar/gPanel/public_server/routing"
 )
 
 func main() {
