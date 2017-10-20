@@ -1,3 +1,5 @@
+// Package networking contains various functions used to communicate between networks and
+// draw data from the client network.
 package networking
 
 import (
@@ -5,16 +7,8 @@ import (
 	"net/http"
 )
 
-/*
-	A function to get the client IP
-
-	@return []byte
-		The IP Address
-	@return error
-		If no error exists, the value is nil
-
-	Known Problems: Uses an external API
-*/
+// GetClientIP returns the current client's IP as an array of bytes.
+// BUG(george-e-shaw-iv) Uses an external API
 func GetClientIP() ([]byte, error) {
 	resp, err := http.Get("http://myexternalip.com/raw")
 
