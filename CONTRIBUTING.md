@@ -15,7 +15,7 @@ Go has [testing baked in the language](https://golang.org/pkg/testing/) and we w
 #### Function Blocks
 
 ```go
-// This function returns the sum of two positive integers.
+// addTwoPositiveIntegers returns the sum of two positive integers.
 // When the two integers are not positive, it returns the zero-value of an integer and an error.
 // BUG(george-e-shaw-iv) This function cannot handle negative integers
 func addTwoPositiveIntegers(one int, two int) (int, error) {
@@ -51,7 +51,7 @@ const(
 Package names should always match their parent folder.
 
 ```go
-// This package contains various functions used to communicate between networks and
+// Package networking contains various functions used to communicate between networks and
 // draw data from the client network.
 package networking
 ```
