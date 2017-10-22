@@ -16,12 +16,10 @@ type privateHost struct {
 }
 
 func NewPrivateHost() privateHost {
-	priv := privateHost{}
-
-	priv.Auth = 1 // Handle Auth
-	priv.Directory = "private/"
-
-	return priv
+	return privateHost{
+		Auth:      1,
+		Directory: "private/",
+	}
 }
 
 func (priv *privateHost) ServeHTTP(w http.ResponseWriter, req *http.Request) {

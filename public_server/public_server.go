@@ -15,11 +15,9 @@ type publicWeb struct {
 }
 
 func NewPublicWeb() publicWeb {
-	pub := publicWeb{}
-
-	pub.Directory = "public/"
-
-	return pub
+	return publicWeb{
+		Directory: "public/",
+	}
 }
 
 func (pub *publicWeb) ServeHTTP(w http.ResponseWriter, req *http.Request) {
