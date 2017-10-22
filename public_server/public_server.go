@@ -10,17 +10,17 @@ import (
 	"github.com/Ennovar/gPanel/general/routing"
 )
 
-type publicWeb struct {
+type PublicWeb struct {
 	Directory string
 }
 
-func NewPublicWeb() publicWeb {
-	return publicWeb{
+func NewPublicWeb() PublicWeb {
+	return PublicWeb{
 		Directory: "public/",
 	}
 }
 
-func (pub *publicWeb) ServeHTTP(w http.ResponseWriter, req *http.Request) {
+func (pub *PublicWeb) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	path := req.URL.Path[1:]
 	path = (pub.Directory + path)
 
