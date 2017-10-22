@@ -15,6 +15,7 @@ type PrivateHost struct {
 	Directory string
 }
 
+// NewPrivateHost returns a new PrivateHost type.
 func NewPrivateHost() PrivateHost {
 	return PrivateHost{
 		Auth:      1,

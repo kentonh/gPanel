@@ -14,6 +14,7 @@ type PublicWeb struct {
 	Directory string
 }
 
+// NewPublicWeb returns a new PublicWeb type.
 func NewPublicWeb() PublicWeb {
 	return PublicWeb{
 		Directory: "public/",
