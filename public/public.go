@@ -1,13 +1,13 @@
-// Package public_server handles the logic of the public facing website
-package public_server
+// Package public handles the logic of the public facing website
+package public
 
 import (
 	"bufio"
 	"net/http"
 	"os"
 
-	"github.com/Ennovar/gPanel/general/logging"
-	"github.com/Ennovar/gPanel/general/routing"
+	"github.com/Ennovar/gPanel/pkg/logging"
+	"github.com/Ennovar/gPanel/pkg/routing"
 )
 
 type PublicWeb struct {
@@ -17,7 +17,7 @@ type PublicWeb struct {
 // NewPublicWeb returns a new PublicWeb type.
 func NewPublicWeb() PublicWeb {
 	return PublicWeb{
-		Directory: "public/",
+		Directory: "document_roots/public/",
 	}
 }
 

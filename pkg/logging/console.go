@@ -5,7 +5,7 @@ import (
 	"log"
 	"strings"
 
-	"github.com/Ennovar/gPanel/general/networking"
+	"github.com/Ennovar/gPanel/pkg/networking"
 )
 
 const (
