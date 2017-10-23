@@ -4,8 +4,8 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/Ennovar/gPanel/public"
-	"github.com/Ennovar/gPanel/webhost"
+	"github.com/Ennovar/gPanel/pkg/public"
+	"github.com/Ennovar/gPanel/pkg/webhost"
 )
 
 func main() {
