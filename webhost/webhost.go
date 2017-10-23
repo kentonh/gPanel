@@ -1,13 +1,13 @@
-// Package private_server handles the logic of the private_server
-package private_server
+// Package webhost handles the logic of the webhosting panel
+package webhost
 
 import (
 	"bufio"
 	"net/http"
 	"os"
 
-	"github.com/Ennovar/gPanel/general/logging"
-	"github.com/Ennovar/gPanel/general/routing"
+	"github.com/Ennovar/gPanel/pkg/logging"
+	"github.com/Ennovar/gPanel/pkg/routing"
 )
 
 type PrivateHost struct {
@@ -19,7 +19,7 @@ type PrivateHost struct {
 func NewPrivateHost() PrivateHost {
 	return PrivateHost{
 		Auth:      1,
-		Directory: "private/",
+		Directory: "document_roots/webhost/",
 	}
 }
 
