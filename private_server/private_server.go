@@ -10,21 +10,20 @@ import (
 	"github.com/Ennovar/gPanel/general/routing"
 )
 
-type privateHost struct {
+type PrivateHost struct {
 	Auth      int
 	Directory string
 }
 
-func NewPrivateHost() privateHost {
-	priv := privateHost{}
-
-	priv.Auth = 1 // Handle Auth
-	priv.Directory = "private/"
-
-	return priv
+// NewPrivateHost returns a new PrivateHost type.
+func NewPrivateHost() PrivateHost {
+	return PrivateHost{
+		Auth:      1,
+		Directory: "private/",
+	}
 }
 
-func (priv *privateHost) ServeHTTP(w http.ResponseWriter, req *http.Request) {
+func (priv *PrivateHost) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	path := req.URL.Path[1:]
 	path = (priv.Directory + path)
 
