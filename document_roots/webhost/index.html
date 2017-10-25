@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Private Test</title>
+  <link rel="icon" type="image/x-icon" href="https://play.golang.org/favicon.ico">
+</head>
+<body>
+<form id="authForm" method="POST" action="authentication">
+  <table>
+    <thead>
+    <tr>
+      <th colspan="2">gPanel Login</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td>Username:</td>
+      <td><input type="text" placeholder="username..." name="user"></td>
+    </tr>
+    <tr>
+      <td>Password:</td>
+      <td><input type="password" placeholder="password..." name="pass"></td>
+    </tr>
+    <tr>
+      <td colspan="2"><input type="submit" value="Login"></td>
+    </tr>
+    </tbody>
+  </table>
+</form>
+
+<script type="text/javascript">
+  var form = document.getElementById('authForm');
+
+  form.onsubmit = function(e) {
+    e.preventDefault();
+
+    var formData = {};
+    for(var i = 0, ii = form.length; i < ii; i++) {
+      var input = form[i];
+      if(input.name) {
+        formData[input.name] = input.value;
+      }
+    }
+    formData['redirect'] = 'ePanel.html';
+    console.log(formData); //debugging
+    console.log(form.action);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open(form.method, form.action, true);
+    xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+    xhr.send(JSON.stringify(formData));
+
+    xhr.onloadend = function() {
+      console.log(xhr.status);
+    }
+  }
+</script>
+</body>
+</html>

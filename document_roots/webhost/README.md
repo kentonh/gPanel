@@ -10,7 +10,7 @@ See guidelines from gPanel
 
 Layout and Components
 ```shell
-gPanel/document_roots/webhost/index.html
+gPanel/document_roots/webhost/ePanel.html
 ```
 
 Styles
