@@ -24,6 +24,8 @@ func NewPrivateHost() PrivateHost {
 	}
 }
 
+// ServeHTTP function routes all requests for the private webhost server. It is used in the main
+// function inside of the http.ListenAndServe() function for the private webhost host.
 func (priv *PrivateHost) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	path := req.URL.Path[1:]
 	if len(path) == 0 {
@@ -33,7 +35,7 @@ func (priv *PrivateHost) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	}
 
 	if priv.Auth != 1 {
-		routing.HttpThrowStatus(404, w)
+		routing.HttpThrowStatus(http.StatusUnauthorized, w)
 		logging.Console(logging.PRIVATE_PREFIX, logging.NORMAL_LOG, "Path \""+path+"\" rendered a 401 error.")
 	} else {
 		isApi, _ := api.HandleAPI(path, w, req)
@@ -51,12 +53,12 @@ func (priv *PrivateHost) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 
 					logging.Console(logging.PRIVATE_PREFIX, logging.NORMAL_LOG, "Path \""+path+"\" rendered a 200 success.")
 				} else {
-					routing.HttpThrowStatus(404, w)
+					routing.HttpThrowStatus(http.StatusUnsupportedMediaType, w)
 					logging.Console(logging.PRIVATE_PREFIX, logging.NORMAL_LOG, "Path \""+path+"\" content type could not be determined, 404 error.")
 				}
 
 			} else {
-				routing.HttpThrowStatus(404, w)
+				routing.HttpThrowStatus(http.StatusNotFound, w)
 				logging.Console(logging.PRIVATE_PREFIX, logging.NORMAL_LOG, "Path \""+path+"\" rendered a 404 error.")
 			}
 

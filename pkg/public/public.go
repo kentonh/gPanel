@@ -21,9 +21,15 @@ func NewPublicWeb() PublicWeb {
 	}
 }
 
+// ServeHTTP function routes all requests for the public web server. It is used in the main
+// function inside of the http.ListenAndServe() function for the public host.
 func (pub *PublicWeb) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	path := req.URL.Path[1:]
-	path = (pub.Directory + path)
+	if len(path) == 0 {
+		path = (pub.Directory + "index.html")
+	} else {
+		path = (pub.Directory + path)
+	}
 
 	f, err := os.Open(path)
 
@@ -37,12 +43,12 @@ func (pub *PublicWeb) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 
 			logging.Console(logging.PUBLIC_PREFIX, logging.NORMAL_LOG, "Path \""+path+"\" rendered a 200 success.")
 		} else {
-			routing.HttpThrowStatus(404, w)
+			routing.HttpThrowStatus(http.StatusUnsupportedMediaType, w)
 			logging.Console(logging.PUBLIC_PREFIX, logging.NORMAL_LOG, "Path \""+path+"\" content type could not be determined, 404 error.")
 		}
 
 	} else {
-		routing.HttpThrowStatus(404, w)
+		routing.HttpThrowStatus(http.StatusNotFound, w)
 		logging.Console(logging.PUBLIC_PREFIX, logging.NORMAL_LOG, "Path \""+path+"\" rendered a 404 error.")
 	}
 
