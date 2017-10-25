@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/Ennovar/gPanel/pkg/api"
 	"github.com/Ennovar/gPanel/pkg/logging"
 	"github.com/Ennovar/gPanel/pkg/routing"
 )
@@ -23,33 +24,44 @@ func NewPrivateHost() PrivateHost {
 	}
 }
 
+// ServeHTTP function routes all requests for the private webhost server. It is used in the main
+// function inside of the http.ListenAndServe() function for the private webhost host.
 func (priv *PrivateHost) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	path := req.URL.Path[1:]
-	path = (priv.Directory + path)
+	if len(path) == 0 {
+		path = (priv.Directory + "index.html")
+	} else {
+		path = (priv.Directory + path)
+	}
 
 	if priv.Auth != 1 {
-		routing.HttpThrowStatus(404, w)
+		routing.HttpThrowStatus(http.StatusUnauthorized, w)
 		logging.Console(logging.PRIVATE_PREFIX, logging.NORMAL_LOG, "Path \""+path+"\" rendered a 401 error.")
 	} else {
-		f, err := os.Open(path)
+		isApi, _ := api.HandleAPI(path, w, req)
 
-		if err == nil {
-			bufferedReader := bufio.NewReader(f)
-			contentType, err := routing.GetContentType(path)
+		if isApi != true {
+			f, err := os.Open(path)
 
 			if err == nil {
-				w.Header().Add("Content Type", contentType)
-				bufferedReader.WriteTo(w)
+				bufferedReader := bufio.NewReader(f)
+				contentType, err := routing.GetContentType(path)
 
-				logging.Console(logging.PRIVATE_PREFIX, logging.NORMAL_LOG, "Path \""+path+"\" rendered a 200 success.")
+				if err == nil {
+					w.Header().Add("Content Type", contentType)
+					bufferedReader.WriteTo(w)
+
+					logging.Console(logging.PRIVATE_PREFIX, logging.NORMAL_LOG, "Path \""+path+"\" rendered a 200 success.")
+				} else {
+					routing.HttpThrowStatus(http.StatusUnsupportedMediaType, w)
+					logging.Console(logging.PRIVATE_PREFIX, logging.NORMAL_LOG, "Path \""+path+"\" content type could not be determined, 404 error.")
+				}
+
 			} else {
-				routing.HttpThrowStatus(404, w)
-				logging.Console(logging.PRIVATE_PREFIX, logging.NORMAL_LOG, "Path \""+path+"\" content type could not be determined, 404 error.")
+				routing.HttpThrowStatus(http.StatusNotFound, w)
+				logging.Console(logging.PRIVATE_PREFIX, logging.NORMAL_LOG, "Path \""+path+"\" rendered a 404 error.")
 			}
 
-		} else {
-			routing.HttpThrowStatus(404, w)
-			logging.Console(logging.PRIVATE_PREFIX, logging.NORMAL_LOG, "Path \""+path+"\" rendered a 404 error.")
 		}
 
 	}
