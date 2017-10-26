@@ -4,13 +4,11 @@ package logging
 import "os"
 
 const (
-	PRIVATE_LOG_FOLDER string = "logs/private/"
-	PUBLIC_LOG_FOLDER  string = "logs/public/"
-)
+	PRIVATE_LOG_FOLDER = "logs/private/"
+	PUBLIC_LOG_FOLDER  = "logs/public/"
 
-const (
-	ERROR   string = "error.log"
-	WARNING string = "warning.log"
+	ERROR   = "error.log"
+	WARNING = "warning.log"
 )
 
 // File logs a given message to a log file
