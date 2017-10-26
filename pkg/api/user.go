@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/Ennovar/gPanel/pkg/database"
+	"github.com/Ennovar/gPanel/pkg/encryption"
 )
 
 // userRequestData struct is the structure of the JSON data to be
@@ -49,14 +50,14 @@ func UserAuthentication(res http.ResponseWriter, req *http.Request) bool {
 		return false
 	}
 
-	if userRequestData.Pass != userDatabaseData.Pass {
-		http.Error(res, "Invalid password", http.StatusUnauthorized)
+	err = encryption.CheckPassword([]byte(userDatabaseData.Pass), []byte(userRequestData.Pass))
+	if err != nil {
+		http.Error(res, err.Error(), http.StatusUnauthorized)
 		return false
 	}
 
 	res.WriteHeader(http.StatusNoContent)
 	return true
-
 }
 
 // UserAuthentication function is accessed by an API call from the webhost root
@@ -83,7 +84,12 @@ func UserRegistration(res http.ResponseWriter, req *http.Request) bool {
 	}
 	defer ds.Close()
 
-	userDatabaseData.Pass = userRequestData.Pass
+	userDatabaseData.Pass, err = encryption.HashPassword(userRequestData.Pass)
+	if err != nil {
+		http.Error(res, err.Error(), http.StatusBadRequest)
+		return false
+	}
+
 	err = ds.Put(database.BUCKET_USERS, []byte(userRequestData.User), userDatabaseData)
 	if err != nil {
 		http.Error(res, err.Error(), http.StatusBadRequest)
@@ -92,5 +98,4 @@ func UserRegistration(res http.ResponseWriter, req *http.Request) bool {
 
 	res.WriteHeader(http.StatusNoContent)
 	return true
-
 }
