@@ -5,7 +5,7 @@
   <link rel="icon" type="image/x-icon" href="https://play.golang.org/favicon.ico">
 </head>
 <body>
-<form id="authForm" method="POST" action="authentication">
+<form class="api_form" method="POST" action="authentication">
   <table>
     <thead>
     <tr>
@@ -28,30 +28,55 @@
   </table>
 </form>
 
+<form class="api_form" method="POST" action="registration">
+  <table>
+    <thead>
+    <tr>
+      <th colspan="2">gPanel Registration</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td>Username:</td>
+      <td><input type="text" placeholder="username..." name="user"></td>
+    </tr>
+    <tr>
+      <td>Password:</td>
+      <td><input type="password" placeholder="password..." name="pass"></td>
+    </tr>
+    <tr>
+      <td colspan="2"><input type="submit" value="Register"></td>
+    </tr>
+    </tbody>
+  </table>
+</form>
+
 <script type="text/javascript">
-  var form = document.getElementById('authForm');
+  var form = document.getElementsByClassName('api_form');
 
-  form.onsubmit = function(e) {
-    e.preventDefault();
+  for(var i  = 0; i < form.length; i++) {
+    form[i].onsubmit = function(e) {
+      e.preventDefault();
 
-    var formData = {};
-    for(var i = 0, ii = form.length; i < ii; i++) {
-      var input = form[i];
-      if(input.name) {
-        formData[input.name] = input.value;
+      var formData = {};
+      for(var y = 0, yy = this.length; y < yy; y++) {
+        var input = this[y];
+        if(input.name) {
+          formData[input.name] = input.value;
+        }
       }
-    }
-    formData['redirect'] = 'ePanel.html';
-    console.log(formData); //debugging
-    console.log(form.action);
+      console.log(formData); //debugging
+      console.log(this.action);
 
-    var xhr = new XMLHttpRequest();
-    xhr.open(form.method, form.action, true);
-    xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-    xhr.send(JSON.stringify(formData));
+      var xhr = new XMLHttpRequest();
+      xhr.open(this.method, this.action, true);
+      xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+      xhr.send(JSON.stringify(formData));
 
-    xhr.onloadend = function() {
-      console.log(xhr.status);
+      xhr.onloadend = function() {
+        console.log(xhr.response)
+        console.log(xhr.status);
+      }
     }
   }
 </script>
