@@ -11,17 +11,17 @@ import (
 
 // Database constants
 const (
-	DBLOC_MAIN string = "datastore.db"
+	DBLOC_MAIN = "datastore.db"
 )
 
 // Bucket constants
 const (
-	BUCKET_USERS string = "users"
+	BUCKET_USERS = "users"
 )
 
 // Error codes
 var (
-	ErrKeyNotExist error = errors.New("key does not exist")
+	ErrKeyNotExist = errors.New("key does not exist")
 )
 
 type Datastore struct {
