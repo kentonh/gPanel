@@ -9,13 +9,11 @@ import (
 )
 
 const (
-	PRIVATE_PREFIX string = "PRIVATE::"
-	PUBLIC_PREFIX  string = "PUBLIC::"
-)
+	PRIVATE_PREFIX = "PRIVATE::"
+	PUBLIC_PREFIX  = "PUBLIC::"
 
-const (
-	NORMAL_LOG int = 1
-	FATAL_LOG  int = 2
+	NORMAL_LOG = 1
+	FATAL_LOG  = 2
 )
 
 // Console logs a prefix, IP, and message all appeneded together to the console.
