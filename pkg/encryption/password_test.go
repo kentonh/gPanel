@@ -27,11 +27,11 @@ func TestPasswordHashing(t *testing.T) {
 			t.Errorf("Error in password_test using HashPassword func: %s", err.Error())
 		}
 
-		ok, err := CheckPassword([]byte(password.hash), []byte(password.plainText))
+		err = CheckPassword([]byte(password.hash), []byte(password.plainText))
 
 		if err != nil {
-			if ok != password.ok {
-				t.Errorf("In password_test expected %t, but got %t from CheckPassword func", password.ok, ok)
+			if password.ok {
+				t.Errorf("Error in password_test using CheckPassword func: %s", err.Error())
 			}
 		}
 	}
