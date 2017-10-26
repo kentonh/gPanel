@@ -4,6 +4,7 @@ package routing
 import (
 	"errors"
 	"path/filepath"
+	"strings"
 )
 
 // getContentType returns the http header safe content-type attribute for the
@@ -13,24 +14,27 @@ import (
 // BUG(george-e-shaw-iv) Does not cover the bulk of encountered content types on the web
 func GetContentType(path string) (string, error) {
 	var contentType string
-	fileType := filepath.Ext(path)
 
-	if fileType == "" {
-		return contentType, errors.New("Invalid path, contained no period-separated content-type")
+	path = filepath.Base(path)
+	ext := filepath.Ext(path)
+	fn := strings.TrimSuffix(path, ext)
+
+	if ext == "" || fn == "" {
+		return "", errors.New("Invalid file path")
 	}
 
-	switch fileType {
-	case "html":
+	switch ext {
+	case ".html":
 		contentType = "text/html"
-	case "css":
+	case ".css":
 		contentType = "text/css"
-	case "js":
+	case ".js":
 		contentType = "text/javascript"
-	case "png":
+	case ".png":
 		contentType = "image/png"
-	case "jpg":
+	case ".jpg":
 		fallthrough
-	case "jpeg":
+	case ".jpeg":
 		contentType = "image/jpeg"
 	default:
 		contentType = "text/plain"
