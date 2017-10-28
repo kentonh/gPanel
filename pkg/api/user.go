@@ -84,6 +84,12 @@ func UserRegistration(res http.ResponseWriter, req *http.Request) bool {
 	}
 	defer ds.Close()
 
+	err = ds.Get(database.BUCKET_USERS, []byte(userRequestData.User), &userDatabaseData)
+	if err != database.ErrKeyNotExist {
+		http.Error(res, "Username already exists in the database", http.StatusBadRequest)
+		return false
+	}
+
 	userDatabaseData.Pass, err = encryption.HashPassword(userRequestData.Pass)
 	if err != nil {
 		http.Error(res, err.Error(), http.StatusBadRequest)
