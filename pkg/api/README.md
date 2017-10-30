@@ -1,7 +1,7 @@
 # Working API Calls
 
 ```go
-// User Authentication API
+// User Authentication API - pkg/api/user_auth.go
 /*
 JSON Data Required:
   {
@@ -11,7 +11,7 @@ JSON Data Required:
 */
 func UserAuthentication(res http.ResponseWriter, req *http.Request) bool
 
-// User Registration API
+// User Registration API - pkg/api/user_auth.go
 /*
 JSON Data Required:
   {
