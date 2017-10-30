@@ -1,84 +1,547 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <title>Private Test</title>
-  <link rel="icon" type="image/x-icon" href="https://play.golang.org/favicon.ico">
+  <title>gPanel - Home</title>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+  <!-- Our own CSS -->
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<form class="api_form" method="POST" action="authentication">
-  <table>
-    <thead>
-    <tr>
-      <th colspan="2">gPanel Login</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-      <td>Username:</td>
-      <td><input type="text" placeholder="username..." name="user"></td>
-    </tr>
-    <tr>
-      <td>Password:</td>
-      <td><input type="password" placeholder="password..." name="pass"></td>
-    </tr>
-    <tr>
-      <td colspan="2"><input type="submit" value="Login"></td>
-    </tr>
-    </tbody>
-  </table>
-</form>
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">gPanel</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="#">News</a></li>
+        <li><a href="#">Change Log</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
 
-<form class="api_form" method="POST" action="registration">
-  <table>
-    <thead>
-    <tr>
-      <th colspan="2">gPanel Registration</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-      <td>Username:</td>
-      <td><input type="text" placeholder="username..." name="user"></td>
-    </tr>
-    <tr>
-      <td>Password:</td>
-      <td><input type="password" placeholder="password..." name="pass"></td>
-    </tr>
-    <tr>
-      <td colspan="2"><input type="submit" value="Register"></td>
-    </tr>
-    </tbody>
-  </table>
-</form>
+<div class="container-fluid text-center">
+  <div class="row content">
+    <div class="col-sm-2 sidenav pre-scrollable">
+      <div class="panel-group">
 
-<script type="text/javascript">
-  var form = document.getElementsByClassName('api_form');
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" href="#collapse1">Server Configuration</a>
+            </h4>
+          </div>
+          <div id="collapse1" class="panel-collapse collapse">
+            <div class="panel-body">Basic WebHost Manager Setup</div>
+            <div class="panel-body">Change Root Password</div>
+            <div class="panel-body">Configure ePanel Cron Jobs</div>
+            <div class="panel-body">Initial Quota Setup</div>
+            <div class="panel-body">Server Time</div>
+            <div class="panel-body">Statistics Software Configuration</div>
+            <div class="panel-body">Tweak Settings</div>
+            <div class="panel-body">Update Preferences</div>
+          </div>
+        </div>
 
-  for(var i  = 0; i < form.length; i++) {
-    form[i].onsubmit = function(e) {
-      e.preventDefault();
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" href="#collapse2">Support</a>
+            </h4>
+          </div>
+          <div id="collapse2" class="panel-collapse collapse">
+            <div class="panel-body">Create Support Ticket</div>
+            <div class="panel-body">Grant gPanel Support Access</div>
+            <div class="panel-body">Support Center</div>
+          </div>
+        </div>
 
-      var formData = {};
-      for(var y = 0, yy = this.length; y < yy; y++) {
-        var input = this[y];
-        if(input.name) {
-          formData[input.name] = input.value;
-        }
-      }
-      console.log(formData); //debugging
-      console.log(this.action);
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" href="#collapse3">Networking Setup</a>
+            </h4>
+          </div>
+          <div id="collapse3" class="panel-collapse collapse">
+            <div class="panel-body">Change Hostname</div>
+            <div class="panel-body">Resolver Configuration</div>
+          </div>
+        </div>
 
-      var xhr = new XMLHttpRequest();
-      xhr.open(this.method, this.action, true);
-      xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-      xhr.send(JSON.stringify(formData));
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" href="#collapse4">Security Center</a>
+            </h4>
+          </div>
+          <div id="collapse4" class="panel-collapse collapse">
+            <div class="panel-body">Apache mod_userdir Tweak</div>
+            <div class="panel-body">Compiler Access</div>
+            <div class="panel-body">Configure Security Policies</div>
+            <div class="panel-body">cPHulk Brute Force Protection</div>
+            <div class="panel-body">Host Access Control</div>
+            <div class="panel-body">Manage External Authentications</div>
+            <div class="panel-body">Manage root’s SSH Keys</div>
+            <div class="panel-body">Manage Wheel Group Users</div>
+            <div class="panel-body">ModSecurity™ Configuration</div>
+            <div class="panel-body">ModSecurity™ Tools</div>
+            <div class="panel-body">ModSecurity™ Vendors</div>
+            <div class="panel-body">Password Strength Configuration</div>
+            <div class="panel-body">PHP open_basedir Tweak</div>
+            <div class="panel-body">cPanel Security Advisor</div>
+            <div class="panel-body">Security Questions</div>
+            <div class="panel-body">Shell Fork Bomb Protection</div>
+            <div class="panel-body">SMTP Restrictions</div>
+            <div class="panel-body">SSH Password Authorization Tweak</div>
+            <div class="panel-body">Traceroute Enable/Disable</div>
+            <div class="panel-body">Two-Factor Authentication</div>
+          </div>
+        </div>
 
-      xhr.onloadend = function() {
-        console.log(xhr.response)
-        console.log(xhr.status);
-      }
-    }
-  }
-</script>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" href="#collapse5">Server Contacts</a>
+            </h4>
+          </div>
+          <div id="collapse5" class="panel-collapse collapse">
+            <div class="panel-body">Contact Manager</div>
+            <div class="panel-body">Edit System Mail Preferences</div>
+          </div>
+        </div>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" href="#collapse6">Reseller</a>
+            </h4>
+          </div>
+          <div id="collapse6" class="panel-collapse collapse">
+            <div class="panel-body">Change Ownership of an Account</div>
+            <div class="panel-body">Change Ownership of Multiple Accounts</div>
+            <div class="panel-body">Edit Reseller Nameservers and Privileges</div>
+            <div class="panel-body">Email All Resellers</div>
+            <div class="panel-body">Manage Reseller’s IP Delegation</div>
+            <div class="panel-body">Manage Reseller’s Shared IP</div>
+            <div class="panel-body">Reseller Center</div>
+            <div class="panel-body">Reset Resellers</div>
+            <div class="panel-body">Show Reseller Accounts</div>
+            <div class="panel-body">View Reseller Usage and Manage Account Status</div>
+          </div>
+        </div>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" href="#collapse7">Locales</a>
+            </h4>
+          </div>
+          <div id="collapse7" class="panel-collapse collapse">
+            <div class="panel-body">Configure Application Locales</div>
+            <div class="panel-body">Copy a Locale</div>
+            <div class="panel-body">Delete a Locale</div>
+            <div class="panel-body">Edit a Locale</div>
+            <div class="panel-body">Locale XML Download</div>
+            <div class="panel-body">Locale XML Upload</div>
+            <div class="panel-body">View Available Locales</div>
+          </div>
+        </div>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" href="#collapse8">Backup</a>
+            </h4>
+          </div>
+          <div id="collapse8" class="panel-collapse collapse">
+            <div class="panel-body">Backup Configuration</div>
+            <div class="panel-body">Backup Restoration</div>
+            <div class="panel-body">Backup User Selection</div>
+            <div class="panel-body">Configuration File Rollback</div>
+            <div class="panel-body">Legacy Backup Configuration</div>
+            <div class="panel-body">Legacy Restore Backups</div>
+            <div class="panel-body">Legacy Restore Multiple Backups</div>
+            <div class="panel-body">Restore a Full Backup/cpmove File</div>
+          </div>
+        </div>
+
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" href="#collapse9">Clusters</a>
+            </h4>
+          </div>
+          <div id="collapse9" class="panel-collapse collapse">
+            <div class="panel-body">Configuration Cluster</div>
+            <div class="panel-body">DNS Cluster</div>
+            <div class="panel-body">Remote Access Key</div>
+          </div>
+        </div>
+
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" href="#collapse10">System Reboot</a>
+            </h4>
+          </div>
+          <div id="collapse10" class="panel-collapse collapse">
+            <div class="panel-body">Forceful Server Reboot</div>
+            <div class="panel-body">Graceful Server Reboot</div>
+          </div>
+        </div>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" href="#collapse11">Server Status</a>
+            </h4>
+          </div>
+          <div id="collapse11" class="panel-collapse collapse">
+            <div class="panel-body">Apache Status</div>
+            <div class="panel-body">Daily Process Log</div>
+            <div class="panel-body">Server Information</div>
+            <div class="panel-body">Service Status</div>
+          </div>
+        </div>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" href="#collapse12">Account Information</a>
+            </h4>
+          </div>
+          <div id="collapse12" class="panel-collapse collapse">
+            <div class="panel-body">List Accounts</div>
+            <div class="panel-body">List Parked Domains</div>
+            <div class="panel-body">List Subdomains</div>
+            <div class="panel-body">Suspended Accounts</div>
+            <div class="panel-body">Show Accounts Over Quota</div>
+            <div class="panel-body">View Bandwidth Usage</div>
+          </div>
+        </div>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" href="#collapse13">Account Functions</a>
+            </h4>
+          </div>
+          <div id="collapse13" class="panel-collapse collapse">
+            <div class="panel-body">Change Site’s IP Address</div>
+            <div class="panel-body">Create a New Account</div>
+            <div class="panel-body">Email All Users</div>
+            <div class="panel-body">Force Password Change</div>
+            <div class="panel-body">Limit Bandwidth Usage</div>
+            <div class="panel-body">Manage Account Suspension</div>
+            <div class="panel-body">Manage Demo Mode</div>
+            <div class="panel-body">Manage Shell Access</div>
+            <div class="panel-body">Modify an Account</div>
+            <div class="panel-body">Password Modification</div>
+            <div class="panel-body">Quota Modification</div>
+            <div class="panel-body">Raw Apache Log Download</div>
+            <div class="panel-body">Raw FTP Log Download</div>
+            <div class="panel-body">Rearrange an Account</div>
+            <div class="panel-body">Reset Account Bandwidth Limit</div>
+            <div class="panel-body">Show Active and Inactive Accounts</div>
+            <div class="panel-body">Skeleton Directory</div>
+            <div class="panel-body">Terminate Accounts</div>
+            <div class="panel-body">Unsuspend Bandwidth Exceeders</div>
+            <div class="panel-body">Upgrade/Downgrade an Account</div>
+            <div class="panel-body">Web Template Editor</div>
+          </div>
+        </div>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" href="#collapse14">Multi Account Functions</a>
+            </h4>
+          </div>
+          <div id="collapse14" class="panel-collapse collapse">
+            <div class="panel-body">Change Multiple Sites’ IP Addresses</div>
+            <div class="panel-body">Modify/Upgrade Multiple Accounts</div>
+          </div>
+        </div>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" href="#collapse15">Transfers</a>
+            </h4>
+          </div>
+          <div id="collapse15" class="panel-collapse collapse">
+            <div class="panel-body">Convert Addon Domain to Account</div>
+            <div class="panel-body">Copy an Account From Another Server With an Account Password</div>
+            <div class="panel-body">Review Transfers and Restores</div>
+            <div class="panel-body">Transfer Tool</div>
+          </div>
+        </div>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" href="#collapse16">Themes</a>
+            </h4>
+          </div>
+          <div id="collapse16" class="panel-collapse collapse">
+            <div class="panel-body">Change WebHost Manager® Theme</div>
+            <div class="panel-body">Theme Manager</div>
+          </div>
+        </div>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" href="#collapse17">Packages</a>
+            </h4>
+          </div>
+          <div id="collapse17" class="panel-collapse collapse">
+            <div class="panel-body">Add a Package</div>
+            <div class="panel-body">Delete a Package</div>
+            <div class="panel-body">Edit a Package</div>
+            <div class="panel-body">Feature Manager</div>
+          </div>
+        </div>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" href="#collapse18">DNS Functions</a>
+            </h4>
+          </div>
+          <div id="collapse18" class="panel-collapse collapse">
+            <div class="panel-body">Add a DNS Zone</div>
+            <div class="panel-body">Add an A Entry for Your Hostname</div>
+            <div class="panel-body">DNS Zone Removal</div>
+            <div class="panel-body">DNS Zone Editor</div>
+            <div class="panel-body">MX Entry Editor</div>
+            <div class="panel-body">Edit Zone Templates</div>
+            <div class="panel-body">Nameserver Record Report</div>
+            <div class="panel-body">Park a Domain</div>
+            <div class="panel-body">Perform a DNS Cleanup</div>
+            <div class="panel-body">Reset a DNS Zone</div>
+            <div class="panel-body">Set Zone Time To Live (TTL)</div>
+            <div class="panel-body">Setup/Edit Domain Forwarding</div>
+            <div class="panel-body">Synchronize DNS Records</div>
+          </div>
+        </div>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" href="#collapse19">SQL Services</a>
+            </h4>
+          </div>
+          <div id="collapse19" class="panel-collapse collapse">
+            <div class="panel-body">Additional MySQL Access Hosts</div>
+            <div class="panel-body">Change MySQL User Password</div>
+            <div class="panel-body">Database Map Tool</div>
+            <div class="panel-body">Manage Database Users</div>
+            <div class="panel-body">Manage Databases</div>
+            <div class="panel-body">Manage MySQL® Profiles</div>
+            <div class="panel-body">MySQL Root Password</div>
+            <div class="panel-body">phpMyAdmin</div>
+            <div class="panel-body">Repair a MySQL Database</div>
+            <div class="panel-body">Show MySQL Processes</div>
+          </div>
+        </div>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" href="#collapse20">IP Functions</a>
+            </h4>
+          </div>
+          <div id="collapse20" class="panel-collapse collapse">
+            <div class="panel-body">Add a New IP Address</div>
+            <div class="panel-body">Assign IPv6 Address</div>
+            <div class="panel-body">Change a Site’s IP Address</div>
+            <div class="panel-body">Configure Remote Service IPs</div>
+            <div class="panel-body">IP Migration Wizard</div>
+            <div class="panel-body">IPv6 Address Ranges</div>
+            <div class="panel-body">Rebuild the IP Address Pool</div>
+            <div class="panel-body">Show IP Address Usage</div>
+            <div class="panel-body">Show or Delete Current IP Addresses</div>
+            <div class="panel-body">Show/Edit Reserved IPs</div>
+          </div>
+        </div>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" href="#collapse21">Software</a>
+            </h4>
+          </div>
+          <div id="collapse21" class="panel-collapse collapse">
+            <div class="panel-body">EasyApache 4</div>
+            <div class="panel-body">Install a Perl Module</div>
+            <div class="panel-body">Install an RPM</div>
+            <div class="panel-body">Module Installers</div>
+            <div class="panel-body">MultiPHP INI Editor</div>
+            <div class="panel-body">MultiPHP Manager</div>
+            <div class="panel-body">MySQL/MariaDB Upgrade</div>
+            <div class="panel-body">Rebuild RPM Database</div>
+            <div class="panel-body">System Update</div>
+            <div class="panel-body">Update Server Software</div>
+          </div>
+        </div>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" href="#collapse22">Email</a>
+            </h4>
+          </div>
+          <div id="collapse22" class="panel-collapse collapse">
+            <div class="panel-body">Greylisting</div>
+            <div class="panel-body">Mail Delivery Reports</div>
+            <div class="panel-body">Mail Queue Manager</div>
+            <div class="panel-body">Mail Troubleshooter</div>
+            <div class="panel-body">Mailbox Conversion</div>
+            <div class="panel-body">Repair Mailbox Permissions</div>
+            <div class="panel-body">Spamd Startup Configuration</div>
+            <div class="panel-body">View Mail Statistics Summary</div>
+            <div class="panel-body">View Relayers</div>
+            <div class="panel-body">View Sent Summary</div>
+          </div>
+        </div>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" href="#collapse23">System Health</a>
+            </h4>
+          </div>
+          <div id="collapse23" class="panel-collapse collapse">
+            <div class="panel-body">Background Process Killer</div>
+            <div class="panel-body">Process Manager</div>
+            <div class="panel-body">Show Current Disk Usage</div>
+            <div class="panel-body">Show Current Running Processes</div>
+          </div>
+        </div>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" href="#collapse24">cPanel</a>
+            </h4>
+          </div>
+          <div id="collapse24" class="panel-collapse collapse">
+            <div class="panel-body">Customization</div>
+            <div class="panel-body">Install cPAddons Site Software</div>
+            <div class="panel-body">Manage cPAddons Site Software</div>
+            <div class="panel-body">Manage Plugins</div>
+            <div class="panel-body">Modify cPanel & WHM News</div>
+            <div class="panel-body">Reset a Mailman Password</div>
+            <div class="panel-body">Synchronize FTP Passwords</div>
+            <div class="panel-body">Upgrade to Latest Version</div>
+          </div>
+        </div>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" href="#collapse25">SSL/TLS</a>
+            </h4>
+          </div>
+          <div id="collapse25" class="panel-collapse collapse">
+            <div class="panel-body">Generate an SSL Certificate and Signing Request</div>
+            <div class="panel-body">Install an SSL Certificate on a Domain</div>
+            <div class="panel-body">Manage AutoSSL</div>
+            <div class="panel-body">Manage SSL Hosts</div>
+            <div class="panel-body">Purchase and Install an SSL Certificate</div>
+            <div class="panel-body">SSL Storage Manager</div>
+          </div>
+        </div>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" href="#collapse26">Market</a>
+            </h4>
+          </div>
+          <div id="collapse26" class="panel-collapse collapse">
+            <div class="panel-body">Market Provider Manager</div>
+          </div>
+        </div>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" href="#collapse27">Restart Services</a>
+            </h4>
+          </div>
+          <div id="collapse27" class="panel-collapse collapse">
+            <div class="panel-body">DNS Server</div>
+            <div class="panel-body">FTP Server (ProFTPd/PureFTPd)</div>
+            <div class="panel-body">HTTP Server (Apache)</div>
+            <div class="panel-body">IMAP Server</div>
+            <div class="panel-body">Mail Server (Exim)</div>
+            <div class="panel-body">Mailing List Manager (Mailman)</div>
+            <div class="panel-body">PHP-FPM service for Apache</div>
+            <div class="panel-body">SQL Server (MySQL)</div>
+            <div class="panel-body">SSH Server (OpenSSH)</div>
+          </div>
+        </div>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" href="#collapse28">Development</a>
+            </h4>
+          </div>
+          <div id="collapse28" class="panel-collapse collapse">
+            <div class="panel-body">Apps Managed by AppConfig</div>
+            <div class="panel-body">cPanel Developement Forum</div>
+            <div class="panel-body">cPanel Plugin File Generator</div>
+            <div class="panel-body">Manage Hooks</div>
+            <div class="panel-body">Software Development Kit</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="col-sm-10 text-left">
+      <h1>Help Wanted</h1>
+      <hr>
+      <h2>Help Wanted</h2>
+      <hr>
+      <h3>Help Wanted</h3>
+      <hr>
+      <h4>Help Wanted</h4>
+      <hr>
+      <h5>Help Wanted</h5>
+      <hr>
+      <h6>Help Wanted</h6>
+    </div>
+  </div>
+</div>
+
+
+<!-- put this last for faster reloading -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"
+        integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </body>
 </html>

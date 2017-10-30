@@ -23,7 +23,8 @@ var userDatabaseData struct {
 }
 
 // UserAuthentication function is accessed by an API call from the webhost root
-// by accessing /authentication and sending it a post request with
+// by accessing /user_auth and sending it a post request with userRequestData
+// struct in JSON format.
 func UserAuthentication(res http.ResponseWriter, req *http.Request) bool {
 	if req.Method != "POST" {
 		http.Error(res, req.Method+" HTTP method is unsupported for this API.", http.StatusMethodNotAllowed)
@@ -60,8 +61,9 @@ func UserAuthentication(res http.ResponseWriter, req *http.Request) bool {
 	return true
 }
 
-// UserAuthentication function is accessed by an API call from the webhost root
-// by accessing /authentication and sending it a post request with
+// UserRegistration function is accessed by an API call from the webhost root
+// by accessing /user_register and sending it a post request with userRequestData
+// struct in JSON format.
 func UserRegistration(res http.ResponseWriter, req *http.Request) bool {
 	if req.Method != "POST" {
 		http.Error(res, req.Method+" HTTP method is unsupported for this API.", http.StatusMethodNotAllowed)

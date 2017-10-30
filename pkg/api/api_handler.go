@@ -14,9 +14,9 @@ func HandleAPI(path string, res http.ResponseWriter, req *http.Request) (bool, b
 	suspectApi := strings.ToLower(splitUrl[len(splitUrl)-1])
 
 	switch suspectApi {
-	case "authentication":
+	case "user_auth":
 		return true, UserAuthentication(res, req)
-	case "registration":
+	case "user_register":
 		return true, UserRegistration(res, req)
 	default:
 		return false, false
