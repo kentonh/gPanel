@@ -86,7 +86,7 @@ Key: __Implemented__ | __*Implemented, but needs work*__ | *Unimplemented* | ~~R
 * Client Web Hosting Panel
   * Accessibility
     * __Using port 2082__
-    * *Authentication*
+    * __*Authentication*__
     * *User system*
   * Public Website Control
     * *Turning access on/off*
