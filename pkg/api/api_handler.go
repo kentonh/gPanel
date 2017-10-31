@@ -18,6 +18,8 @@ func HandleAPI(path string, res http.ResponseWriter, req *http.Request) (bool, b
 		return true, UserAuthentication(res, req)
 	case "user_register":
 		return true, UserRegistration(res, req)
+	case "user_logout":
+		return true, UserLogout(res, req)
 	default:
 		return false, false
 	}

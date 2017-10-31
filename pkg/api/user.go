@@ -7,6 +7,7 @@ import (
 
 	"github.com/Ennovar/gPanel/pkg/database"
 	"github.com/Ennovar/gPanel/pkg/encryption"
+	"github.com/Ennovar/gPanel/pkg/networking"
 )
 
 // userRequestData struct is the structure of the JSON data to be
@@ -54,6 +55,14 @@ func UserAuthentication(res http.ResponseWriter, req *http.Request) bool {
 	err = encryption.CheckPassword([]byte(userDatabaseData.Pass), []byte(userRequestData.Pass))
 	if err != nil {
 		http.Error(res, err.Error(), http.StatusUnauthorized)
+		return false
+	}
+
+	store := networking.GetStore(networking.COOKIES_USER_AUTH)
+	err = store.Set(res, req, "auth", true, (60 * 60 * 24))
+
+	if err != nil {
+		http.Error(res, http.StatusText(500), http.StatusInternalServerError)
 		return false
 	}
 
@@ -105,5 +114,25 @@ func UserRegistration(res http.ResponseWriter, req *http.Request) bool {
 	}
 
 	res.WriteHeader(http.StatusNoContent)
+	return true
+}
+
+// UserRegistration function is accessed by an API call from the webhost root
+// by accessing /user_logout and sending it an empty POST request. This function will
+// delete the user-auth cookie session store
+func UserLogout(res http.ResponseWriter, req *http.Request) bool {
+	if req.Method != "POST" {
+		http.Error(res, req.Method+" HTTP method is unsupported for this API.", http.StatusMethodNotAllowed)
+		return false
+	}
+
+	store := networking.GetStore(networking.COOKIES_USER_AUTH)
+	err := store.Delete(res, req)
+
+	if err != nil {
+		http.Error(res, http.StatusText(500), http.StatusInternalServerError)
+		return false
+	}
+
 	return true
 }
