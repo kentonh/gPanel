@@ -8,18 +8,17 @@ import (
 
 	"github.com/Ennovar/gPanel/pkg/api"
 	"github.com/Ennovar/gPanel/pkg/logging"
+	"github.com/Ennovar/gPanel/pkg/networking"
 	"github.com/Ennovar/gPanel/pkg/routing"
 )
 
 type PrivateHost struct {
-	Auth      int
 	Directory string
 }
 
 // NewPrivateHost returns a new PrivateHost type.
 func NewPrivateHost() PrivateHost {
 	return PrivateHost{
-		Auth:      1,
 		Directory: "document_roots/webhost/",
 	}
 }
@@ -34,7 +33,14 @@ func (priv *PrivateHost) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		path = (priv.Directory + path)
 	}
 
-	if priv.Auth != 1 {
+	store := networking.GetStore(networking.COOKIES_USER_AUTH)
+	val, err := store.Read(w, req, "auth")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if val != true && !CheckAuth(path) {
 		routing.HttpThrowStatus(http.StatusUnauthorized, w)
 		logging.Console(logging.PRIVATE_PREFIX, logging.NORMAL_LOG, "Path \""+path+"\" rendered a 401 error.")
 	} else {
