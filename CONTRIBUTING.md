@@ -17,7 +17,7 @@ Go has [testing baked in the language](https://golang.org/pkg/testing/) and we w
 ```go
 // addTwoPositiveIntegers returns the sum of two positive integers.
 // When the two integers are not positive, it returns the zero-value of an integer and an error.
-// BUG(george-e-shaw-iv) This function cannot handle negative integers
+// BUG(george-e-shaw-iv) This function cannot handle negative integers, this needs addressed
 func addTwoPositiveIntegers(one int, two int) (int, error) {
   var answer int
 
