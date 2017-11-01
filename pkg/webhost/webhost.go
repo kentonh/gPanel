@@ -2,9 +2,10 @@
 package webhost
 
 import (
-	"bufio"
+	"io"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/Ennovar/gPanel/pkg/api"
 	"github.com/Ennovar/gPanel/pkg/logging"
@@ -23,6 +24,30 @@ func NewPrivateHost() PrivateHost {
 	}
 }
 
+// reqAuth function checks to see if the given path requires authentication.
+func reqAuth(path string) bool {
+	path = strings.ToLower(path)
+
+	dismissibleTypes := []string{".css", ".js"}
+	for _, t := range dismissibleTypes {
+		if strings.HasSuffix(path, t) {
+			return false
+		}
+	}
+
+	dismissibleFiles := []string{
+		"api_testing.html",
+		"index.html",
+	}
+	for _, f := range dismissibleFiles {
+		if strings.HasSuffix(path, f) {
+			return false
+		}
+	}
+
+	return true
+}
+
 // ServeHTTP function routes all requests for the private webhost server. It is used in the main
 // function inside of the http.ListenAndServe() function for the private webhost host.
 func (priv *PrivateHost) ServeHTTP(w http.ResponseWriter, req *http.Request) {
@@ -33,43 +58,58 @@ func (priv *PrivateHost) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		path = (priv.Directory + path)
 	}
 
-	store := networking.GetStore(networking.COOKIES_USER_AUTH)
-	val, err := store.Read(w, req, "auth")
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+	var auth interface{} = true
+	if reqAuth(path) {
+		store := networking.GetStore(networking.COOKIES_USER_AUTH)
+
+		auth, err := store.Read(w, req, "auth")
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		auth, ok := auth.(bool)
+		if !ok {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+	}
+
+	if !auth.(bool) {
+		routing.HttpThrowStatus(http.StatusUnauthorized, w)
+		logging.Console(logging.PRIVATE_PREFIX, logging.NORMAL_LOG, "Path \""+path+"\" rendered a 401 error.")
 		return
 	}
 
-	if val != true && !CheckAuth(path) {
-		routing.HttpThrowStatus(http.StatusUnauthorized, w)
-		logging.Console(logging.PRIVATE_PREFIX, logging.NORMAL_LOG, "Path \""+path+"\" rendered a 401 error.")
-	} else {
-		isApi, _ := api.HandleAPI(path, w, req)
+	isApi, _ := api.HandleAPI(path, w, req)
 
-		if isApi != true {
-			f, err := os.Open(path)
-
-			if err == nil {
-				bufferedReader := bufio.NewReader(f)
-				contentType, err := routing.GetContentType(path)
-
-				if err == nil {
-					w.Header().Add("Content Type", contentType)
-					bufferedReader.WriteTo(w)
-
-					logging.Console(logging.PRIVATE_PREFIX, logging.NORMAL_LOG, "Path \""+path+"\" rendered a 200 success.")
-				} else {
-					routing.HttpThrowStatus(http.StatusUnsupportedMediaType, w)
-					logging.Console(logging.PRIVATE_PREFIX, logging.NORMAL_LOG, "Path \""+path+"\" content type could not be determined, 404 error.")
-				}
-
-			} else {
-				routing.HttpThrowStatus(http.StatusNotFound, w)
-				logging.Console(logging.PRIVATE_PREFIX, logging.NORMAL_LOG, "Path \""+path+"\" rendered a 404 error.")
-			}
-
-		}
-
+	if isApi {
+		// API methods handle HTTP logic from here
+		return
 	}
 
+	f, err := os.Open(path)
+
+	if err != nil {
+		routing.HttpThrowStatus(http.StatusNotFound, w)
+		logging.Console(logging.PRIVATE_PREFIX, logging.NORMAL_LOG, "Path \""+path+"\" rendered a 404 error.")
+		return
+	}
+
+	contentType, err := routing.GetContentType(path)
+
+	if err != nil {
+		routing.HttpThrowStatus(http.StatusUnsupportedMediaType, w)
+		logging.Console(logging.PUBLIC_PREFIX, logging.NORMAL_LOG, "Path \""+path+"\" content type could not be determined, 404 error.")
+		return
+	}
+
+	w.Header().Add("Content-Type", contentType)
+	_, err = io.Copy(w, f)
+
+	if err != nil {
+		routing.HttpThrowStatus(http.StatusInternalServerError, w)
+		logging.Console(logging.PUBLIC_PREFIX, logging.NORMAL_LOG, "Path \""+path+"\" rendered a 500 error.")
+		return
+	}
 }
