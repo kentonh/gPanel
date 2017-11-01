@@ -2,7 +2,7 @@
 package public
 
 import (
-	"bufio"
+	"io"
 	"net/http"
 	"os"
 
@@ -33,23 +33,26 @@ func (pub *PublicWeb) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 
 	f, err := os.Open(path)
 
-	if err == nil {
-		bufferedReader := bufio.NewReader(f)
-		contentType, err := routing.GetContentType(path)
-
-		if err == nil {
-			w.Header().Add("Content Type", contentType)
-			bufferedReader.WriteTo(w)
-
-			logging.Console(logging.PUBLIC_PREFIX, logging.NORMAL_LOG, "Path \""+path+"\" rendered a 200 success.")
-		} else {
-			routing.HttpThrowStatus(http.StatusUnsupportedMediaType, w)
-			logging.Console(logging.PUBLIC_PREFIX, logging.NORMAL_LOG, "Path \""+path+"\" content type could not be determined, 404 error.")
-		}
-
-	} else {
+	if err != nil {
 		routing.HttpThrowStatus(http.StatusNotFound, w)
 		logging.Console(logging.PUBLIC_PREFIX, logging.NORMAL_LOG, "Path \""+path+"\" rendered a 404 error.")
+		return
 	}
 
+	contentType, err := routing.GetContentType(path)
+
+	if err != nil {
+		routing.HttpThrowStatus(http.StatusUnsupportedMediaType, w)
+		logging.Console(logging.PUBLIC_PREFIX, logging.NORMAL_LOG, "Path \""+path+"\" content type could not be determined, 404 error.")
+		return
+	}
+
+	w.Header().Add("Content-Type", contentType)
+	_, err = io.Copy(w, f)
+
+	if err != nil {
+		routing.HttpThrowStatus(http.StatusInternalServerError, w)
+		logging.Console(logging.PUBLIC_PREFIX, logging.NORMAL_LOG, "Path \""+path+"\" rendered a 500 error.")
+		return
+	}
 }
