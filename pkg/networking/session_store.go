@@ -32,7 +32,6 @@ func (s *store) Set(res http.ResponseWriter, req *http.Request, key string, valu
 	session, err := s.handle.Get(req, s.cookieName)
 
 	if err != nil {
-		http.Error(res, http.StatusText(500), http.StatusInternalServerError)
 		return err
 	}
 
@@ -50,7 +49,6 @@ func (s *store) Read(res http.ResponseWriter, req *http.Request, key string) (in
 	session, err := s.handle.Get(req, s.cookieName)
 
 	if err != nil {
-		http.Error(res, http.StatusText(500), http.StatusInternalServerError)
 		return nil, err
 	}
 
@@ -62,7 +60,6 @@ func (s *store) Delete(res http.ResponseWriter, req *http.Request) error {
 	session, err := s.handle.Get(req, s.cookieName)
 
 	if err != nil {
-		http.Error(res, http.StatusText(500), http.StatusInternalServerError)
 		return err
 	}
 
