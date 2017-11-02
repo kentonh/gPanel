@@ -7,10 +7,8 @@ A web-hosting control panel written in Go.
 Version Control: __[git](https://git-scm.com/)__  
 Backend: __[Go](https://golang.org/)__  
 Database: __[Bolt](https://github.com/boltdb/bolt)__  
-Frontend Framework: __[Angular 4](https://angular.io/)__  
-CSS Preprocessor: __[SASS](http://sass-lang.com/)__  
-CSS Toolkit: __[Bootstrap 4](http://getbootstrap.com/)__  
-Package Manager: __[npm](https://www.npmjs.com/)__
+CSS Toolkit(s): __[Bootstrap 4](http://getbootstrap.com/) & [Font Awesome](http://fontawesome.io/)__  
+JS Toolkit(s): __[jQuery](https://jquery.com/)__
 
 ## Contribution Set-up & Deployment
 
