@@ -48,7 +48,7 @@ func UserAuthentication(res http.ResponseWriter, req *http.Request) bool {
 	err = ds.Get(database.BUCKET_USERS, []byte(userRequestData.User), &userDatabaseData)
 
 	if err == database.ErrKeyNotExist {
-		http.Error(res, "User does not exist in database", http.StatusUnauthorized)
+		http.Error(res, "User does not exist.", http.StatusUnauthorized)
 		return false
 	}
 
@@ -134,5 +134,6 @@ func UserLogout(res http.ResponseWriter, req *http.Request) bool {
 		return false
 	}
 
+	res.WriteHeader(http.StatusNoContent)
 	return true
 }

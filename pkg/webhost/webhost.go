@@ -38,6 +38,9 @@ func reqAuth(path string) bool {
 	dismissibleFiles := []string{
 		"api_testing.html",
 		"index.html",
+		"user_auth",
+		"user_register",
+		"user_logut",
 	}
 	for _, f := range dismissibleFiles {
 		if strings.HasSuffix(path, f) {
@@ -58,27 +61,24 @@ func (priv *PrivateHost) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		path = (priv.Directory + path)
 	}
 
-	var auth interface{} = true
 	if reqAuth(path) {
 		store := networking.GetStore(networking.COOKIES_USER_AUTH)
 
-		auth, err := store.Read(w, req, "auth")
+		session_value, err := store.Read(w, req, "auth")
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 
-		auth, ok := auth.(bool)
-		if !ok {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+		if session_value == nil {
+			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 			return
 		}
-	}
 
-	if !auth.(bool) {
-		routing.HttpThrowStatus(http.StatusUnauthorized, w)
-		logging.Console(logging.PRIVATE_PREFIX, logging.NORMAL_LOG, "Path \""+path+"\" rendered a 401 error.")
-		return
+		if auth, ok := session_value.(bool); !ok || !auth {
+			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+			return
+		}
 	}
 
 	isApi, _ := api.HandleAPI(path, w, req)
