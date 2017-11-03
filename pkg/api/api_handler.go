@@ -4,6 +4,8 @@ package api
 import (
 	"net/http"
 	"strings"
+
+	"github.com/Ennovar/gPanel/pkg/api/user"
 )
 
 // HandleAPI function takes a path and determines if it is an API call, if it is it will
@@ -15,11 +17,11 @@ func HandleAPI(path string, res http.ResponseWriter, req *http.Request) (bool, b
 
 	switch suspectApi {
 	case "user_auth":
-		return true, UserAuthentication(res, req)
+		return true, user.UserAuthentication(res, req)
 	case "user_register":
-		return true, UserRegistration(res, req)
+		return true, user.UserRegistration(res, req)
 	case "user_logout":
-		return true, UserLogout(res, req)
+		return true, user.UserLogout(res, req)
 	default:
 		return false, false
 	}
