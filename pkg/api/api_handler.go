@@ -17,11 +17,11 @@ func HandleAPI(path string, res http.ResponseWriter, req *http.Request) (bool, b
 
 	switch suspectApi {
 	case "user_auth":
-		return true, user.UserAuthentication(res, req)
+		return true, user.Auth(res, req)
 	case "user_register":
-		return true, user.UserRegistration(res, req)
+		return true, user.Register(res, req)
 	case "user_logout":
-		return true, user.UserLogout(res, req)
+		return true, user.Logout(res, req)
 	default:
 		return false, false
 	}

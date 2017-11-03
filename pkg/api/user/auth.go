@@ -12,10 +12,10 @@ import (
 	jwt "github.com/dgrijalva/jwt-go"
 )
 
-// UserAuthentication function is accessed by an API call from the webhost root
+// Auth function is accessed by an API call from the webhost root
 // by accessing /user_auth and sending it a post request with userRequestData
 // struct in JSON format.
-func UserAuthentication(res http.ResponseWriter, req *http.Request) bool {
+func Auth(res http.ResponseWriter, req *http.Request) bool {
 	if req.Method != "POST" {
 		http.Error(res, req.Method+" HTTP method is unsupported for this API.", http.StatusMethodNotAllowed)
 		return false

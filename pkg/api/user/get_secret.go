@@ -3,10 +3,10 @@ package user
 
 import "github.com/Ennovar/gPanel/pkg/database"
 
-// UserSecret is not accessible from the any client side request. It is
+// GetSecret is not accessible from the any client side request. It is
 // only used on the server side to help verify users are who they say they
 // are.
-func UserSecret(user string) (string, error) {
+func GetSecret(user string) (string, error) {
 	ds, err := database.Open(database.DBLOC_MAIN)
 	if err != nil {
 		return "", err

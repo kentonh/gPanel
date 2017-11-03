@@ -67,57 +67,43 @@ func (priv *PrivateHost) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 
 		session_value, err := store.Read(w, req, "user")
 		if err != nil {
-			logging.Console("DEBUG::", logging.NORMAL_LOG, "1")
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 
 		if session_value == nil {
-			logging.Console("DEBUG::", logging.NORMAL_LOG, "2")
 			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 			return
 		}
 
 		username, ok := session_value.(string)
 		if !ok {
-			logging.Console("DEBUG::", logging.NORMAL_LOG, "3")
 			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 			return
 		}
 
-		stored_secret, err := user.UserSecret(username)
+		stored_secret, err := user.GetSecret(username)
 		if stored_secret == "" {
-			logging.Console("DEBUG::", logging.NORMAL_LOG, "4")
 			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 			return
 		}
 
 		session_value, err = store.Read(w, req, "token")
 		if err != nil {
-			logging.Console("DEBUG::", logging.NORMAL_LOG, "5")
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 
 		if session_value == nil {
-			logging.Console("DEBUG::", logging.NORMAL_LOG, "6")
 			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 			return
 		}
 
 		tokenString, ok := session_value.(string)
 		if !ok {
-			logging.Console("DEBUG::", logging.NORMAL_LOG, "7")
 			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 			return
 		}
-
-		// if len(tokenString) < 7 {
-		// 	logging.Console("DEBUG::", logging.NORMAL_LOG, "8")
-		// 	http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
-		// 	return
-		// }
-		// tokenString = tokenString[7:]
 
 		keyfunc := func(t *jwt.Token) (interface{}, error) {
 			return []byte(stored_secret), nil
@@ -129,17 +115,12 @@ func (priv *PrivateHost) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		t, err := p.ParseWithClaims(tokenString, &jwt.StandardClaims{}, keyfunc)
 
 		if err != nil {
-			logging.Console("DEBUG::", logging.NORMAL_LOG, username)
-			logging.Console("DEBUG::", logging.NORMAL_LOG, tokenString)
-			logging.Console("DEBUG::", logging.NORMAL_LOG, stored_secret)
-			logging.Console("DEBUG::", logging.NORMAL_LOG, err.Error())
 			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 			return
 		}
 
 		claims := t.Claims.(*jwt.StandardClaims)
 		if claims.Subject != username {
-			logging.Console("DEBUG::", logging.NORMAL_LOG, "10")
 			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 			return
 		}
