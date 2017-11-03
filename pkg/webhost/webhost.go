@@ -8,9 +8,11 @@ import (
 	"strings"
 
 	"github.com/Ennovar/gPanel/pkg/api"
+	"github.com/Ennovar/gPanel/pkg/api/user"
 	"github.com/Ennovar/gPanel/pkg/logging"
 	"github.com/Ennovar/gPanel/pkg/networking"
 	"github.com/Ennovar/gPanel/pkg/routing"
+	jwt "github.com/dgrijalva/jwt-go"
 )
 
 type PrivateHost struct {
@@ -36,11 +38,10 @@ func reqAuth(path string) bool {
 	}
 
 	dismissibleFiles := []string{
-		"api_testing.html",
 		"index.html",
 		"user_auth",
 		"user_register",
-		"user_logut",
+		"user_logout",
 	}
 	for _, f := range dismissibleFiles {
 		if strings.HasSuffix(path, f) {
@@ -64,7 +65,7 @@ func (priv *PrivateHost) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	if reqAuth(path) {
 		store := networking.GetStore(networking.COOKIES_USER_AUTH)
 
-		session_value, err := store.Read(w, req, "auth")
+		session_value, err := store.Read(w, req, "user")
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -75,7 +76,51 @@ func (priv *PrivateHost) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 			return
 		}
 
-		if auth, ok := session_value.(bool); !ok || !auth {
+		username, ok := session_value.(string)
+		if !ok {
+			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+			return
+		}
+
+		stored_secret, err := user.GetSecret(username)
+		if stored_secret == "" {
+			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+			return
+		}
+
+		session_value, err = store.Read(w, req, "token")
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		if session_value == nil {
+			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+			return
+		}
+
+		tokenString, ok := session_value.(string)
+		if !ok {
+			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+			return
+		}
+
+		keyfunc := func(t *jwt.Token) (interface{}, error) {
+			return []byte(stored_secret), nil
+		}
+
+		p := jwt.Parser{
+			ValidMethods: []string{"HS256", "HS384", "HS512"},
+		}
+		t, err := p.ParseWithClaims(tokenString, &jwt.StandardClaims{}, keyfunc)
+
+		if err != nil {
+			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+			return
+		}
+
+		claims := t.Claims.(*jwt.StandardClaims)
+		if claims.Subject != username {
 			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 			return
 		}

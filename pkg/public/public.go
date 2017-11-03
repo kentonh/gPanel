@@ -11,19 +11,26 @@ import (
 )
 
 type PublicWeb struct {
-	Directory string
+	Directory       string
+	MaintenanceMode int
 }
 
 // NewPublicWeb returns a new PublicWeb type.
 func NewPublicWeb() PublicWeb {
 	return PublicWeb{
-		Directory: "document_roots/public/",
+		Directory:       "document_roots/public/",
+		MaintenanceMode: 0,
 	}
 }
 
 // ServeHTTP function routes all requests for the public web server. It is used in the main
 // function inside of the http.ListenAndServe() function for the public host.
 func (pub *PublicWeb) ServeHTTP(w http.ResponseWriter, req *http.Request) {
+	if pub.MaintenanceMode == 1 {
+		w.WriteHeader(http.StatusServiceUnavailable)
+		w.Write([]byte("We are currently in maintenance mode, please check back later."))
+	}
+
 	path := req.URL.Path[1:]
 	if len(path) == 0 {
 		path = (pub.Directory + "index.html")
