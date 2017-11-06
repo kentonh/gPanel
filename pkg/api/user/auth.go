@@ -47,11 +47,7 @@ func Auth(res http.ResponseWriter, req *http.Request) bool {
 		return false
 	}
 
-	secret, err := encryption.RandomString()
-	if err != nil {
-		http.Error(res, err.Error(), http.StatusInternalServerError)
-		return false
-	}
+	secret := encryption.RandomString(16)
 	userDatabaseData.Secret = secret
 
 	err = ds.Put(database.BUCKET_USERS, []byte(userRequestData.User), userDatabaseData)
