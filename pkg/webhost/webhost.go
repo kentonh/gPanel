@@ -5,14 +5,10 @@ import (
 	"io"
 	"net/http"
 	"os"
-	"strings"
 
 	"github.com/Ennovar/gPanel/pkg/api"
-	"github.com/Ennovar/gPanel/pkg/api/user"
 	"github.com/Ennovar/gPanel/pkg/logging"
-	"github.com/Ennovar/gPanel/pkg/networking"
 	"github.com/Ennovar/gPanel/pkg/routing"
-	jwt "github.com/dgrijalva/jwt-go"
 )
 
 type PrivateHost struct {
@@ -26,35 +22,9 @@ func NewPrivateHost() PrivateHost {
 	}
 }
 
-// reqAuth function checks to see if the given path requires authentication.
-func reqAuth(path string) bool {
-	path = strings.ToLower(path)
-
-	dismissibleTypes := []string{".css", ".js"}
-	for _, t := range dismissibleTypes {
-		if strings.HasSuffix(path, t) {
-			return false
-		}
-	}
-
-	dismissibleFiles := []string{
-		"index.html",
-		"user_auth",
-		"user_register",
-		"user_logout",
-	}
-	for _, f := range dismissibleFiles {
-		if strings.HasSuffix(path, f) {
-			return false
-		}
-	}
-
-	return true
-}
-
 // ServeHTTP function routes all requests for the private webhost server. It is used in the main
 // function inside of the http.ListenAndServe() function for the private webhost host.
-func (priv *PrivateHost) ServeHTTP(w http.ResponseWriter, req *http.Request) {
+func (priv *PrivateHost) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 	path := req.URL.Path[1:]
 	if len(path) == 0 {
 		path = (priv.Directory + "index.html")
@@ -63,70 +33,13 @@ func (priv *PrivateHost) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	}
 
 	if reqAuth(path) {
-		store := networking.GetStore(networking.COOKIES_USER_AUTH)
-
-		session_value, err := store.Read(w, req, "user")
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-
-		if session_value == nil {
-			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
-			return
-		}
-
-		username, ok := session_value.(string)
-		if !ok {
-			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
-			return
-		}
-
-		stored_secret, err := user.GetSecret(username)
-		if stored_secret == "" {
-			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
-			return
-		}
-
-		session_value, err = store.Read(w, req, "token")
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-
-		if session_value == nil {
-			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
-			return
-		}
-
-		tokenString, ok := session_value.(string)
-		if !ok {
-			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
-			return
-		}
-
-		keyfunc := func(t *jwt.Token) (interface{}, error) {
-			return []byte(stored_secret), nil
-		}
-
-		p := jwt.Parser{
-			ValidMethods: []string{"HS256", "HS384", "HS512"},
-		}
-		t, err := p.ParseWithClaims(tokenString, &jwt.StandardClaims{}, keyfunc)
-
-		if err != nil {
-			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
-			return
-		}
-
-		claims := t.Claims.(*jwt.StandardClaims)
-		if claims.Subject != username {
-			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+		if !checkAuth(res, req) {
+			http.Error(res, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 			return
 		}
 	}
 
-	isApi, _ := api.HandleAPI(path, w, req)
+	isApi, _ := api.HandleAPI(path, res, req)
 
 	if isApi {
 		// API methods handle HTTP logic from here
@@ -136,7 +49,7 @@ func (priv *PrivateHost) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	f, err := os.Open(path)
 
 	if err != nil {
-		routing.HttpThrowStatus(http.StatusNotFound, w)
+		routing.HttpThrowStatus(http.StatusNotFound, res)
 		logging.Console(logging.PRIVATE_PREFIX, logging.NORMAL_LOG, "Path \""+path+"\" rendered a 404 error.")
 		return
 	}
@@ -144,16 +57,16 @@ func (priv *PrivateHost) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	contentType, err := routing.GetContentType(path)
 
 	if err != nil {
-		routing.HttpThrowStatus(http.StatusUnsupportedMediaType, w)
+		routing.HttpThrowStatus(http.StatusUnsupportedMediaType, res)
 		logging.Console(logging.PUBLIC_PREFIX, logging.NORMAL_LOG, "Path \""+path+"\" content type could not be determined, 404 error.")
 		return
 	}
 
-	w.Header().Add("Content-Type", contentType)
-	_, err = io.Copy(w, f)
+	res.Header().Add("Content-Type", contentType)
+	_, err = io.Copy(res, f)
 
 	if err != nil {
-		routing.HttpThrowStatus(http.StatusInternalServerError, w)
+		routing.HttpThrowStatus(http.StatusInternalServerError, res)
 		logging.Console(logging.PUBLIC_PREFIX, logging.NORMAL_LOG, "Path \""+path+"\" rendered a 500 error.")
 		return
 	}
