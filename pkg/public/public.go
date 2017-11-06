@@ -25,10 +25,10 @@ func NewPublicWeb() PublicWeb {
 
 // ServeHTTP function routes all requests for the public web server. It is used in the main
 // function inside of the http.ListenAndServe() function for the public host.
-func (pub *PublicWeb) ServeHTTP(w http.ResponseWriter, req *http.Request) {
+func (pub *PublicWeb) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 	if pub.MaintenanceMode == 1 {
-		w.WriteHeader(http.StatusServiceUnavailable)
-		w.Write([]byte("We are currently in maintenance mode, please check back later."))
+		res.WriteHeader(http.StatusServiceUnavailable)
+		res.Write([]byte("We are currently in maintenance mode, please check back later."))
 	}
 
 	path := req.URL.Path[1:]
@@ -41,7 +41,7 @@ func (pub *PublicWeb) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	f, err := os.Open(path)
 
 	if err != nil {
-		routing.HttpThrowStatus(http.StatusNotFound, w)
+		routing.HttpThrowStatus(http.StatusNotFound, res)
 		logging.Console(logging.PUBLIC_PREFIX, logging.NORMAL_LOG, "Path \""+path+"\" rendered a 404 error.")
 		return
 	}
@@ -49,16 +49,16 @@ func (pub *PublicWeb) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	contentType, err := routing.GetContentType(path)
 
 	if err != nil {
-		routing.HttpThrowStatus(http.StatusUnsupportedMediaType, w)
+		routing.HttpThrowStatus(http.StatusUnsupportedMediaType, res)
 		logging.Console(logging.PUBLIC_PREFIX, logging.NORMAL_LOG, "Path \""+path+"\" content type could not be determined, 404 error.")
 		return
 	}
 
-	w.Header().Add("Content-Type", contentType)
-	_, err = io.Copy(w, f)
+	res.Header().Add("Content-Type", contentType)
+	_, err = io.Copy(res, f)
 
 	if err != nil {
-		routing.HttpThrowStatus(http.StatusInternalServerError, w)
+		routing.HttpThrowStatus(http.StatusInternalServerError, res)
 		logging.Console(logging.PUBLIC_PREFIX, logging.NORMAL_LOG, "Path \""+path+"\" rendered a 500 error.")
 		return
 	}
