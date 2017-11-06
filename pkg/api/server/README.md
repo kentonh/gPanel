@@ -9,7 +9,7 @@ Request:
 Response():
   N/A
 */
-func Status(res http.ResponseWriter, req *http.Request) bool
+func Status(res http.ResponseWriter, req *http.Request) bool {}
 
 /*
 Relative API Path:
@@ -19,7 +19,7 @@ Request:
 Response():
   N/A
 */
-func Start(res http.ResponseWriter, req *http.Request) bool
+func Start(res http.ResponseWriter, req *http.Request) bool {}
 
 /*
 Relative API Path:
@@ -29,7 +29,7 @@ Request:
 Response():
   N/A
 */
-func Shutdown(res http.ResponseWriter, req *http.Request) bool
+func Shutdown(res http.ResponseWriter, req *http.Request) bool {}
 
 /*
 Relative API Path:
@@ -39,7 +39,7 @@ Request:
 Response():
   N/A
 */
-func Restart(res http.ResponseWriter, req *http.Request) bool
+func Restart(res http.ResponseWriter, req *http.Request) bool {}
 
 /*
 Relative API Path:
@@ -49,5 +49,5 @@ Request:
 Response():
   N/A
 */
-func Maintenance(res http.ResponseWriter, req *http.Request) bool
+func Maintenance(res http.ResponseWriter, req *http.Request) bool {}
 ```
