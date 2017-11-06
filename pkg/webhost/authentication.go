@@ -23,9 +23,9 @@ func reqAuth(path string) bool {
 
 	dismissibleFiles := []string{
 		"index.html",
-		"user_auth",
-		"user_register",
-		"user_logout",
+		"api/user/auth",
+		"api/user/register",
+		"api/user/logout",
 	}
 	for _, f := range dismissibleFiles {
 		if strings.HasSuffix(path, f) {
