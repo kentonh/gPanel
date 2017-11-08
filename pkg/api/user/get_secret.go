@@ -11,6 +11,7 @@ func GetSecret(user string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	defer ds.Close()
 
 	err = ds.Get(database.BUCKET_USERS, []byte(user), &userDatabaseData)
 	if err != nil {
