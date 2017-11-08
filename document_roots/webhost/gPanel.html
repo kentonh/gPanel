@@ -21,7 +21,7 @@
           <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
           <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Search</button>
         </form>
-        <form id="logoutForm" method="POST" action="user_logout" class="form-inline mt-2 mt-md-0 ml-3">
+        <form id="logoutForm" method="POST" action="api/user/logout" class="form-inline mt-2 mt-md-0 ml-3">
           <button class="btn btn-primary my-2 my-sm-0" type="submit">Logout</button>
         </form>
       </div>
@@ -34,13 +34,15 @@
             <div class="card-body">
               <h4 class="card-title">Public Server</h4>
               <h6 class="card-subtitle mb-4 text-muted">Handle operations for the public serving server</h6>
-              <button type="button" class="btn btn-outline-primary">Maintenance Mode</button>
-              <button type="button" class="btn btn-outline-primary">Graceful Shutdown</button>
-              <button type="button" class="btn btn-outline-primary">Forced Shutdown</button>
-              <button type="button" class="btn btn-outline-primary">Restart</button>
+              <button type="button" class="_js_public-server-start btn btn-outline-primary">Start</button>
+              <button type="button" class="_js_public-server-maintenance-mode btn btn-outline-primary">Maintenance Mode</button>
+              <button type="button" class="btn btn-outline-primary _js_public-server-shutdown-graceful">Graceful Shutdown</button>
+              <button type="button" class="btn btn-outline-primary _js_public-server-shutdown-forceful">Forced Shutdown</button>
+              <button type="button" class="btn btn-outline-primary _js_public-server-restart-graceful">Graceful Restart</button>
+              <button type="button" class="btn btn-outline-primary _js_public-server-restart-forceful">Forced Restart</button>
             </div>
             <div class="card-footer text-muted text-center">
-              Server Status: <span class="text-success">ON</span>
+              Server Status: <span class="_js_public-server-status text-muted">LOADING</span>
             </div>
           </div>
         </div>
@@ -64,8 +66,15 @@
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+
     <script type="text/javascript" src="assets/js/formHandlers/search.js"></script>
     <script type="text/javascript" src="assets/js/formHandlers/logout.js"></script>
+
+    <script type="text/javascript" src="assets/js/panelHandlers/publicServer/status.js"></script>
+    <script type="text/javascript" src="assets/js/panelHandlers/publicServer/maintenance.js"></script>
+    <script type="text/javascript" src="assets/js/panelHandlers/publicServer/start.js"></script>
+    <script type="text/javascript" src="assets/js/panelHandlers/publicServer/shutdown.js"></script>
+    <script type="text/javascript" src="assets/js/panelHandlers/publicServer/restart.js"></script>
     <!-- KEEP AT BOTTOM OF BODY TAGS -->
   </body>
 </html>

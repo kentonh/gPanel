@@ -8,28 +8,31 @@ import (
 
 	"github.com/Ennovar/gPanel/pkg/api"
 	"github.com/Ennovar/gPanel/pkg/logging"
+	"github.com/Ennovar/gPanel/pkg/public"
 	"github.com/Ennovar/gPanel/pkg/routing"
 )
 
-type PrivateHost struct {
+type Controller struct {
 	Directory string
+	Public    *public.Controller
 }
 
-// NewPrivateHost returns a new PrivateHost type.
-func NewPrivateHost() PrivateHost {
-	return PrivateHost{
+// New returns a new PrivateHost type.
+func New() Controller {
+	return Controller{
 		Directory: "document_roots/webhost/",
+		Public:    public.New(),
 	}
 }
 
 // ServeHTTP function routes all requests for the private webhost server. It is used in the main
 // function inside of the http.ListenAndServe() function for the private webhost host.
-func (priv *PrivateHost) ServeHTTP(res http.ResponseWriter, req *http.Request) {
+func (con *Controller) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 	path := req.URL.Path[1:]
 	if len(path) == 0 {
-		path = (priv.Directory + "index.html")
+		path = (con.Directory + "index.html")
 	} else {
-		path = (priv.Directory + path)
+		path = (con.Directory + path)
 	}
 
 	if reqAuth(path) {
@@ -39,7 +42,7 @@ func (priv *PrivateHost) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 		}
 	}
 
-	isApi, _ := api.HandleAPI(path, res, req)
+	isApi, _ := api.HandleAPI(res, req, path, con.Public)
 
 	if isApi {
 		// API methods handle HTTP logic from here
