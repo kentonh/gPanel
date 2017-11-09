@@ -60,18 +60,14 @@ func (con *Controller) Stop(graceful bool) error {
 		defer cancel()
 
 		err := server.Shutdown(context)
-		if err != nil {
-			fmt.Printf("Graceful shutdown failed attempting forced: %v\n", err)
-
-			err = server.Close()
-			if err != nil {
-				return err
-			}
+		if err == nil {
+			return nil
 		}
+
+		fmt.Printf("Graceful shutdown failed attempting forced: %v\n", err)
 	}
 
-	err := server.Close()
-	if err != nil {
+	if err := server.Close(); err != nil {
 		return err
 	}
 
