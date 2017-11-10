@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/Ennovar/gPanel/pkg/api/logs"
 	"github.com/Ennovar/gPanel/pkg/api/server"
 	"github.com/Ennovar/gPanel/pkg/api/user"
 	"github.com/Ennovar/gPanel/pkg/public"
@@ -39,6 +40,8 @@ func HandleAPI(res http.ResponseWriter, req *http.Request, path string, publicSe
 		return true, server.Restart(res, req, publicServer)
 	case "/server/maintenance":
 		return true, server.Maintenance(res, req, publicServer)
+	case "/logs/read":
+		return true, logs.Read(res, req)
 	default:
 		return false, false
 	}

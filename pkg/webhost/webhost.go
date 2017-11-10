@@ -7,7 +7,6 @@ import (
 	"os"
 
 	"github.com/Ennovar/gPanel/pkg/api"
-	"github.com/Ennovar/gPanel/pkg/logging"
 	"github.com/Ennovar/gPanel/pkg/public"
 	"github.com/Ennovar/gPanel/pkg/routing"
 )
@@ -53,7 +52,6 @@ func (con *Controller) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 
 	if err != nil {
 		routing.HttpThrowStatus(http.StatusNotFound, res)
-		logging.Console(logging.PRIVATE_PREFIX, logging.NORMAL_LOG, "Path \""+path+"\" rendered a 404 error.")
 		return
 	}
 
@@ -61,7 +59,6 @@ func (con *Controller) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 
 	if err != nil {
 		routing.HttpThrowStatus(http.StatusUnsupportedMediaType, res)
-		logging.Console(logging.PUBLIC_PREFIX, logging.NORMAL_LOG, "Path \""+path+"\" content type could not be determined, 404 error.")
 		return
 	}
 
@@ -70,7 +67,6 @@ func (con *Controller) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 
 	if err != nil {
 		routing.HttpThrowStatus(http.StatusInternalServerError, res)
-		logging.Console(logging.PUBLIC_PREFIX, logging.NORMAL_LOG, "Path \""+path+"\" rendered a 500 error.")
 		return
 	}
 }
