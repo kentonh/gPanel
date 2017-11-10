@@ -8,8 +8,10 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"strconv"
 	"time"
 
+	"github.com/Ennovar/gPanel/pkg/file"
 	"github.com/Ennovar/gPanel/pkg/routing"
 )
 
@@ -17,6 +19,9 @@ type Controller struct {
 	Directory               string
 	GracefulShutdownTimeout time.Duration
 	Status                  int
+	ClientLogger            *file.Handler
+	ServerLogger            *file.Handler
+	LoadTimeLogger          *file.Handler
 }
 
 var controller Controller
@@ -24,10 +29,17 @@ var server http.Server
 
 // New function returns a new PublicWeb type.
 func New() *Controller {
+	clientLogHandler, _ := file.Open(file.LOG_CLIENT_ERRORS, true, true)
+	serverLogHandler, _ := file.Open(file.LOG_CLIENT_ERRORS, true, true)
+	loadLogHandler, _ := file.Open(file.LOG_LOADTIME, true, true)
+
 	controller = Controller{
 		Directory:               "document_roots/public/",
 		GracefulShutdownTimeout: 5 * time.Second,
 		Status:                  0,
+		ClientLogger:            clientLogHandler,
+		ServerLogger:            serverLogHandler,
+		LoadTimeLogger:          loadLogHandler,
 	}
 
 	server = http.Server{
@@ -111,6 +123,8 @@ func (con *Controller) Maintenance() {
 // ServeHTTP function routes all requests for the public web server. It is used in the main
 // function inside of the http.ListenAndServe() function for the public host.
 func (con *Controller) ServeHTTP(res http.ResponseWriter, req *http.Request) {
+	startTime := time.Now()
+
 	switch con.Status {
 	case 0: // This will actually never show because this function won't run if the server is off
 		http.Error(res, "The server is currently down and not serving requests.", http.StatusServiceUnavailable)
@@ -135,6 +149,7 @@ func (con *Controller) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 	f, err := os.Open(path)
 
 	if err != nil {
+		con.ClientLogger.Write(path + "::" + strconv.Itoa(http.StatusNotFound) + "::" + err.Error())
 		routing.HttpThrowStatus(http.StatusNotFound, res)
 		return
 	}
@@ -142,6 +157,7 @@ func (con *Controller) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 	contentType, err := routing.GetContentType(path)
 
 	if err != nil {
+		con.ClientLogger.Write(path + "::" + strconv.Itoa(http.StatusUnsupportedMediaType) + "::" + err.Error())
 		routing.HttpThrowStatus(http.StatusUnsupportedMediaType, res)
 		return
 	}
@@ -150,7 +166,11 @@ func (con *Controller) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 	_, err = io.Copy(res, f)
 
 	if err != nil {
+		con.ServerLogger.Write(path + "::" + strconv.Itoa(http.StatusInternalServerError) + "::" + err.Error())
 		routing.HttpThrowStatus(http.StatusInternalServerError, res)
 		return
 	}
+
+	elapsedTime := time.Since(startTime)
+	con.LoadTimeLogger.Write(path + " rendered in " + strconv.FormatFloat(elapsedTime.Seconds(), 'f', 6, 64) + " seconds")
 }

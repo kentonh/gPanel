@@ -15,12 +15,12 @@ const (
 
 var KNOWN_LOGS = [...]string{LOG_CLIENT_ERRORS, LOG_SERVER_ERRORS, LOG_LOADTIME}
 
-type handler struct {
+type Handler struct {
 	fileHandle *os.File
 	path       string
 }
 
-func Open(file string, append bool, log bool) (*handler, error) {
+func Open(file string, append bool, log bool) (*Handler, error) {
 	var err error
 	var absPath string
 	var f *os.File
@@ -50,13 +50,13 @@ func Open(file string, append bool, log bool) (*handler, error) {
 	}
 
 	// Upon success, return the handler
-	return &handler{
+	return &Handler{
 		fileHandle: f,
 		path:       absPath,
 	}, nil
 }
 
-func (h *handler) Read() ([]byte, error) {
+func (h *Handler) Read() ([]byte, error) {
 	data, err := ioutil.ReadAll(h.fileHandle)
 	if err != nil {
 		return nil, err
@@ -65,8 +65,8 @@ func (h *handler) Read() ([]byte, error) {
 	return data, err
 }
 
-func (h *handler) Write(data string) (int, error) {
-	written, err := h.fileHandle.Write([]byte(data))
+func (h *Handler) Write(data string) (int, error) {
+	written, err := h.fileHandle.Write([]byte(data + "\n"))
 	if err != nil {
 		return 0, err
 	}
@@ -74,7 +74,7 @@ func (h *handler) Write(data string) (int, error) {
 	return written, err
 }
 
-func (h *handler) Close(delete bool) (error, error) {
+func (h *Handler) Close(delete bool) (error, error) {
 	closeErr := h.fileHandle.Close()
 
 	if delete {
