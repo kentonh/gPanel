@@ -8,19 +8,20 @@ jQuery('._js_diagnostics-view-log').on('click', function(e){
   var title;
   switch(logName) {
     case "client_errors":
-      title = "Client Error Log (4xx)"
+      title = "Client Error Log (4xx)";
       break;
     case "server_errors":
-      title = "Server Error Log (5xx)"
+      title = "Server Error Log (5xx)";
       break;
     case "load_time":
-      title = "Load Time Log"
+      title = "Load Time Log";
       break;
     default:
       return;
       break;
   }
   jQuery(logModal).find('.modal-title').html(title);
+  jQuery(logModal).find('._js_diagnostics-clear-log').attr('data', logName);
 
   var requestData = {};
   requestData["name"] = logName+".log";
@@ -44,7 +45,7 @@ jQuery('._js_diagnostics-view-log').on('click', function(e){
       jQuery(logModal).modal('show');
     }
     else {
-      if(xhr.response) {
+      if(xhr.response != undefined && xhr.response.length != 0) {
         alert(xhr.response);
       }
       else {

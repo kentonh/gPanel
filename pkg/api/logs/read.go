@@ -20,7 +20,7 @@ func Read(res http.ResponseWriter, req *http.Request) bool {
 
 	err := json.NewDecoder(req.Body).Decode(&readLogRequestData)
 	if err != nil {
-		http.Error(res, "0:"+err.Error(), http.StatusBadRequest)
+		http.Error(res, err.Error(), http.StatusBadRequest)
 		return false
 	}
 
@@ -39,14 +39,14 @@ func Read(res http.ResponseWriter, req *http.Request) bool {
 
 	handle, err := file.Open(readLogRequestData.Name, true, true)
 	if err != nil {
-		http.Error(res, "1:"+err.Error(), http.StatusBadRequest)
+		http.Error(res, err.Error(), http.StatusBadRequest)
 		return false
 	}
 	defer handle.Close(false)
 
 	data, err := handle.Read()
 	if err != nil {
-		http.Error(res, "2:"+err.Error(), http.StatusBadRequest)
+		http.Error(res, err.Error(), http.StatusBadRequest)
 		return false
 	}
 

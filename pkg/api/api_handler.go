@@ -42,6 +42,8 @@ func HandleAPI(res http.ResponseWriter, req *http.Request, path string, publicSe
 		return true, server.Maintenance(res, req, publicServer)
 	case "/logs/read":
 		return true, logs.Read(res, req)
+	case "/logs/delete":
+		return true, logs.Delete(res, req)
 	default:
 		return false, false
 	}

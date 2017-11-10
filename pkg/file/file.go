@@ -18,6 +18,7 @@ var KNOWN_LOGS = [...]string{LOG_CLIENT_ERRORS, LOG_SERVER_ERRORS, LOG_LOADTIME}
 type Handler struct {
 	fileHandle *os.File
 	path       string
+	append     bool
 }
 
 func Open(file string, append bool, log bool) (*Handler, error) {
@@ -56,7 +57,33 @@ func Open(file string, append bool, log bool) (*Handler, error) {
 	}, nil
 }
 
+func (h *Handler) checkExistence(createIfNotExist bool) (bool, error) {
+	if _, err := os.Stat(h.path); os.IsNotExist(err) {
+		if createIfNotExist {
+			if h.append {
+				h.fileHandle, err = os.OpenFile(h.path, os.O_APPEND|os.O_CREATE|os.O_RDWR, 0644)
+			} else {
+				h.fileHandle, err = os.OpenFile(h.path, os.O_TRUNC|os.O_CREATE|os.O_RDWR, 0644)
+			}
+
+			if err != nil {
+				return false, err
+			}
+			return false, nil
+		} else {
+			return false, nil
+		}
+	}
+
+	return true, nil
+}
+
 func (h *Handler) Read() ([]byte, error) {
+	_, err := h.checkExistence(true)
+	if err != nil {
+		return nil, err
+	}
+
 	data, err := ioutil.ReadAll(h.fileHandle)
 	if err != nil {
 		return nil, err
@@ -66,6 +93,11 @@ func (h *Handler) Read() ([]byte, error) {
 }
 
 func (h *Handler) Write(data string) (int, error) {
+	_, err := h.checkExistence(true)
+	if err != nil {
+		return 0, err
+	}
+
 	written, err := h.fileHandle.Write([]byte(data + "\n"))
 	if err != nil {
 		return 0, err
@@ -75,6 +107,11 @@ func (h *Handler) Write(data string) (int, error) {
 }
 
 func (h *Handler) Close(delete bool) (error, error) {
+	exist, _ := h.checkExistence(false)
+	if !exist {
+		return nil, nil
+	}
+
 	closeErr := h.fileHandle.Close()
 
 	if delete {
