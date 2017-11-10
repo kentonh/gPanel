@@ -15,7 +15,7 @@ func Shutdown(res http.ResponseWriter, req *http.Request, publicServer *public.C
 	}
 
 	var shutdownRequestData struct {
-		graceful bool `json:"graceful"`
+		Graceful bool `json:"graceful"`
 	}
 
 	err := json.NewDecoder(req.Body).Decode(&shutdownRequestData)
@@ -24,7 +24,7 @@ func Shutdown(res http.ResponseWriter, req *http.Request, publicServer *public.C
 		return false
 	}
 
-	err = publicServer.Stop(shutdownRequestData.graceful)
+	err = publicServer.Stop(shutdownRequestData.Graceful)
 	if err != nil {
 		http.Error(res, err.Error(), http.StatusBadRequest)
 		return false

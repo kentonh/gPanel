@@ -5,23 +5,28 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"strconv"
 
 	"github.com/Ennovar/gPanel/pkg/api"
-	"github.com/Ennovar/gPanel/pkg/logging"
+	"github.com/Ennovar/gPanel/pkg/file"
 	"github.com/Ennovar/gPanel/pkg/public"
 	"github.com/Ennovar/gPanel/pkg/routing"
 )
 
 type Controller struct {
-	Directory string
-	Public    *public.Controller
+	Directory    string
+	Public       *public.Controller
+	ServerLogger *file.Handler
 }
 
 // New returns a new PrivateHost type.
 func New() Controller {
+	serverErrorLogger, _ := file.Open(file.LOG_SERVER_ERRORS, true, true)
+
 	return Controller{
-		Directory: "document_roots/webhost/",
-		Public:    public.New(),
+		Directory:    "document_roots/webhost/",
+		Public:       public.New(),
+		ServerLogger: serverErrorLogger,
 	}
 }
 
@@ -37,6 +42,7 @@ func (con *Controller) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 
 	if reqAuth(path) {
 		if !checkAuth(res, req) {
+			con.ServerLogger.Write(path + "::" + strconv.Itoa(http.StatusUnauthorized) + "::" + http.StatusText(http.StatusUnauthorized))
 			http.Error(res, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 			return
 		}
@@ -52,16 +58,16 @@ func (con *Controller) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 	f, err := os.Open(path)
 
 	if err != nil {
+		con.ServerLogger.Write(path + "::" + strconv.Itoa(http.StatusNotFound) + "::" + err.Error())
 		routing.HttpThrowStatus(http.StatusNotFound, res)
-		logging.Console(logging.PRIVATE_PREFIX, logging.NORMAL_LOG, "Path \""+path+"\" rendered a 404 error.")
 		return
 	}
 
 	contentType, err := routing.GetContentType(path)
 
 	if err != nil {
+		con.ServerLogger.Write(path + "::" + strconv.Itoa(http.StatusUnsupportedMediaType) + "::" + err.Error())
 		routing.HttpThrowStatus(http.StatusUnsupportedMediaType, res)
-		logging.Console(logging.PUBLIC_PREFIX, logging.NORMAL_LOG, "Path \""+path+"\" content type could not be determined, 404 error.")
 		return
 	}
 
@@ -69,8 +75,8 @@ func (con *Controller) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 	_, err = io.Copy(res, f)
 
 	if err != nil {
+		con.ServerLogger.Write(path + "::" + strconv.Itoa(http.StatusInternalServerError) + "::" + err.Error())
 		routing.HttpThrowStatus(http.StatusInternalServerError, res)
-		logging.Console(logging.PUBLIC_PREFIX, logging.NORMAL_LOG, "Path \""+path+"\" rendered a 500 error.")
 		return
 	}
 }

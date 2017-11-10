@@ -1,7 +1,11 @@
+# Ignore executables generated
 main
-
 gpanel
 
+# Ignore database files
 datastore.db
-
 datastore.db.lock
+
+# Ignore log files
+logs/*
+!logs/README.md
