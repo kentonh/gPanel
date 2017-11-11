@@ -1,6 +1,6 @@
 # Contributing to gPanel
 
-A quick way to get started contributing to this project is to check out our active issues in the issues tab of the master repository. If you would like to contribute to the wiki (wiki contribution guidelines are found [here](#wiki_guidelines_anchor)), that is also an easy to get started contributing. A more advanced way of contributing is to take a look at our [features list](#features_list_anchor) and pick one that needs work, or start working on an unimplemented feature. Feel free to edit this document in your own fork and submit a pull request to add to, subtract from, or make minor adjustments to existing features on the list.
+A quick way to get started contributing to this project is to check out our active issues in the issues tab of the master repository. Also take a look at our [features list](#features_list_anchor) and choose one that needs work, or start working on an unimplemented feature. Feel free to edit this document in your own fork and submit a pull request to add to, subtract from, or make minor adjustments to existing features on the list.
 
 ## Stylistic & Conventions Guidelines
 
@@ -55,18 +55,6 @@ Package names should always match their parent folder.
 // draw data from the client network.
 package networking
 ```
-
-## <a name="wiki_guidelines_anchor"></a>Internal Wiki Conventions & Guidelines
-
-To-do conventions and guidelines...
-
-#### Wiki pages that don't exist but need to:
-
-* Supported content types
-
-#### Wiki pages that exist but need more content:
-
-* N/A
 
 ## <a name="features_list_anchor"></a>Features
 
