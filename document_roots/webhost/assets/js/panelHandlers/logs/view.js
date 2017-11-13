@@ -8,10 +8,10 @@ jQuery('._js_diagnostics-view-log').on('click', function(e){
   var title;
   switch(logName) {
     case "client_errors":
-      title = "Client Error Log (4xx)";
+      title = "Client Error Log";
       break;
     case "server_errors":
-      title = "Server Error Log (5xx)";
+      title = "Server Error Log";
       break;
     case "load_time":
       title = "Load Time Log";
@@ -27,7 +27,7 @@ jQuery('._js_diagnostics-view-log').on('click', function(e){
   requestData["name"] = logName+".log";
 
   var xhr = new XMLHttpRequest();
-  xhr.open('POST', 'api/logs/read', true);
+  xhr.open('POST', 'api/log/read', true);
   xhr.send(JSON.stringify(requestData));
 
   xhr.onloadend = function() {

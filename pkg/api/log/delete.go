@@ -1,5 +1,5 @@
 // Package logs is a child of package api to handle api calls concerning log files
-package logs
+package log
 
 import (
 	"encoding/json"
@@ -8,6 +8,8 @@ import (
 	"github.com/Ennovar/gPanel/pkg/file"
 )
 
+// Delete function is accessed from api/logs/delete and will attempt to
+// delete a given log based off of request data.
 func Delete(res http.ResponseWriter, req *http.Request) bool {
 	if req.Method != "UPDATE" {
 		http.Error(res, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)

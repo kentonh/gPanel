@@ -8,6 +8,8 @@ import (
 	"github.com/Ennovar/gPanel/pkg/public"
 )
 
+// Restart function is called from /api/server/restart and will attempt to shutdown, either gracefully
+// or not gracefully (contingent on request data), and then turn back on the public server.
 func Restart(res http.ResponseWriter, req *http.Request, publicServer *public.Controller) bool {
 	if req.Method != "UPDATE" {
 		http.Error(res, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)

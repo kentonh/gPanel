@@ -21,6 +21,10 @@ type Handler struct {
 	append     bool
 }
 
+// Open function attempts to open a file and returns the handler for said file.
+// This function takes a parameter append which if set to false will truncate the
+// file upon writing to it. The log parameter denotes whether or not to look inside
+// of the log folder when attempting to open a given file.
 func Open(file string, append bool, log bool) (*Handler, error) {
 	var err error
 	var absPath string
@@ -57,6 +61,10 @@ func Open(file string, append bool, log bool) (*Handler, error) {
 	}, nil
 }
 
+// checkexistence function is ran everytime the handler has a function called from it.
+// This function ensures that the file still exists whenever trying to perform various
+// operations on it. The boolean parameter, createIfNotExist, if set to true, will create
+// the file again if it has been deleted.
 func (h *Handler) checkExistence(createIfNotExist bool) (bool, error) {
 	if _, err := os.Stat(h.path); os.IsNotExist(err) {
 		if createIfNotExist {
@@ -78,6 +86,7 @@ func (h *Handler) checkExistence(createIfNotExist bool) (bool, error) {
 	return true, nil
 }
 
+// Read function is attached to the file handler type and will read the current file.
 func (h *Handler) Read() ([]byte, error) {
 	_, err := h.checkExistence(true)
 	if err != nil {
@@ -92,6 +101,7 @@ func (h *Handler) Read() ([]byte, error) {
 	return data, err
 }
 
+// Write function is attached to the file handler type and will write to the current file.
 func (h *Handler) Write(data string) (int, error) {
 	_, err := h.checkExistence(true)
 	if err != nil {
@@ -106,6 +116,9 @@ func (h *Handler) Write(data string) (int, error) {
 	return written, err
 }
 
+// Close function is attached to the current file and will attempt to close the current file.
+// The boolean parameter delete, if set to true, will also attempt to delete the file
+// upon closing it.
 func (h *Handler) Close(delete bool) (error, error) {
 	exist, _ := h.checkExistence(false)
 	if !exist {

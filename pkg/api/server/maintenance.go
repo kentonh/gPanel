@@ -7,6 +7,8 @@ import (
 	"github.com/Ennovar/gPanel/pkg/public"
 )
 
+// Maintenance function is called from /api/server/maintenance and will place the public server into
+// maintenance mode.
 func Maintenance(res http.ResponseWriter, req *http.Request, publicServer *public.Controller) bool {
 	if req.Method != "UPDATE" {
 		http.Error(res, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)

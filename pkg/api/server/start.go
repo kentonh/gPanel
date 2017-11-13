@@ -7,6 +7,7 @@ import (
 	"github.com/Ennovar/gPanel/pkg/public"
 )
 
+// Start function is called from /api/server/start and turn the public server on.
 func Start(res http.ResponseWriter, req *http.Request, publicServer *public.Controller) bool {
 	if req.Method != "UPDATE" {
 		http.Error(res, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
