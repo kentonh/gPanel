@@ -1,5 +1,5 @@
 // Package logs is a child of package api to handle api calls concerning log files
-package logs
+package log
 
 import (
 	"encoding/json"
@@ -8,6 +8,8 @@ import (
 	"github.com/Ennovar/gPanel/pkg/file"
 )
 
+// Read function is accessed from api/logs/read and will attempt to read
+// a given log based off of the request data.
 func Read(res http.ResponseWriter, req *http.Request) bool {
 	if req.Method != "POST" {
 		http.Error(res, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
