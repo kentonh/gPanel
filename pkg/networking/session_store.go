@@ -19,6 +19,7 @@ type store struct {
 	cookieName string
 }
 
+// GetStore function takes a name and either creates/grabs a store with that name.
 func GetStore(name string) store {
 	sessionStore := store{
 		handle:     sessions.NewCookieStore(key),
@@ -28,6 +29,7 @@ func GetStore(name string) store {
 	return sessionStore
 }
 
+// Set function is attached to the store struct and will set a session value inside of the current store.
 func (s *store) Set(res http.ResponseWriter, req *http.Request, key string, value interface{}, expire int) error {
 	session, err := s.handle.Get(req, s.cookieName)
 
@@ -45,6 +47,7 @@ func (s *store) Set(res http.ResponseWriter, req *http.Request, key string, valu
 	return nil
 }
 
+// Read function is attached to the store struct and will read a given session value inside of the current store.
 func (s *store) Read(res http.ResponseWriter, req *http.Request, key string) (interface{}, error) {
 	session, err := s.handle.Get(req, s.cookieName)
 
@@ -56,6 +59,7 @@ func (s *store) Read(res http.ResponseWriter, req *http.Request, key string) (in
 	return value, nil
 }
 
+// Delete function is attached to the store struct and will delete a given session value inside of the current store.
 func (s *store) Delete(res http.ResponseWriter, req *http.Request) error {
 	session, err := s.handle.Get(req, s.cookieName)
 
