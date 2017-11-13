@@ -44,9 +44,9 @@ func Open(file string, append bool, log bool) (*Handler, error) {
 
 	// Open file
 	if append {
-		f, err = os.OpenFile(absPath, os.O_APPEND|os.O_CREATE|os.O_RDWR, 0644)
+		f, err = os.OpenFile(absPath, os.O_APPEND|os.O_CREATE|os.O_RDWR, 0777)
 	} else {
-		f, err = os.OpenFile(absPath, os.O_TRUNC|os.O_CREATE|os.O_RDWR, 0644)
+		f, err = os.OpenFile(absPath, os.O_TRUNC|os.O_CREATE|os.O_RDWR, 0777)
 	}
 
 	//Handle open file errors
@@ -69,9 +69,9 @@ func (h *Handler) checkExistence(createIfNotExist bool) (bool, error) {
 	if _, err := os.Stat(h.path); os.IsNotExist(err) {
 		if createIfNotExist {
 			if h.append {
-				h.fileHandle, err = os.OpenFile(h.path, os.O_APPEND|os.O_CREATE|os.O_RDWR, 0644)
+				h.fileHandle, err = os.OpenFile(h.path, os.O_APPEND|os.O_CREATE|os.O_RDWR, 0777)
 			} else {
-				h.fileHandle, err = os.OpenFile(h.path, os.O_TRUNC|os.O_CREATE|os.O_RDWR, 0644)
+				h.fileHandle, err = os.OpenFile(h.path, os.O_TRUNC|os.O_CREATE|os.O_RDWR, 0777)
 			}
 
 			if err != nil {
