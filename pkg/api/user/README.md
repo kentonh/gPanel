@@ -6,8 +6,8 @@ Relative API Path:
   api/user/auth
 Request:
   {
-    "user": "test",
-    "pass": "test",
+    "user": string,
+    "pass": string,
   }
 Response(204, 400, 401, 405, 500):
   N/A
@@ -19,8 +19,8 @@ Relative API Path:
   api/user/register
 Request:
   {
-    "user": "test",
-    "pass": "test",
+    "user": string,
+    "pass": string,
   }
 Response (204, 400, 405, 500):
   N/A
