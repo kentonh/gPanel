@@ -18,6 +18,11 @@ func Register(res http.ResponseWriter, req *http.Request) bool {
 		return false
 	}
 
+	var userRequestData struct {
+		User string `json:"user"`
+		Pass string `json:"pass"`
+	}
+
 	err := json.NewDecoder(req.Body).Decode(&userRequestData)
 	if err != nil {
 		http.Error(res, err.Error(), http.StatusBadRequest)
@@ -33,6 +38,11 @@ func Register(res http.ResponseWriter, req *http.Request) bool {
 		return false
 	}
 	defer ds.Close()
+
+	var userDatabaseData struct {
+		Pass   string `json:"pass"`
+		Secret string `json:"secret"`
+	}
 
 	err = ds.Get(database.BUCKET_USERS, []byte(userRequestData.User), &userDatabaseData)
 	if err != database.ErrKeyNotExist {

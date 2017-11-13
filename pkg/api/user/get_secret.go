@@ -13,6 +13,11 @@ func GetSecret(user string) (string, error) {
 	}
 	defer ds.Close()
 
+	var userDatabaseData struct {
+		Pass   string `json:"pass"`
+		Secret string `json:"secret"`
+	}
+
 	err = ds.Get(database.BUCKET_USERS, []byte(user), &userDatabaseData)
 	if err != nil {
 		return "", err
