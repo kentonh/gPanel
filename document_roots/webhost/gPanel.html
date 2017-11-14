@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>gPanel</title>
+    <title>gPanel Account</title>
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -12,7 +12,7 @@
   </head>
   <body>
     <nav class="navbar navbar-expand-md navbar-light mb-4">
-      <a class="navbar-brand text-primary" href="#">gPanel</a>
+      <a class="navbar-brand text-primary" href="#">gPanel Account</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -27,6 +27,7 @@
       </div>
     </nav>
 
+    <!-- View/Clear Log Modal -->
     <div class="modal fade view-log-modal" tabindex="-1" role="dialog" aria-labelledby="view-log-modal" aria-hidden="true">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -37,11 +38,31 @@
             </button>
           </div>
           <div class="modal-body">
-            <textarea class="w-100 h-100" readonly></textarea>
+            <textarea class="w-100" rows="15" readonly></textarea>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             <button type="button" class="btn btn-danger _js_diagnostics-clear-log" data="">Clear Log</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- IP Filtering Modal -->
+    <div class="modal fade ip-filter-modal" tabindex="-1" role="dialog" aria-labelledby="ip-filter-modal" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title"></h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>Coming soon!</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
           </div>
         </div>
       </div>
@@ -54,12 +75,28 @@
             <div class="card-body">
               <h4 class="card-title">Public Server</h4>
               <h6 class="card-subtitle mb-4 text-muted">Handle operations for the public serving server</h6>
-              <button type="button" class="_js_public-server-start btn btn-outline-primary">Start</button>
-              <button type="button" class="_js_public-server-maintenance-mode btn btn-outline-primary">Maintenance Mode</button>
-              <button type="button" class="btn btn-outline-primary _js_public-server-shutdown-graceful">Graceful Shutdown</button>
-              <button type="button" class="btn btn-outline-primary _js_public-server-shutdown-forceful">Forced Shutdown</button>
-              <button type="button" class="btn btn-outline-primary _js_public-server-restart-graceful">Graceful Restart</button>
-              <button type="button" class="btn btn-outline-primary _js_public-server-restart-forceful">Forced Restart</button>
+              <div class="btn-group" role="group">
+                <button type="button" class="_js_public-server-start btn btn-outline-primary">Start</button>
+                <button type="button" class="_js_public-server-maintenance-mode btn btn-outline-primary">Maintenance Mode</button>
+                <div class="btn-group" role="group">
+                  <button class="btn btn-outline-primary dropdown-toggle" type="button" id="shutdownDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Shutdown
+                  </button>
+                  <div class="dropdown-menu" aria-labelledby="shutdownDropdown">
+                    <a class="dropdown-item _js_public-server-shutdown-graceful" href="#graceful_shutdown">Graceful</a>
+                    <a class="dropdown-item _js_public-server-shutdown-forceful" href="#forceful_shutdown">Forceful</a>
+                  </div>
+                </div>
+                <div class="btn-group" role="group">
+                  <button class="btn btn-outline-primary dropdown-toggle" type="button" id="ipFilterDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Restart
+                  </button>
+                  <div class="dropdown-menu" aria-labelledby="ipFilterDropdown">
+                    <a class="dropdown-item _js_public-server-restart-graceful" href="#graceful_restart">Graceful</a>
+                    <a class="dropdown-item _js_public-server-restart-forceful" href="#forceful_restart">Forceful</a>
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="card-footer text-muted text-center">
               Server Status: <span class="_js_public-server-status text-muted">LOADING</span>
@@ -74,9 +111,33 @@
             <div class="card-body">
               <h4 class="card-title">Logs</h4>
               <h6 class="card-subtitle mb-4 text-muted">View various client and server data logs that may help pinpoint issues</h6>
-              <button type="button" class="btn btn-outline-primary _js_diagnostics-view-log" data="client_errors">Client Error Log</button>
-              <button type="button" class="btn btn-outline-primary _js_diagnostics-view-log" data="server_errors">Server Error Log</button>
-              <button type="button" class="btn btn-outline-primary _js_diagnostics-view-log" data="load_time">Load Time Log</button>
+              <div class="btn-group" role="group">
+                <button type="button" class="btn btn-outline-primary _js_diagnostics-view-log" data="client_errors">Client Error</button>
+                <button type="button" class="btn btn-outline-primary _js_diagnostics-view-log" data="server_errors">Server Error</button>
+                <button type="button" class="btn btn-outline-primary _js_diagnostics-view-log" data="load_time">Load Time</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mt-5">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-body">
+              <h4 class="card-title">Security</h4>
+              <h6 class="card-subtitle mb-4 text-muted">Operations concerning security of the public site</h6>
+              <div class="btn-group" role="group">
+                <div class="btn-group" role="group">
+                  <button class="btn btn-outline-primary dropdown-toggle" type="button" id="ipFilterDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    IP Filtering
+                  </button>
+                  <div class="dropdown-menu" aria-labelledby="ipFilterDropdown">
+                    <a class="dropdown-item _js_ip-filtering-open" href="#general_ip_filter" data="general">General</a>
+                    <a class="dropdown-item _js_ip-filtering-open" href="#maintenance_ip_filter" data="maintenance">Maintenance Mode</a>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -112,6 +173,8 @@
 
     <script type="text/javascript" src="assets/js/panelHandlers/logs/view.js"></script>
     <script type="text/javascript" src="assets/js/panelHandlers/logs/delete.js"></script>
+
+    <script type="text/javascript" src="assets/js/panelHandlers/security/ipFiltering.js"></script>
     <!-- KEEP AT BOTTOM OF BODY TAGS -->
   </body>
 </html>
