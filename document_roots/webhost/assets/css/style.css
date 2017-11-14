@@ -22,10 +22,6 @@ body {
 .navbar {
   background-color:#E0EBF5 !important;
 }
-
-#logoutForm > button {
-  cursor:pointer;
-}
 /* Navbar End */
 
 /* General Start */
