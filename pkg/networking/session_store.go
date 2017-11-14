@@ -11,7 +11,8 @@ import (
 var key = []byte("GbP=K4#f$khYuZpStK68GyHxGg$4@5K-")
 
 const (
-	COOKIES_USER_AUTH = "gpanel-webhost-user-auth"
+	ACCOUNT_USER_AUTH = "gpanel-account-user-auth"
+	SERVER_USER_AUTH  = "gpanel-server-user-auth"
 )
 
 type store struct {

@@ -16,7 +16,7 @@ func Logout(res http.ResponseWriter, req *http.Request) bool {
 		return false
 	}
 
-	store := networking.GetStore(networking.COOKIES_USER_AUTH)
+	store := networking.GetStore(networking.ACCOUNT_USER_AUTH)
 	err := store.Delete(res, req)
 
 	if err != nil {

@@ -16,7 +16,8 @@ import (
 )
 
 type Controller struct {
-	Directory               string
+	DocumentRoot            string
+	Port                    int
 	GracefulShutdownTimeout time.Duration
 	Status                  int
 	ClientLogger            *file.Handler
@@ -28,13 +29,14 @@ var controller Controller
 var server http.Server
 
 // New function returns a new PublicWeb type.
-func New() *Controller {
+func New(root string) *Controller {
 	clientLogHandler, _ := file.Open(file.LOG_CLIENT_ERRORS, true, true)
 	serverLogHandler, _ := file.Open(file.LOG_CLIENT_ERRORS, true, true)
 	loadLogHandler, _ := file.Open(file.LOG_LOADTIME, true, true)
 
 	controller = Controller{
-		Directory:               "document_roots/public/",
+		DocumentRoot: root,
+		Port:         3000,
 		GracefulShutdownTimeout: 5 * time.Second,
 		Status:                  0,
 		ClientLogger:            clientLogHandler,
@@ -141,9 +143,9 @@ func (con *Controller) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 
 	path := req.URL.Path[1:]
 	if len(path) == 0 {
-		path = (con.Directory + "index.html")
+		path = (con.DocumentRoot + "index.html")
 	} else {
-		path = (con.Directory + path)
+		path = (con.DocumentRoot + path)
 	}
 
 	f, err := os.Open(path)

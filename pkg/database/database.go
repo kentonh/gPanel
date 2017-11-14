@@ -30,8 +30,8 @@ type Datastore struct {
 
 // Open function will open the database and return a Datastore struct
 // that has a handle within it for various datastore functions.
-func Open(filename string) (*Datastore, error) {
-	db, err := bolt.Open(filename, 0666, &bolt.Options{Timeout: 15 * time.Second})
+func Open(filepath string) (*Datastore, error) {
+	db, err := bolt.Open(filepath, 0666, &bolt.Options{Timeout: 15 * time.Second})
 
 	if err != nil {
 		return nil, err

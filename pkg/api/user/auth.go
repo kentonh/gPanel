@@ -80,7 +80,7 @@ func Auth(res http.ResponseWriter, req *http.Request) bool {
 		return false
 	}
 
-	store := networking.GetStore(networking.COOKIES_USER_AUTH)
+	store := networking.GetStore(networking.ACCOUNT_USER_AUTH)
 	err = store.Set(res, req, "token", token, (60 * 60 * 24))
 	err2 := store.Set(res, req, "user", userRequestData.User, (60 * 60 * 24))
 	if err != nil || err2 != nil {

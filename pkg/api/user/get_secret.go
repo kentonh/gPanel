@@ -6,8 +6,8 @@ import "github.com/Ennovar/gPanel/pkg/database"
 // GetSecret is not accessible from the any client side request. It is
 // only used on the server side to help verify users are who they say they
 // are.
-func GetSecret(user string) (string, error) {
-	ds, err := database.Open(database.DBLOC_MAIN)
+func GetSecret(user string, directory string) (string, error) {
+	ds, err := database.Open(directory + database.DBLOC_MAIN)
 	if err != nil {
 		return "", err
 	}
