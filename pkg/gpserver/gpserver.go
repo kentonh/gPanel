@@ -1,25 +1,26 @@
-package server
+// Package gpserver handles the logic of the gPanel server
+package gpserver
 
 import (
 	"io"
 	"net/http"
 	"os"
 
-	"github.com/Ennovar/gPanel/pkg/account"
+	"github.com/Ennovar/gPanel/pkg/gpaccount"
 	"github.com/Ennovar/gPanel/pkg/routing"
 )
 
 type Controller struct {
 	Directory    string
 	DocumentRoot string
-	Bundles      []account.Controller
+	Bundles      []gpaccount.Controller
 }
 
 func New() *Controller {
 	return &Controller{
 		Directory:    "server/",
 		DocumentRoot: "document_root/",
-		Bundles:      []account.Controller{},
+		Bundles:      []gpaccount.Controller{},
 	}
 }
 
@@ -36,6 +37,13 @@ func (con *Controller) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 			http.Error(res, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 			return
 		}
+	}
+
+	isApi, _ := con.apiHandler(res, req, 0)
+
+	if isApi {
+		// API methods handle HTTP logic from here
+		return
 	}
 
 	f, err := os.Open(path)

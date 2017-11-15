@@ -1,17 +1,13 @@
-// Package account handles the logic of the gPanel account server
-package account
+// Package gpaccount handles the logic of the gPanel account server
+package gpaccount
 
 import (
-	"context"
-	"errors"
-	"fmt"
 	"io"
 	"net/http"
 	"os"
 	"strconv"
 	"time"
 
-	"github.com/Ennovar/gPanel/pkg/api"
 	"github.com/Ennovar/gPanel/pkg/file"
 	"github.com/Ennovar/gPanel/pkg/public"
 	"github.com/Ennovar/gPanel/pkg/routing"
@@ -28,7 +24,7 @@ type Controller struct {
 }
 
 var controller Controller
-var server http.Server
+var httpserver http.Server
 
 // New returns a new Controller reference.
 func New(root string) *Controller {
@@ -44,7 +40,7 @@ func New(root string) *Controller {
 		ServerLogger:            serverErrorLogger,
 	}
 
-	server = http.Server{
+	httpserver = http.Server{
 		Addr:           "localhost:" + strconv.Itoa(controller.Port),
 		Handler:        &controller,
 		ReadTimeout:    30 * time.Second,
@@ -53,37 +49,6 @@ func New(root string) *Controller {
 	}
 
 	return &controller
-}
-
-func (con *Controller) Start() error {
-	if con.Status == 1 {
-		return errors.New("Account server is already on.")
-	}
-
-	con.Status = 1
-	go server.ListenAndServe()
-	return nil
-}
-
-func (con *Controller) Stop(graceful bool) error {
-	if graceful {
-		context, cancel := context.WithTimeout(context.Background(), con.GracefulShutdownTimeout)
-		defer cancel()
-
-		err := server.Shutdown(context)
-		if err == nil {
-			return nil
-		}
-
-		fmt.Printf("Graceful shutdown failed attempting forced: %v\n", err)
-	}
-
-	if err := server.Close(); err != nil {
-		return err
-	}
-
-	con.Status = 0
-	return nil
 }
 
 // ServeHTTP function routes all requests for the private webhost server. It is used in the main
@@ -104,7 +69,7 @@ func (con *Controller) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 		}
 	}
 
-	isApi, _ := api.HandleAPI(res, req, path, con.Public)
+	isApi, _ := con.apiHandler(res, req)
 
 	if isApi {
 		// API methods handle HTTP logic from here

@@ -15,14 +15,14 @@ const (
 	SERVER_USER_AUTH  = "gpanel-server-user-auth"
 )
 
-type store struct {
+type Store struct {
 	handle     *sessions.CookieStore
 	cookieName string
 }
 
 // GetStore function takes a name and either creates/grabs a store with that name.
-func GetStore(name string) store {
-	sessionStore := store{
+func GetStore(name string) Store {
+	sessionStore := Store{
 		handle:     sessions.NewCookieStore(key),
 		cookieName: name,
 	}
@@ -31,7 +31,7 @@ func GetStore(name string) store {
 }
 
 // Set function is attached to the store struct and will set a session value inside of the current store.
-func (s *store) Set(res http.ResponseWriter, req *http.Request, key string, value interface{}, expire int) error {
+func (s *Store) Set(res http.ResponseWriter, req *http.Request, key string, value interface{}, expire int) error {
 	session, err := s.handle.Get(req, s.cookieName)
 
 	if err != nil {
@@ -49,7 +49,7 @@ func (s *store) Set(res http.ResponseWriter, req *http.Request, key string, valu
 }
 
 // Read function is attached to the store struct and will read a given session value inside of the current store.
-func (s *store) Read(res http.ResponseWriter, req *http.Request, key string) (interface{}, error) {
+func (s *Store) Read(res http.ResponseWriter, req *http.Request, key string) (interface{}, error) {
 	session, err := s.handle.Get(req, s.cookieName)
 
 	if err != nil {
@@ -61,7 +61,7 @@ func (s *store) Read(res http.ResponseWriter, req *http.Request, key string) (in
 }
 
 // Delete function is attached to the store struct and will delete a given session value inside of the current store.
-func (s *store) Delete(res http.ResponseWriter, req *http.Request) error {
+func (s *Store) Delete(res http.ResponseWriter, req *http.Request) error {
 	session, err := s.handle.Get(req, s.cookieName)
 
 	if err != nil {

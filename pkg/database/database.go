@@ -11,7 +11,7 @@ import (
 
 // Database constants
 const (
-	DBLOC_MAIN = "datastore.db"
+	DB_USERS = "users.db"
 )
 
 // Bucket constants

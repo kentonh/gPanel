@@ -1,5 +1,5 @@
-// Package account handles the logic of the gPanel account server
-package account
+// Package gpserver handles the logic of the gPanel server
+package gpserver
 
 import (
 	"net/http"
@@ -39,7 +39,7 @@ func reqAuth(path string) bool {
 // checkAuth function returns a boolean based on whether or not the current
 // caller is authenticated based off of encrypted sessions using JWT values.
 func (con *Controller) checkAuth(res http.ResponseWriter, req *http.Request) bool {
-	store := networking.GetStore(networking.ACCOUNT_USER_AUTH)
+	store := networking.GetStore(networking.SERVER_USER_AUTH)
 
 	session_value, err := store.Read(res, req, "user")
 	if err != nil || session_value == nil {
