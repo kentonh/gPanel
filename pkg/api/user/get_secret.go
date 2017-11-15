@@ -7,7 +7,7 @@ import "github.com/Ennovar/gPanel/pkg/database"
 // only used on the server side to help verify users are who they say they
 // are.
 func GetSecret(user string, directory string) (string, error) {
-	ds, err := database.Open(directory + database.DB_USERS)
+	ds, err := database.Open(directory + database.DB_MAIN)
 	if err != nil {
 		return "", err
 	}

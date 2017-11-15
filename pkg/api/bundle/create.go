@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/Ennovar/gPanel/pkg/database"
+	"github.com/Ennovar/gPanel/pkg/file"
 	"github.com/Ennovar/gPanel/pkg/gpaccount"
 )
 
@@ -62,6 +64,36 @@ func Create(res http.ResponseWriter, req *http.Request, bundles map[string]*gpac
 		http.Error(res, err.Error(), http.StatusBadRequest)
 		return false
 	}
+
+	newBundle := "bundles/bundle_" + createBundleRequestData.Name
+	err = file.CopyDir("bundles/default_bundle", newBundle)
+	if err != nil {
+		http.Error(res, err.Error(), http.StatusInternalServerError)
+		return false
+	}
+
+	ds, err := database.Open(newBundle + "/" + database.DB_MAIN)
+	if err != nil {
+		http.Error(res, err.Error(), http.StatusBadRequest)
+		return false
+	}
+	defer ds.Close()
+
+	err = ds.Put(database.BUCKET_PORTS, []byte("account"), createBundleRequestData.AccPort)
+	if err != nil {
+		http.Error(res, err.Error(), http.StatusBadRequest)
+		return false
+	}
+
+	err = ds.Put(database.BUCKET_PORTS, []byte("public"), createBundleRequestData.PubPort)
+	if err != nil {
+		http.Error(res, err.Error(), http.StatusBadRequest)
+		return false
+	}
+
+	bundles[createBundleRequestData.Name] = gpaccount.New(newBundle+"/", createBundleRequestData.AccPort, createBundleRequestData.PubPort)
+	_ = bundles[createBundleRequestData.Name].Start()
+	_ = bundles[createBundleRequestData.Name].Public.Start()
 
 	res.WriteHeader(http.StatusOK)
 	res.Write([]byte(createBundleRequestData.Name))

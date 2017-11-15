@@ -12,3 +12,6 @@ bundles/*
 
 # IGNORE .DB FILES
 **.db
+
+# IGNORE OSX FINDER FILES
+**.DS_Store

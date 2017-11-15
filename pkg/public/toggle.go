@@ -15,6 +15,7 @@ func (con *Controller) Start() error {
 
 	con.Status = 1
 	go server.ListenAndServe()
+	fmt.Printf("Public server now serving out of %s on port %d\n", con.DocumentRoot, con.Port)
 	return nil
 }
 

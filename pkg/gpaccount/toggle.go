@@ -14,6 +14,7 @@ func (con *Controller) Start() error {
 
 	con.Status = 1
 	go httpserver.ListenAndServe()
+	fmt.Printf("gPanel account server now serving out of %s%s on port %d\n", con.Directory, con.DocumentRoot, con.Port)
 	return nil
 }
 

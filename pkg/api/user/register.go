@@ -32,7 +32,7 @@ func Register(res http.ResponseWriter, req *http.Request, dir string) bool {
 		return false
 	}
 
-	ds, err := database.Open(dir + database.DB_USERS)
+	ds, err := database.Open(dir + database.DB_MAIN)
 	if err != nil || ds == nil {
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 		return false

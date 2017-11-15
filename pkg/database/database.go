@@ -11,12 +11,13 @@ import (
 
 // Database constants
 const (
-	DB_USERS = "users.db"
+	DB_MAIN = "datastore.db"
 )
 
 // Bucket constants
 const (
 	BUCKET_USERS = "users"
+	BUCKET_PORTS = "ports"
 )
 
 // Error codes
@@ -44,6 +45,11 @@ func Open(filepath string) (*Datastore, error) {
 	// Ensure that all top-level buckets exist
 	err = ds.handle.Update(func(tx *bolt.Tx) error {
 		_, err := tx.CreateBucketIfNotExists([]byte(BUCKET_USERS))
+
+		if err != nil {
+			return err
+		}
+		_, err = tx.CreateBucketIfNotExists([]byte(BUCKET_PORTS))
 
 		if err != nil {
 			return err
