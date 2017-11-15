@@ -1,11 +1,14 @@
-# Ignore executables generated
+# IGNORE GENERATED BINARIES
 main
 gpanel
 
-# Ignore database files
-datastore.db
-datastore.db.lock
+# IGNORE ALL BUNDLES EXCEPT FOR DEFAULT_BUNDLE
+bundles/*
+!bundles/default_bundle
 
-# Ignore log files
-logs/*
-!logs/README.md
+# IGNORE ALL FILES IN /LOG EXCEPT README
+**/logs/*
+!**/logs/README.md
+
+# IGNORE .DB FILES
+**.db
