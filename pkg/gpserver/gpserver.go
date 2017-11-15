@@ -13,14 +13,14 @@ import (
 type Controller struct {
 	Directory    string
 	DocumentRoot string
-	Bundles      []gpaccount.Controller
+	Bundles      map[string]*gpaccount.Controller
 }
 
 func New() *Controller {
 	return &Controller{
 		Directory:    "server/",
 		DocumentRoot: "document_root/",
-		Bundles:      []gpaccount.Controller{},
+		Bundles:      make(map[string]*gpaccount.Controller),
 	}
 }
 

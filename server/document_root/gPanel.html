@@ -27,17 +27,54 @@
       </div>
     </nav>
 
+    <!-- Create New Bundle Modal -->
+    <div class="modal fade new-bundle-modal" tabindex="-1" role="dialog" aria-labelledby="new-bundle-modal" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Create New Bundle</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form class="_js_create-bundle-form" action="api/bundle/create" method="POST">
+              <div class="form-group">
+                <label for="newBundleName">Bundle Name</label>
+                <input name="name" type="text" class="form-control" id="newBundleName" aria-describedby="newBundleNameHelp" placeholder="Bundle Name">
+                <small id="newBundleNameHelp" class="form-text text-muted">Bundle name must be unqiue in terms of your current bundle collection.</small>
+              </div>
+              <div class="form-group">
+                <label for="newBundleAccountPort">Bundle Account Port</label>
+                <input name="account_port" type="number" class="form-control" id="newBundleAccountPort" aria-describedby="newBundleAccountPortHelp" min="2000" max="4000" value="2083">
+                <small id="newBundleAccountPortHelp" class="form-text text-muted">Bundle account port must be unique in terms of your current bundle collection.</small>
+              </div>
+              <div class="form-group">
+                <label for="newBundlePublicPort">Bundle Public Port</label>
+                <input name="public_port" type="number" class="form-control" id="newBundlePublicPort" aria-describedby="newBundlePublicPortHelp" min="2000" max="4000" value="2084">
+                <small id="newBundlePublicPortHelp" class="form-text text-muted">Bundle public port must be unique in terms of your current bundle collection.</small>
+              </div>
+              <button type="submit" class="btn btn-primary">Create Bundle</button>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="container">
       <div class="row">
         <div class="col-12">
           <div class="card">
             <div class="card-body">
-              <h4 class="card-title">Test</h4>
-              <h6 class="card-subtitle mb-4 text-muted">Test</h6>
-              <button class="btn btn-outline-primary">Test</button>
-            </div>
-            <div class="card-footer text-muted text-center">
-              TEST
+              <h4 class="card-title">Bundles</h4>
+              <h6 class="card-subtitle mb-4 text-muted">Create new bundles and update current bundles.</h6>
+              <div class="btn-group" role="group">
+                <button class="btn btn-outline-primary _js_bundles-create">Create New Bundle</button>
+                <button class="btn btn-outline-primary">Manage Current Bundles</button>
+              </div>
             </div>
           </div>
         </div>
@@ -64,6 +101,8 @@
 
     <script type="text/javascript" src="assets/js/formHandlers/search.js"></script>
     <script type="text/javascript" src="assets/js/formHandlers/logout.js"></script>
+
+    <script type="text/javascript" src="assets/js/panelHandlers/bundles/create.js"></script>
     <!-- KEEP AT BOTTOM OF BODY TAGS -->
   </body>
 </html>

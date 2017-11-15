@@ -27,14 +27,14 @@ var controller Controller
 var httpserver http.Server
 
 // New returns a new Controller reference.
-func New(root string) *Controller {
+func New(dir string, accPort int, pubPort int) *Controller {
 	serverErrorLogger, _ := file.Open(file.LOG_SERVER_ERRORS, true, true)
 
 	controller = Controller{
-		Directory:               root,
+		Directory:               dir,
 		DocumentRoot:            "account/",
-		Port:                    2082,
-		Public:                  public.New(root + "public/"),
+		Port:                    accPort,
+		Public:                  public.New(dir+"public/", pubPort),
 		GracefulShutdownTimeout: 5 * time.Second,
 		Status:                  0,
 		ServerLogger:            serverErrorLogger,

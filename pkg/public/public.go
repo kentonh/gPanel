@@ -2,8 +2,6 @@
 package public
 
 import (
-	"context"
-	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -21,7 +19,6 @@ type Controller struct {
 	GracefulShutdownTimeout time.Duration
 	Status                  int
 	ClientLogger            *file.Handler
-	ServerLogger            *file.Handler
 	LoadTimeLogger          *file.Handler
 }
 
@@ -29,18 +26,16 @@ var controller Controller
 var server http.Server
 
 // New function returns a new PublicWeb type.
-func New(root string) *Controller {
+func New(root string, port int) *Controller {
 	clientLogHandler, _ := file.Open(file.LOG_CLIENT_ERRORS, true, true)
-	serverLogHandler, _ := file.Open(file.LOG_CLIENT_ERRORS, true, true)
 	loadLogHandler, _ := file.Open(file.LOG_LOADTIME, true, true)
 
 	controller = Controller{
 		DocumentRoot: root,
-		Port:         3000,
+		Port:         port,
 		GracefulShutdownTimeout: 5 * time.Second,
 		Status:                  0,
 		ClientLogger:            clientLogHandler,
-		ServerLogger:            serverLogHandler,
 		LoadTimeLogger:          loadLogHandler,
 	}
 
@@ -53,73 +48,6 @@ func New(root string) *Controller {
 	}
 
 	return &controller
-}
-
-// Start function starts listening on the public server
-func (con *Controller) Start() error {
-	if con.Status == 1 {
-		return errors.New("Public server is already on.")
-	}
-
-	con.Status = 1
-	go server.ListenAndServe()
-	return nil
-}
-
-// Stop function stops the server gracefully or forceful, depending on the boolean input
-func (con *Controller) Stop(graceful bool) error {
-	if graceful {
-		context, cancel := context.WithTimeout(context.Background(), con.GracefulShutdownTimeout)
-		defer cancel()
-
-		err := server.Shutdown(context)
-		if err == nil {
-			return nil
-		}
-
-		fmt.Printf("Graceful shutdown failed attempting forced: %v\n", err)
-	}
-
-	if err := server.Close(); err != nil {
-		return err
-	}
-
-	con.Status = 0
-	return nil
-}
-
-// Restart function combines both the start and stop function, using different
-// status codes, as it is restarting.
-func (con *Controller) Restart(graceful bool) error {
-	con.Status = 3
-
-	if graceful {
-		context, cancel := context.WithTimeout(context.Background(), con.GracefulShutdownTimeout)
-		defer cancel()
-
-		err := server.Shutdown(context)
-		if err != nil {
-			fmt.Printf("Graceful shutdown failed attempting forced: %v\n", err)
-
-			err = server.Close()
-			if err != nil {
-				return err
-			}
-		}
-	}
-
-	err := server.Close()
-	if err != nil {
-		return err
-	}
-
-	con.Status = 1
-	go server.ListenAndServe()
-	return nil
-}
-
-func (con *Controller) Maintenance() {
-	con.Status = 2
 }
 
 // ServeHTTP function routes all requests for the public web server. It is used in the main
@@ -168,7 +96,7 @@ func (con *Controller) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 	_, err = io.Copy(res, f)
 
 	if err != nil {
-		con.ServerLogger.Write(path + "::" + strconv.Itoa(http.StatusInternalServerError) + "::" + err.Error())
+		fmt.Printf("Server error serving files to client: %v\n", err)
 		routing.HttpThrowStatus(http.StatusInternalServerError, res)
 		return
 	}
