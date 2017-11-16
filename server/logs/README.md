@@ -4,5 +4,6 @@ The actual log files are ignored by the .gitignore file. They are generated auto
 
 Current log files:  
 - client_errors.log
+- account_errors.log
 - server_errors.log
 - loadtime.log

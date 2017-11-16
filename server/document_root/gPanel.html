@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>gPanel Server</title>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/style.css">
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-md navbar-light mb-4">
+      <a class="navbar-brand text-primary" href="#">gPanel Server</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <form id="searchForm" method="POST" action="#" class="form-inline mt-2 mt-md-0 ml-auto">
+          <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Search</button>
+        </form>
+        <form id="logoutForm" method="POST" action="api/user/logout" class="form-inline mt-2 mt-md-0 ml-3">
+          <button class="btn btn-primary my-2 my-sm-0" type="submit">Logout</button>
+        </form>
+      </div>
+    </nav>
+
+    <!-- Create New Bundle Modal -->
+    <div class="modal fade new-bundle-modal" tabindex="-1" role="dialog" aria-labelledby="new-bundle-modal" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Create New Bundle</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form class="_js_create-bundle-form" action="api/bundle/create" method="POST">
+              <div class="form-group">
+                <label for="newBundleName">Bundle Name</label>
+                <input name="name" type="text" class="form-control" id="newBundleName" aria-describedby="newBundleNameHelp" placeholder="Bundle Name">
+                <small id="newBundleNameHelp" class="form-text text-muted">Bundle name must be unqiue in terms of your current bundle collection.</small>
+              </div>
+              <div class="form-group">
+                <label for="newBundleAccountPort">Bundle Account Port</label>
+                <input name="account_port" type="number" class="form-control" id="newBundleAccountPort" aria-describedby="newBundleAccountPortHelp" min="2000" max="4000" value="2083">
+                <small id="newBundleAccountPortHelp" class="form-text text-muted">Bundle account port must be unique in terms of your current bundle collection.</small>
+              </div>
+              <div class="form-group">
+                <label for="newBundlePublicPort">Bundle Public Port</label>
+                <input name="public_port" type="number" class="form-control" id="newBundlePublicPort" aria-describedby="newBundlePublicPortHelp" min="2000" max="4000" value="2084">
+                <small id="newBundlePublicPortHelp" class="form-text text-muted">Bundle public port must be unique in terms of your current bundle collection.</small>
+              </div>
+              <button type="submit" class="btn btn-primary">Create Bundle</button>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Manage Existing Bundles Modal -->
+    <div class="modal fade manage-bundles-modal" tabindex="-1" role="dialog" aria-labelledby="manage-bundles-modal" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Manage Existing Bundles</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>No bundles current exist on the server.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-body">
+              <h4 class="card-title">Bundles</h4>
+              <h6 class="card-subtitle mb-4 text-muted">Create new bundles and update current bundles.</h6>
+              <div class="btn-group" role="group">
+                <button class="btn btn-outline-primary _js_bundles-create">Create New Bundle</button>
+                <button class="btn btn-outline-primary _js_bundles-manage">Manage Current Bundles</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="sticky-footer">
+      <div class="container">
+        <div class="row no-gutters">
+          <div class="col-md-6 col-12">
+            <p class="text-muted m-0">Managed by <a target="_blank" href="http://ennovar.io/">Ennovar</a></p>
+          </div>
+          <div class="col-md-6 col-12 d-flex justify-content-center justify-content-md-end">
+            <p class="text-muted m-0">Contribute on <a target="_blank" href="https://github.com/Ennovar/gPanel">Github <i class="fa fa-github" aria-hidden="true"></i></a></p>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- KEEP AT BOTTOM OF BODY TAGS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+
+    <script type="text/javascript" src="assets/js/formHandlers/search.js"></script>
+    <script type="text/javascript" src="assets/js/formHandlers/logout.js"></script>
+
+    <script type="text/javascript" src="assets/js/panelHandlers/bundles/create.js"></script>
+    <script type="text/javascript" src="assets/js/panelHandlers/bundles/manage.js"></script>
+    <!-- KEEP AT BOTTOM OF BODY TAGS -->
+  </body>
+</html>

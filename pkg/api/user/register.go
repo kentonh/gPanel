@@ -12,7 +12,7 @@ import (
 // Register function is accessed by an API call from the webhost root
 // by accessing /user_register and sending it a post request with userRequestData
 // struct in JSON format.
-func Register(res http.ResponseWriter, req *http.Request) bool {
+func Register(res http.ResponseWriter, req *http.Request, dir string) bool {
 	if req.Method != "POST" {
 		http.Error(res, req.Method+" HTTP method is unsupported for this API.", http.StatusMethodNotAllowed)
 		return false
@@ -32,7 +32,7 @@ func Register(res http.ResponseWriter, req *http.Request) bool {
 		return false
 	}
 
-	ds, err := database.Open(database.DBLOC_MAIN)
+	ds, err := database.Open(dir + database.DB_MAIN)
 	if err != nil || ds == nil {
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 		return false

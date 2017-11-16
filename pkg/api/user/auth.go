@@ -4,6 +4,7 @@ package user
 import (
 	"encoding/json"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/Ennovar/gPanel/pkg/database"
@@ -15,7 +16,7 @@ import (
 // Auth function is accessed by an API call from the webhost root
 // by accessing /user_auth and sending it a post request with userRequestData
 // struct in JSON format.
-func Auth(res http.ResponseWriter, req *http.Request) bool {
+func Auth(res http.ResponseWriter, req *http.Request, dir string) bool {
 	if req.Method != "POST" {
 		http.Error(res, req.Method+" HTTP method is unsupported for this API.", http.StatusMethodNotAllowed)
 		return false
@@ -32,7 +33,7 @@ func Auth(res http.ResponseWriter, req *http.Request) bool {
 		return false
 	}
 
-	ds, err := database.Open(database.DBLOC_MAIN)
+	ds, err := database.Open(dir + database.DB_MAIN)
 	if err != nil || ds == nil {
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 		return false
@@ -80,7 +81,13 @@ func Auth(res http.ResponseWriter, req *http.Request) bool {
 		return false
 	}
 
-	store := networking.GetStore(networking.COOKIES_USER_AUTH)
+	var store networking.Store
+	if strings.Contains(dir, "bundles/") {
+		store = networking.GetStore(networking.ACCOUNT_USER_AUTH)
+	} else {
+		store = networking.GetStore(networking.SERVER_USER_AUTH)
+	}
+
 	err = store.Set(res, req, "token", token, (60 * 60 * 24))
 	err2 := store.Set(res, req, "user", userRequestData.User, (60 * 60 * 24))
 	if err != nil || err2 != nil {

@@ -11,12 +11,13 @@ import (
 
 // Database constants
 const (
-	DBLOC_MAIN = "datastore.db"
+	DB_MAIN = "datastore.db"
 )
 
 // Bucket constants
 const (
 	BUCKET_USERS = "users"
+	BUCKET_PORTS = "ports"
 )
 
 // Error codes
@@ -30,8 +31,8 @@ type Datastore struct {
 
 // Open function will open the database and return a Datastore struct
 // that has a handle within it for various datastore functions.
-func Open(filename string) (*Datastore, error) {
-	db, err := bolt.Open(filename, 0666, &bolt.Options{Timeout: 15 * time.Second})
+func Open(filepath string) (*Datastore, error) {
+	db, err := bolt.Open(filepath, 0666, &bolt.Options{Timeout: 15 * time.Second})
 
 	if err != nil {
 		return nil, err
@@ -44,6 +45,11 @@ func Open(filename string) (*Datastore, error) {
 	// Ensure that all top-level buckets exist
 	err = ds.handle.Update(func(tx *bolt.Tx) error {
 		_, err := tx.CreateBucketIfNotExists([]byte(BUCKET_USERS))
+
+		if err != nil {
+			return err
+		}
+		_, err = tx.CreateBucketIfNotExists([]byte(BUCKET_PORTS))
 
 		if err != nil {
 			return err
