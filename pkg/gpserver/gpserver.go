@@ -3,9 +3,13 @@ package gpserver
 
 import (
 	"io"
+	"io/ioutil"
+	"log"
 	"net/http"
 	"os"
+	"strings"
 
+	"github.com/Ennovar/gPanel/pkg/api/bundle"
 	"github.com/Ennovar/gPanel/pkg/gpaccount"
 	"github.com/Ennovar/gPanel/pkg/routing"
 )
@@ -17,10 +21,38 @@ type Controller struct {
 }
 
 func New() *Controller {
+	bundles := make(map[string]*gpaccount.Controller)
+
+	dirs, err := ioutil.ReadDir("bundles/")
+	if err != nil {
+		log.Fatal("Error finding bundles: %v\n", err.Error())
+	}
+
+	for _, dir := range dirs {
+		if dir.Name() == "default_bundle" || !dir.IsDir() {
+			continue
+		}
+
+		if strings.HasPrefix(dir.Name(), "bundle_") {
+			dirPath := "bundles/" + dir.Name() + "/"
+			err, accPort, pubPort := bundle.GetPorts(dirPath)
+
+			curBundle := gpaccount.New(dirPath, accPort, pubPort)
+
+			err = curBundle.Start()
+			err2 := curBundle.Public.Start()
+			if err != nil || err2 != nil {
+				log.Fatal("Error starting bundle: %v\n", dir.Name())
+			}
+
+			bundles[strings.Replace(dir.Name(), "bundle_", "", 1)] = curBundle
+		}
+	}
+
 	return &Controller{
 		Directory:    "server/",
 		DocumentRoot: "document_root/",
-		Bundles:      make(map[string]*gpaccount.Controller),
+		Bundles:      bundles,
 	}
 }
 

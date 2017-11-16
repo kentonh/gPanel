@@ -29,6 +29,8 @@ func (con *Controller) apiHandler(res http.ResponseWriter, req *http.Request, cu
 		return true, user.Logout(res, req, con.Directory)
 	case "/bundle/create":
 		return true, bundle.Create(res, req, con.Bundles)
+	case "/bundle/list":
+		return true, bundle.List(res, req, con.Bundles)
 	default:
 		return false, false
 	}

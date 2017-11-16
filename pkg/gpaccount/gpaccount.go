@@ -2,7 +2,6 @@
 package gpaccount
 
 import (
-	"fmt"
 	"io"
 	"net/http"
 	"os"
@@ -80,7 +79,6 @@ func (con *Controller) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 
 	if err != nil {
 		// con.ServerLogger.Write(path + "::" + strconv.Itoa(http.StatusNotFound) + "::" + err.Error())
-		fmt.Println(err.Error())
 		routing.HttpThrowStatus(http.StatusNotFound, res)
 		return
 	}

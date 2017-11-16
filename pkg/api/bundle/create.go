@@ -79,19 +79,20 @@ func Create(res http.ResponseWriter, req *http.Request, bundles map[string]*gpac
 	}
 	defer ds.Close()
 
-	err = ds.Put(database.BUCKET_PORTS, []byte("account"), createBundleRequestData.AccPort)
+	var databaseBundlePorts struct {
+		Account int `json:"account"`
+		Public  int `json:"public"`
+	}
+	databaseBundlePorts.Account = createBundleRequestData.AccPort
+	databaseBundlePorts.Public = createBundleRequestData.PubPort
+
+	err = ds.Put(database.BUCKET_PORTS, []byte("bundle_ports"), databaseBundlePorts)
 	if err != nil {
 		http.Error(res, err.Error(), http.StatusBadRequest)
 		return false
 	}
 
-	err = ds.Put(database.BUCKET_PORTS, []byte("public"), createBundleRequestData.PubPort)
-	if err != nil {
-		http.Error(res, err.Error(), http.StatusBadRequest)
-		return false
-	}
-
-	bundles[createBundleRequestData.Name] = gpaccount.New(newBundle+"/", createBundleRequestData.AccPort, createBundleRequestData.PubPort)
+	bundles[createBundleRequestData.Name] = gpaccount.New(newBundle+"/", databaseBundlePorts.Account, databaseBundlePorts.Public)
 	_ = bundles[createBundleRequestData.Name].Start()
 	_ = bundles[createBundleRequestData.Name].Public.Start()
 
