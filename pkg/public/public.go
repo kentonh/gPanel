@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/Ennovar/gPanel/pkg/routing"
@@ -38,7 +39,7 @@ func New(root string, port int) *Controller {
 	}
 
 	server = http.Server{
-		Addr:           "localhost:3000",
+		Addr:           "localhost:" + strconv.Itoa(controller.Port),
 		Handler:        &controller,
 		ReadTimeout:    30 * time.Second,
 		WriteTimeout:   30 * time.Second,
@@ -73,8 +74,6 @@ func (con *Controller) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 	} else {
 		path = (con.DocumentRoot + path)
 	}
-
-	fmt.Println("pub: " + path)
 
 	f, err := os.Open(path)
 

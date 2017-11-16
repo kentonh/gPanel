@@ -56,12 +56,10 @@ func New(dir string, accPort int, pubPort int) *Controller {
 func (con *Controller) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 	path := req.URL.Path[1:]
 	if len(path) == 0 {
-		path = (con.Directory + "index.html")
+		path = (con.DocumentRoot + "index.html")
 	} else {
-		path = (con.Directory + path)
+		path = (con.DocumentRoot + path)
 	}
-
-	fmt.Println("acc: " + path)
 
 	if reqAuth(path) {
 		if !con.checkAuth(res, req) {
