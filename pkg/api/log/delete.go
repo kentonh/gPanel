@@ -10,7 +10,7 @@ import (
 
 // Delete function is accessed from api/logs/delete and will attempt to
 // delete a given log based off of request data.
-func Delete(res http.ResponseWriter, req *http.Request) bool {
+func Delete(res http.ResponseWriter, req *http.Request, dir string) bool {
 	if req.Method != "UPDATE" {
 		http.Error(res, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
 		return false
@@ -26,20 +26,20 @@ func Delete(res http.ResponseWriter, req *http.Request) bool {
 		return false
 	}
 
-	valid := false
-	for _, log := range file.KNOWN_LOGS {
-		if log == deleteLogRequestData.Name {
-			valid = true
-			break
-		}
-	}
-
-	if !valid {
-		http.Error(res, "Attempting to delete an unknown log file.", http.StatusBadRequest)
+	var log string
+	switch deleteLogRequestData.Name {
+	case "client_errors":
+		log = dir + "logs/" + file.LOG_CLIENT_ERRORS
+	case "load_time":
+		log = dir + "logs/" + file.LOG_LOADTIME
+	case "server_errors":
+		log = file.LOG_SERVER_ERRORS
+	default:
+		http.Error(res, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return false
 	}
 
-	handle, err := file.Open(deleteLogRequestData.Name, true, true)
+	handle, err := file.Open(log, true)
 	if err != nil {
 		http.Error(res, err.Error(), http.StatusBadRequest)
 		return false

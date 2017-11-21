@@ -24,7 +24,7 @@ jQuery('._js_diagnostics-view-log').on('click', function(e){
   jQuery(logModal).find('._js_diagnostics-clear-log').attr('data', logName);
 
   var requestData = {};
-  requestData["name"] = logName+".log";
+  requestData["name"] = logName;
 
   var xhr = new XMLHttpRequest();
   xhr.open('POST', 'api/log/read', true);
