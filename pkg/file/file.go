@@ -9,11 +9,9 @@ import (
 
 const (
 	LOG_CLIENT_ERRORS = "client_errors.log"
-	LOG_SERVER_ERRORS = "server_errors.log"
+	LOG_SERVER_ERRORS = "server/logs/server_errors.log"
 	LOG_LOADTIME      = "load_time.log"
 )
-
-var KNOWN_LOGS = [...]string{LOG_CLIENT_ERRORS, LOG_SERVER_ERRORS, LOG_LOADTIME}
 
 type Handler struct {
 	fileHandle *os.File
@@ -25,17 +23,13 @@ type Handler struct {
 // This function takes a parameter append which if set to false will truncate the
 // file upon writing to it. The log parameter denotes whether or not to look inside
 // of the log folder when attempting to open a given file.
-func Open(file string, append bool, log bool) (*Handler, error) {
+func Open(file string, append bool) (*Handler, error) {
 	var err error
 	var absPath string
 	var f *os.File
 
 	// Generate file path
-	if log {
-		absPath, err = filepath.Abs("logs/" + file)
-	} else {
-		absPath, err = filepath.Abs(file)
-	}
+	absPath, err = filepath.Abs(file)
 
 	// Handle file path errors
 	if err != nil {

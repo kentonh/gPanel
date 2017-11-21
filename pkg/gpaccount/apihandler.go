@@ -39,9 +39,9 @@ func (con *Controller) apiHandler(res http.ResponseWriter, req *http.Request) (b
 	case "/server/maintenance":
 		return true, server.Maintenance(res, req, con.Public)
 	case "/log/read":
-		return true, log.Read(res, req)
+		return true, log.Read(res, req, con.Directory)
 	case "/log/delete":
-		return true, log.Delete(res, req)
+		return true, log.Delete(res, req, con.Directory)
 	default:
 		return false, false
 	}

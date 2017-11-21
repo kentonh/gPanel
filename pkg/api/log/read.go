@@ -10,7 +10,7 @@ import (
 
 // Read function is accessed from api/logs/read and will attempt to read
 // a given log based off of the request data.
-func Read(res http.ResponseWriter, req *http.Request) bool {
+func Read(res http.ResponseWriter, req *http.Request, dir string) bool {
 	if req.Method != "POST" {
 		http.Error(res, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
 		return false
@@ -26,20 +26,20 @@ func Read(res http.ResponseWriter, req *http.Request) bool {
 		return false
 	}
 
-	valid := false
-	for _, log := range file.KNOWN_LOGS {
-		if log == readLogRequestData.Name {
-			valid = true
-			break
-		}
-	}
-
-	if !valid {
-		http.Error(res, "Attempting to read from an unknown log file.", http.StatusBadRequest)
+	var log string
+	switch readLogRequestData.Name {
+	case "client_errors":
+		log = dir + "logs/" + file.LOG_CLIENT_ERRORS
+	case "load_time":
+		log = dir + "logs/" + file.LOG_LOADTIME
+	case "server_errors":
+		log = file.LOG_SERVER_ERRORS
+	default:
+		http.Error(res, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return false
 	}
 
-	handle, err := file.Open(readLogRequestData.Name, true, true)
+	handle, err := file.Open(log, true)
 	if err != nil {
 		http.Error(res, err.Error(), http.StatusBadRequest)
 		return false
