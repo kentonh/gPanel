@@ -8,9 +8,10 @@ import (
 )
 
 const (
-	LOG_CLIENT_ERRORS = "client_errors.log"
-	LOG_SERVER_ERRORS = "server/logs/server_errors.log"
-	LOG_LOADTIME      = "load_time.log"
+	LOG_PUBLIC_ERRORS  = "public_errors.log"
+	LOG_ACCOUNT_ERRORS = "account_errors.log"
+	LOG_SERVER_ERRORS  = "server/logs/server_errors.log"
+	LOG_PUBLIC_LOAD    = "public_load_time.log"
 )
 
 type Handler struct {

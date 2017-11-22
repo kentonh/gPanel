@@ -28,10 +28,12 @@ func Delete(res http.ResponseWriter, req *http.Request, dir string) bool {
 
 	var log string
 	switch deleteLogRequestData.Name {
-	case "client_errors":
-		log = dir + "logs/" + file.LOG_CLIENT_ERRORS
-	case "load_time":
-		log = dir + "logs/" + file.LOG_LOADTIME
+	case "public_errors":
+		log = dir + "logs/" + file.LOG_PUBLIC_ERRORS
+	case "account_errors":
+		log = dir + "logs/" + file.LOG_ACCOUNT_ERRORS
+	case "public_load_time":
+		log = dir + "logs/" + file.LOG_PUBLIC_LOAD
 	case "server_errors":
 		log = file.LOG_SERVER_ERRORS
 	default:
