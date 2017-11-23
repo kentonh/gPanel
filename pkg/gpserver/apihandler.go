@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/Ennovar/gPanel/pkg/api/bundle"
+	"github.com/Ennovar/gPanel/pkg/api/log"
 	"github.com/Ennovar/gPanel/pkg/api/user"
 )
 
@@ -31,6 +32,10 @@ func (con *Controller) apiHandler(res http.ResponseWriter, req *http.Request, cu
 		return true, bundle.Create(res, req, con.Bundles)
 	case "/bundle/list":
 		return true, bundle.List(res, req, con.Bundles)
+	case "/log/read":
+		return true, log.Read(res, req, con.Directory)
+	case "/log/delete":
+		return true, log.Delete(res, req, con.Directory)
 	default:
 		return false, false
 	}

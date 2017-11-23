@@ -10,7 +10,11 @@ jQuery('._js_bundles-manage').on('click', function(e){
   xhr.onloadend = function() {
     if(xhr.status == 200) {
       if(xhr.response != undefined && xhr.response.length != 0) {
-        manageBundlesModal.find('.modal-body').html(xhr.response)
+        manageBundlesModal.find('.modal-body').html('<div class="btn-group" role="group"></div>');
+        jsonResponse = JSON.parse(xhr.response)
+        jQuery.each(jsonResponse, function(k, v) {
+          manageBundlesModal.find('.modal-body .btn-group').append('<button class="btn btn-outline-primary _js_specific-bundle" data="'+v+'">'+v+'</button>');
+        });
       }
       else {
         manageBundlesModal.find('.modal-body').html("An error has occurred. Please try again. If problem persists contact server administrator.")

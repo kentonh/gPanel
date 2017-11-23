@@ -18,7 +18,7 @@ type Controller struct {
 	Port                    int
 	GracefulShutdownTimeout time.Duration
 	Status                  int
-	ClientLogger            *file.Handler
+	PublicLogger            *file.Handler
 	LoadTimeLogger          *file.Handler
 }
 
@@ -27,15 +27,22 @@ var server http.Server
 
 // New function returns a new PublicWeb type.
 func New(dir string, port int) *Controller {
-	clientLogHandler, _ := file.Open(dir+"logs/"+file.LOG_CLIENT_ERRORS, true)
-	loadLogHandler, _ := file.Open(dir+"logs/"+file.LOG_LOADTIME, true)
+	publicErrorHandler, err := file.Open(dir+"logs/"+file.LOG_PUBLIC_ERRORS, true)
+	if err != nil {
+		fmt.Errorf("Error whilst trying to start public logging instance: %v\n", err.Error())
+	}
+
+	loadLogHandler, err := file.Open(dir+"logs/"+file.LOG_PUBLIC_LOAD, true)
+	if err != nil {
+		fmt.Errorf("Error whilst trying to start public load time logging instance: %v\n", err.Error())
+	}
 
 	controller = Controller{
 		DocumentRoot: dir + "public/",
 		Port:         port,
 		GracefulShutdownTimeout: 5 * time.Second,
 		Status:                  0,
-		ClientLogger:            clientLogHandler,
+		PublicLogger:            publicErrorHandler,
 		LoadTimeLogger:          loadLogHandler,
 	}
 
@@ -79,7 +86,7 @@ func (con *Controller) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 	f, err := os.Open(path)
 
 	if err != nil {
-		con.ClientLogger.Write(path + "::" + strconv.Itoa(http.StatusNotFound) + "::" + err.Error())
+		con.PublicLogger.Write(path + "::" + strconv.Itoa(http.StatusNotFound) + "::" + err.Error())
 		routing.HttpThrowStatus(http.StatusNotFound, res)
 		return
 	}
@@ -87,7 +94,7 @@ func (con *Controller) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 	contentType, err := routing.GetContentType(path)
 
 	if err != nil {
-		con.ClientLogger.Write(path + "::" + strconv.Itoa(http.StatusUnsupportedMediaType) + "::" + err.Error())
+		con.PublicLogger.Write(path + "::" + strconv.Itoa(http.StatusUnsupportedMediaType) + "::" + err.Error())
 		routing.HttpThrowStatus(http.StatusUnsupportedMediaType, res)
 		return
 	}
@@ -96,7 +103,7 @@ func (con *Controller) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 	_, err = io.Copy(res, f)
 
 	if err != nil {
-		fmt.Printf("Server error serving files to client: %v\n", err)
+		con.PublicLogger.Write(path + "::" + strconv.Itoa(http.StatusInternalServerError) + "::" + err.Error())
 		routing.HttpThrowStatus(http.StatusInternalServerError, res)
 		return
 	}

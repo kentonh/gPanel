@@ -2,6 +2,7 @@
 package gpaccount
 
 import (
+	"fmt"
 	"io"
 	"net/http"
 	"os"
@@ -20,7 +21,7 @@ type Controller struct {
 	Public                  *public.Controller
 	GracefulShutdownTimeout time.Duration
 	Status                  int
-	ServerLogger            *file.Handler
+	AccountLogger           *file.Handler
 }
 
 var controller Controller
@@ -28,7 +29,10 @@ var httpserver http.Server
 
 // New returns a new Controller reference.
 func New(dir string, accPort int, pubPort int) *Controller {
-	serverErrorLogger, _ := file.Open(file.LOG_SERVER_ERRORS, true)
+	accountErrorLogger, err := file.Open(dir+"logs/"+file.LOG_ACCOUNT_ERRORS, true)
+	if err != nil {
+		fmt.Errorf("Error whilst trying to start account logging instance: %v\n", err.Error())
+	}
 
 	controller = Controller{
 		Directory:               dir,
@@ -37,7 +41,7 @@ func New(dir string, accPort int, pubPort int) *Controller {
 		Public:                  public.New(dir, pubPort),
 		GracefulShutdownTimeout: 5 * time.Second,
 		Status:                  0,
-		ServerLogger:            serverErrorLogger,
+		AccountLogger:           accountErrorLogger,
 	}
 
 	httpserver = http.Server{
@@ -63,7 +67,7 @@ func (con *Controller) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 
 	if reqAuth(path) {
 		if !con.checkAuth(res, req) {
-			con.ServerLogger.Write(path + "::" + strconv.Itoa(http.StatusUnauthorized) + "::" + http.StatusText(http.StatusUnauthorized))
+			con.AccountLogger.Write(path + "::" + strconv.Itoa(http.StatusUnauthorized) + "::" + http.StatusText(http.StatusUnauthorized))
 			http.Error(res, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 			return
 		}
@@ -79,7 +83,7 @@ func (con *Controller) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 	f, err := os.Open(path)
 
 	if err != nil {
-		con.ServerLogger.Write(path + "::" + strconv.Itoa(http.StatusNotFound) + "::" + err.Error())
+		con.AccountLogger.Write(path + "::" + strconv.Itoa(http.StatusNotFound) + "::" + err.Error())
 		routing.HttpThrowStatus(http.StatusNotFound, res)
 		return
 	}
@@ -87,7 +91,7 @@ func (con *Controller) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 	contentType, err := routing.GetContentType(path)
 
 	if err != nil {
-		con.ServerLogger.Write(path + "::" + strconv.Itoa(http.StatusUnsupportedMediaType) + "::" + err.Error())
+		con.AccountLogger.Write(path + "::" + strconv.Itoa(http.StatusUnsupportedMediaType) + "::" + err.Error())
 		routing.HttpThrowStatus(http.StatusUnsupportedMediaType, res)
 		return
 	}
@@ -96,7 +100,7 @@ func (con *Controller) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 	_, err = io.Copy(res, f)
 
 	if err != nil {
-		con.ServerLogger.Write(path + "::" + strconv.Itoa(http.StatusInternalServerError) + "::" + err.Error())
+		con.AccountLogger.Write(path + "::" + strconv.Itoa(http.StatusInternalServerError) + "::" + err.Error())
 		routing.HttpThrowStatus(http.StatusInternalServerError, res)
 		return
 	}
