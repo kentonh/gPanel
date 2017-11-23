@@ -84,6 +84,75 @@
       </div>
     </div>
 
+    <!-- Specific Bundle Management -->
+    <div class="modal fade specific-bundle-modal" tabindex="-1" role="dialog" aria-labelledby="specific-bundle-modal" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title"></h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="container-fluid">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Public Server</h4>
+                  <h6 class="card-subtitle mb-4 text-muted">Handle operations for the public serving server</h6>
+                  <div class="btn-group" role="group">
+                    <button type="button" class="_js_specific-bundle-public-start btn btn-outline-primary">Start</button>
+                    <button type="button" class="_js_specific-bundle-public-maintenance-mode btn btn-outline-primary">Maintenance Mode</button>
+                    <div class="btn-group" role="group">
+                      <button class="btn btn-outline-primary dropdown-toggle" type="button" id="shutdownDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Shutdown
+                      </button>
+                      <div class="dropdown-menu" aria-labelledby="shutdownDropdown">
+                        <a class="dropdown-item _js_specific-bundle-public-shutdown-graceful" href="#graceful_shutdown">Graceful</a>
+                        <a class="dropdown-item _js_specific-bundle-public-shutdown-forceful" href="#forceful_shutdown">Forceful</a>
+                      </div>
+                    </div>
+                    <div class="btn-group" role="group">
+                      <button class="btn btn-outline-primary dropdown-toggle" type="button" id="ipFilterDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Restart
+                      </button>
+                      <div class="dropdown-menu" aria-labelledby="ipFilterDropdown">
+                        <a class="dropdown-item _js_specific-bundle-public-restart-graceful" href="#graceful_restart">Graceful</a>
+                        <a class="dropdown-item _js_specific-bundle-public-restart-forceful" href="#forceful_restart">Forceful</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-footer text-muted text-center">
+                  Server Status: <span class="_js_specific-bundle-public-status text-muted">LOADING</span>
+                </div>
+              </div>
+
+              <div class="row mt-5">
+                <div class="col-12">
+                  <div class="card">
+                    <div class="card-body">
+                      <h4 class="card-title">Logs</h4>
+                      <h6 class="card-subtitle mb-4 text-muted">View various public and account data logs that may help pinpoint issues</h6>
+                      <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-outline-primary _js_specific-bundle-log-view" data="account_errors">Account Errors</button>
+                        <button type="button" class="btn btn-outline-primary _js_specific-bundle-log-view" data="public_errors">Public Errors</button>
+                        <button type="button" class="btn btn-outline-primary _js_specific-bundle-log-view" data="public_load_time">Public Load Time</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-warning _js_back-to-bundle-menu">Back to Bundle Menu</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- View/Clear Log Modal -->
     <div class="modal fade view-log-modal" tabindex="-1" role="dialog" aria-labelledby="view-log-modal" aria-hidden="true">
       <div class="modal-dialog modal-lg">
@@ -159,6 +228,9 @@
 
     <script type="text/javascript" src="assets/js/panelHandlers/bundles/create.js"></script>
     <script type="text/javascript" src="assets/js/panelHandlers/bundles/manage.js"></script>
+
+    <script type="text/javascript" src="assets/js/panelHandlers/bundles/specific/open.js"></script>
+    <script type="text/javascript" src="assets/js/panelHandlers/bundles/specific/back.js"></script>
 
     <script type="text/javascript" src="assets/js/panelHandlers/log/view.js"></script>
     <script type="text/javascript" src="assets/js/panelHandlers/log/delete.js"></script>
