@@ -2,15 +2,19 @@
 package gpserver
 
 import (
+	"bytes"
+	"encoding/json"
+	"io/ioutil"
 	"net/http"
 	"strings"
 
 	"github.com/Ennovar/gPanel/pkg/api/bundle"
 	"github.com/Ennovar/gPanel/pkg/api/log"
+	"github.com/Ennovar/gPanel/pkg/api/server"
 	"github.com/Ennovar/gPanel/pkg/api/user"
 )
 
-func (con *Controller) apiHandler(res http.ResponseWriter, req *http.Request, curBundle int) (bool, bool) {
+func (con *Controller) apiHandler(res http.ResponseWriter, req *http.Request) (bool, bool) {
 	path := req.URL.Path[1:]
 	if len(path) == 0 {
 		path = (con.Directory + "index.html")
@@ -20,6 +24,34 @@ func (con *Controller) apiHandler(res http.ResponseWriter, req *http.Request, cu
 
 	splitUrl := strings.SplitN(path, "api", 2)
 	suspectApi := strings.ToLower(splitUrl[len(splitUrl)-1])
+
+	if req.ContentLength > 0 {
+		var bundleRequestData struct {
+			BName string `json:"bundle_name,omitempty"`
+		}
+
+		buf, err := ioutil.ReadAll(req.Body)
+		if err != nil {
+			return false, false
+		}
+
+		b1 := ioutil.NopCloser(bytes.NewBuffer(buf))
+		req.Body = ioutil.NopCloser(bytes.NewBuffer(buf))
+
+		err = json.NewDecoder(b1).Decode(&bundleRequestData)
+		if err != nil {
+			return false, false
+		}
+
+		if specific, ok := con.Bundles[bundleRequestData.BName]; ok {
+			switch suspectApi {
+			case "/server/status":
+				return true, server.Status(res, req, specific.Public)
+			default:
+				return false, false
+			}
+		}
+	}
 
 	switch suspectApi {
 	case "/user/auth":
