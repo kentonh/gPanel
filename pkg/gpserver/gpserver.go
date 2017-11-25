@@ -81,7 +81,7 @@ func (con *Controller) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 		}
 	}
 
-	isApi, _ := con.apiHandler(res, req, 0)
+	isApi, _ := con.apiHandler(res, req)
 
 	if isApi {
 		// API methods handle HTTP logic from here

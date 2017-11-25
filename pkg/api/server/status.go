@@ -11,7 +11,7 @@ import (
 // Status function is called from api/server/status and will return the current status of
 // the public server.
 func Status(res http.ResponseWriter, req *http.Request, publicServer *public.Controller) bool {
-	if req.Method != "GET" {
+	if req.Method != "GET" && req.Method != "POST" {
 		http.Error(res, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
 		return false
 	}
