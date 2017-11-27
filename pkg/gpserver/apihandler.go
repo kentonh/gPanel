@@ -55,6 +55,10 @@ func (con *Controller) apiHandler(res http.ResponseWriter, req *http.Request) (b
 				return true, server.Maintenance(res, req, specific.Public)
 			case "/server/restart":
 				return true, server.Restart(res, req, specific.Public)
+			case "/log/read":
+				return true, log.Read(res, req, specific.Directory)
+			case "/log/delete":
+				return true, log.Delete(res, req, specific.Directory)
 			default:
 				return false, false
 			}

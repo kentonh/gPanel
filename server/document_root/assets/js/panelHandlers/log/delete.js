@@ -10,6 +10,15 @@ jQuery('._js_log-clear').on('click', function(e){
     case "server_errors":
       title = "Server Error Log";
       break;
+    case "public_errors":
+      title = "Public Error Log";
+      break;
+    case "account_errors":
+      title = "Account Error Log";
+      break;
+    case "public_load_time":
+      title = "Public Load Time Log";
+      break;
     default:
       return;
       break;
