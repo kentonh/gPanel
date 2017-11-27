@@ -1,6 +1,6 @@
 # Contributing to gPanel
 
-A quick way to get started contributing to this project is to check out our active issues in the issues tab of the master repository. Also take a look at our [features list](#features_list_anchor) and choose one that needs work, or start working on an unimplemented feature. Feel free to edit this document in your own fork and submit a pull request to add to, subtract from, or make minor adjustments to existing features on the list.
+A quick way to get started contributing to this project is to check out our active issues in the issues tab of the master repository. Also take a look at our [key features list](#features_list_anchor) and choose one that needs work, or start working on an unimplemented feature. Feel free to edit this document in your own fork and submit a pull request to add to, subtract from, or make minor adjustments to existing features on the list.
 
 ## Stylistic & Conventions Guidelines
 
@@ -56,36 +56,36 @@ Package names should always match their parent folder.
 package networking
 ```
 
-## <a name="features_list_anchor"></a>Features
+## <a name="features_list_anchor"></a>Key Features
 
 Feel free to edit this document in your own fork and submit a pull request to add to, subtract from, or make minor adjustments to existing features on the list.
 
 Key: __Implemented__ | __*Implemented, but needs work*__ | *Unimplemented* | ~~Removed~~ | Section Heading
 
-* Administrative Web Hosting Panel
+* gPanel Server (Uppermost Controller)
   * Accessibility
-    * *Using a special port*
-    * *Authentication*
-    * *User system*
+    * __Using a special port:2082__
+    * __Authentication__
+    * __*User system*__
   * Clients
-    * *Multi-client support*
-    * *Configuration of new clients*
-    * *Configuration of existing hosts*
-* Client Web Hosting Panel
+    * __Multi-client support__
+    * __Configuration of new clients__
+    * __*Configuration of existing hosts*__
+* gPanel Account (Upper level of bundles)
   * Accessibility
-    * __Using port 2082__
-    * __*Authentication*__
-    * *User system*
+    * __Using ports defined during configuration__
+    * __Authentication__
+    * __*User system*__
   * Public Website Control
-    * *Turning access on/off*
-    * *Graceful shutdown*
-    * *Maintenance mode*
+    * __Startup__
+    * __Graceful/forceful shutdown__
+    * __Maintenance mode__
     * *IP Filtering*
   * Statistics
     * *Various graphs for usage, bandwidth, etc*
     * *Click heat maps*
   * Diagnostics
-    * *Smart logging*
+    * __Error Logging__
     * *Alert system for fatal errors*
   * Mail Servers
   * Domains
@@ -99,18 +99,18 @@ Key: __Implemented__ | __*Implemented, but needs work*__ | *Unimplemented* | ~~R
     * *CRUD*
     * *Inline Editor*
     * *Managing Permissions*
-* Public Website
+* Public (Lower level of bundles)
   * Accessibility
-    * __Port 3000 for Development__
-    * *Port 80 for Production w/o SSL/TLS*
-    * *Port 443 for Production w/ SSL/TLS*
+    * __Using ports defined during configuration__
   * __Serve Requests (duh)__
-  * *Concurrent Processing*
+  * __Concurrent Processing__
   * Supported content types
-    * __*All of the obvious ones (.jpg/.html/.css/etc)*__
+    * __All of the obvious ones (.jpg/.html/.css/etc)__
     * *.go*
     * *.php*
 * General
+  * Load Balancing and Routing Requests to the Correct Ports
+    * *Undecided on implementation, possibly NGINX*
   * Deployment
     * *Binary*
     * *GUI Installation Helper*
