@@ -3,6 +3,7 @@ package bundle
 import (
 	"encoding/json"
 	"errors"
+	"log"
 	"net"
 	"net/http"
 	"strconv"
@@ -12,8 +13,9 @@ import (
 	"github.com/Ennovar/gPanel/pkg/gpaccount"
 )
 
-func Create(res http.ResponseWriter, req *http.Request, bundles map[string]*gpaccount.Controller) bool {
+func Create(res http.ResponseWriter, req *http.Request, logger *log.Logger, bundles map[string]*gpaccount.Controller) bool {
 	if req.Method != "POST" {
+		logger.Println(req.URL.Path + "::" + req.Method + "::" + strconv.Itoa(http.StatusMethodNotAllowed) + "::" + http.StatusText(http.StatusMethodNotAllowed))
 		http.Error(res, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
 		return false
 	}
@@ -26,12 +28,14 @@ func Create(res http.ResponseWriter, req *http.Request, bundles map[string]*gpac
 
 	err := json.NewDecoder(req.Body).Decode(&createBundleRequestData)
 	if err != nil {
+		logger.Println(req.URL.Path + "::" + err.Error())
 		http.Error(res, err.Error(), http.StatusBadRequest)
 		return false
 	}
 
 	check, err := net.Listen("tcp", ":"+strconv.Itoa(createBundleRequestData.AccPort))
 	if err != nil {
+		logger.Println(req.URL.Path + "::" + "a service is already listening on port " + strconv.Itoa(createBundleRequestData.AccPort) + "::" + err.Error())
 		http.Error(res, "A service is already listening on port "+strconv.Itoa(createBundleRequestData.AccPort), http.StatusInternalServerError)
 		return false
 	}
@@ -39,6 +43,7 @@ func Create(res http.ResponseWriter, req *http.Request, bundles map[string]*gpac
 
 	check, err = net.Listen("tcp", ":"+strconv.Itoa(createBundleRequestData.PubPort))
 	if err != nil {
+		logger.Println(req.URL.Path + "::" + "a service is already listening on port " + strconv.Itoa(createBundleRequestData.PubPort) + "::" + err.Error())
 		http.Error(res, "A service is already listening on port "+strconv.Itoa(createBundleRequestData.PubPort), http.StatusInternalServerError)
 		return false
 	}
@@ -61,6 +66,7 @@ func Create(res http.ResponseWriter, req *http.Request, bundles map[string]*gpac
 	}
 
 	if err != nil {
+		logger.Println(req.URL.Path + "::" + err.Error())
 		http.Error(res, err.Error(), http.StatusBadRequest)
 		return false
 	}
@@ -68,12 +74,14 @@ func Create(res http.ResponseWriter, req *http.Request, bundles map[string]*gpac
 	newBundle := "bundles/bundle_" + createBundleRequestData.Name
 	err = file.CopyDir("bundles/default_bundle", newBundle)
 	if err != nil {
+		logger.Println(req.URL.Path + "::" + err.Error())
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 		return false
 	}
 
 	ds, err := database.Open(newBundle + "/" + database.DB_MAIN)
 	if err != nil {
+		logger.Println(req.URL.Path + "::" + err.Error())
 		http.Error(res, err.Error(), http.StatusBadRequest)
 		return false
 	}
@@ -88,11 +96,12 @@ func Create(res http.ResponseWriter, req *http.Request, bundles map[string]*gpac
 
 	err = ds.Put(database.BUCKET_PORTS, []byte("bundle_ports"), databaseBundlePorts)
 	if err != nil {
+		logger.Println(req.URL.Path + "::" + err.Error())
 		http.Error(res, err.Error(), http.StatusBadRequest)
 		return false
 	}
 
-	bundles[createBundleRequestData.Name] = gpaccount.New(newBundle+"/", databaseBundlePorts.Account, databaseBundlePorts.Public)
+	bundles[createBundleRequestData.Name] = gpaccount.New(newBundle+"/", databaseBundlePorts.Account, databaseBundlePorts.Public, logger)
 	_ = bundles[createBundleRequestData.Name].Start()
 	_ = bundles[createBundleRequestData.Name].Public.Start()
 

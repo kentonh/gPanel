@@ -1,17 +1,20 @@
-// Package logs is a child of package api to handle api calls concerning log files
+// Package log is a child of package api to handle api calls concerning log files
 package log
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/Ennovar/gPanel/pkg/file"
 )
 
 // Read function is accessed from api/logs/read and will attempt to read
 // a given log based off of the request data.
-func Read(res http.ResponseWriter, req *http.Request, dir string) bool {
+func Read(res http.ResponseWriter, req *http.Request, logger *log.Logger, dir string) bool {
 	if req.Method != "POST" {
+		logger.Println(req.URL.Path + "::" + req.Method + "::" + strconv.Itoa(http.StatusMethodNotAllowed) + "::" + http.StatusText(http.StatusMethodNotAllowed))
 		http.Error(res, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
 		return false
 	}
@@ -22,6 +25,7 @@ func Read(res http.ResponseWriter, req *http.Request, dir string) bool {
 
 	err := json.NewDecoder(req.Body).Decode(&readLogRequestData)
 	if err != nil {
+		logger.Println(req.URL.Path + "::" + err.Error())
 		http.Error(res, err.Error(), http.StatusBadRequest)
 		return false
 	}
@@ -37,12 +41,14 @@ func Read(res http.ResponseWriter, req *http.Request, dir string) bool {
 	case "server_errors":
 		log = file.LOG_SERVER_ERRORS
 	default:
+		logger.Println(req.URL.Path + "::unknown log type requested")
 		http.Error(res, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return false
 	}
 
 	handle, err := file.Open(log, true)
 	if err != nil {
+		logger.Println(req.URL.Path + "::" + err.Error())
 		http.Error(res, err.Error(), http.StatusBadRequest)
 		return false
 	}
@@ -50,6 +56,7 @@ func Read(res http.ResponseWriter, req *http.Request, dir string) bool {
 
 	data, err := handle.Read()
 	if err != nil {
+		logger.Println(req.URL.Path + "::" + err.Error())
 		http.Error(res, err.Error(), http.StatusBadRequest)
 		return false
 	}

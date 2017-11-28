@@ -23,25 +23,25 @@ func (con *Controller) apiHandler(res http.ResponseWriter, req *http.Request) (b
 
 	switch suspectApi {
 	case "/user/auth":
-		return true, user.Auth(res, req, con.Directory)
+		return true, user.Auth(res, req, con.APILogger, con.Directory)
 	case "/user/register":
-		return true, user.Register(res, req, con.Directory)
+		return true, user.Register(res, req, con.APILogger, con.Directory)
 	case "/user/logout":
-		return true, user.Logout(res, req, con.Directory)
+		return true, user.Logout(res, req, con.APILogger, con.Directory)
 	case "/server/status":
-		return true, server.Status(res, req, con.Public)
+		return true, server.Status(res, req, con.APILogger, con.Public)
 	case "/server/start":
-		return true, server.Start(res, req, con.Public)
+		return true, server.Start(res, req, con.APILogger, con.Public)
 	case "/server/shutdown":
-		return true, server.Shutdown(res, req, con.Public)
+		return true, server.Shutdown(res, req, con.APILogger, con.Public)
 	case "/server/restart":
-		return true, server.Restart(res, req, con.Public)
+		return true, server.Restart(res, req, con.APILogger, con.Public)
 	case "/server/maintenance":
-		return true, server.Maintenance(res, req, con.Public)
+		return true, server.Maintenance(res, req, con.APILogger, con.Public)
 	case "/log/read":
-		return true, log.Read(res, req, con.Directory)
+		return true, log.Read(res, req, con.APILogger, con.Directory)
 	case "/log/delete":
-		return true, log.Delete(res, req, con.Directory)
+		return true, log.Delete(res, req, con.APILogger, con.Directory)
 	default:
 		return false, false
 	}

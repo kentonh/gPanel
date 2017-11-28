@@ -4,6 +4,7 @@ package gpaccount
 import (
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"os"
 	"strconv"
@@ -22,13 +23,14 @@ type Controller struct {
 	GracefulShutdownTimeout time.Duration
 	Status                  int
 	AccountLogger           *file.Handler
+	APILogger               *log.Logger
 }
 
 var controller Controller
 var httpserver http.Server
 
 // New returns a new Controller reference.
-func New(dir string, accPort int, pubPort int) *Controller {
+func New(dir string, accPort int, pubPort int, apiLogger *log.Logger) *Controller {
 	accountErrorLogger, err := file.Open(dir+"logs/"+file.LOG_ACCOUNT_ERRORS, true)
 	if err != nil {
 		fmt.Errorf("Error whilst trying to start account logging instance: %v\n", err.Error())
@@ -42,6 +44,7 @@ func New(dir string, accPort int, pubPort int) *Controller {
 		GracefulShutdownTimeout: 5 * time.Second,
 		Status:                  0,
 		AccountLogger:           accountErrorLogger,
+		APILogger:               apiLogger,
 	}
 
 	httpserver = http.Server{
