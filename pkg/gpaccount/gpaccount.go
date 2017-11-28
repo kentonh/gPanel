@@ -10,7 +10,6 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/Ennovar/gPanel/pkg/file"
 	"github.com/Ennovar/gPanel/pkg/public"
 	"github.com/Ennovar/gPanel/pkg/routing"
 )
@@ -22,7 +21,7 @@ type Controller struct {
 	Public                  *public.Controller
 	GracefulShutdownTimeout time.Duration
 	Status                  int
-	AccountLogger           *file.Handler
+	AccountLogger           *log.Logger
 	APILogger               *log.Logger
 }
 
@@ -30,11 +29,14 @@ var controller Controller
 var httpserver http.Server
 
 // New returns a new Controller reference.
-func New(dir string, accPort int, pubPort int, apiLogger *log.Logger) *Controller {
-	accountErrorLogger, err := file.Open(dir+"logs/"+file.LOG_ACCOUNT_ERRORS, true)
+func New(dir string, accPort int, pubPort int) *Controller {
+	f, err := os.OpenFile(dir+"logs/account_errors.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
-		fmt.Errorf("Error whilst trying to start account logging instance: %v\n", err.Error())
+		fmt.Println("error whilst trying to start server logging instance:", err.Error())
 	}
+
+	apiLogger := log.New(f, "API :: ", 3)
+	accountLogger := log.New(f, "ACCOUNT :: ", 3)
 
 	controller = Controller{
 		Directory:               dir,
@@ -43,7 +45,7 @@ func New(dir string, accPort int, pubPort int, apiLogger *log.Logger) *Controlle
 		Public:                  public.New(dir, pubPort),
 		GracefulShutdownTimeout: 5 * time.Second,
 		Status:                  0,
-		AccountLogger:           accountErrorLogger,
+		AccountLogger:           accountLogger,
 		APILogger:               apiLogger,
 	}
 
@@ -70,7 +72,7 @@ func (con *Controller) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 
 	if reqAuth(path) {
 		if !con.checkAuth(res, req) {
-			con.AccountLogger.Write(path + "::" + strconv.Itoa(http.StatusUnauthorized) + "::" + http.StatusText(http.StatusUnauthorized))
+			con.AccountLogger.Println(path + "::" + strconv.Itoa(http.StatusUnauthorized) + "::" + http.StatusText(http.StatusUnauthorized))
 			http.Error(res, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 			return
 		}
@@ -86,7 +88,7 @@ func (con *Controller) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 	f, err := os.Open(path)
 
 	if err != nil {
-		con.AccountLogger.Write(path + "::" + strconv.Itoa(http.StatusNotFound) + "::" + err.Error())
+		con.AccountLogger.Println(path + "::" + strconv.Itoa(http.StatusNotFound) + "::" + err.Error())
 		routing.HttpThrowStatus(http.StatusNotFound, res)
 		return
 	}
@@ -94,7 +96,7 @@ func (con *Controller) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 	contentType, err := routing.GetContentType(path)
 
 	if err != nil {
-		con.AccountLogger.Write(path + "::" + strconv.Itoa(http.StatusUnsupportedMediaType) + "::" + err.Error())
+		con.AccountLogger.Println(path + "::" + strconv.Itoa(http.StatusUnsupportedMediaType) + "::" + err.Error())
 		routing.HttpThrowStatus(http.StatusUnsupportedMediaType, res)
 		return
 	}
@@ -103,7 +105,7 @@ func (con *Controller) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 	_, err = io.Copy(res, f)
 
 	if err != nil {
-		con.AccountLogger.Write(path + "::" + strconv.Itoa(http.StatusInternalServerError) + "::" + err.Error())
+		con.AccountLogger.Println(path + "::" + strconv.Itoa(http.StatusInternalServerError) + "::" + err.Error())
 		routing.HttpThrowStatus(http.StatusInternalServerError, res)
 		return
 	}

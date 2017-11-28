@@ -33,13 +33,13 @@ func Read(res http.ResponseWriter, req *http.Request, logger *log.Logger, dir st
 	var log string
 	switch readLogRequestData.Name {
 	case "public_errors":
-		log = dir + "logs/" + file.LOG_PUBLIC_ERRORS
+		log = dir + "logs/" + LOG_PUBLIC_ERRORS
 	case "account_errors":
-		log = dir + "logs/" + file.LOG_ACCOUNT_ERRORS
+		log = dir + "logs/" + LOG_ACCOUNT_ERRORS
 	case "public_load_time":
-		log = dir + "logs/" + file.LOG_PUBLIC_LOAD
+		log = dir + "logs/" + LOG_PUBLIC_LOAD
 	case "server_errors":
-		log = file.LOG_SERVER_ERRORS
+		log = LOG_SERVER_ERRORS
 	default:
 		logger.Println(req.URL.Path + "::unknown log type requested")
 		http.Error(res, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
