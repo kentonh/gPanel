@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/Ennovar/gPanel/pkg/api/log"
+	logapi "github.com/Ennovar/gPanel/pkg/api/log"
 	"github.com/Ennovar/gPanel/pkg/api/server"
 	"github.com/Ennovar/gPanel/pkg/api/user"
 )
@@ -39,9 +39,9 @@ func (con *Controller) apiHandler(res http.ResponseWriter, req *http.Request) (b
 	case "/server/maintenance":
 		return true, server.Maintenance(res, req, con.APILogger, con.Public)
 	case "/log/read":
-		return true, log.Read(res, req, con.APILogger, con.Directory)
+		return true, logapi.Read(res, req, con.APILogger, con.Directory)
 	case "/log/delete":
-		return true, log.Delete(res, req, con.APILogger, con.Directory)
+		return true, logapi.Truncate(res, req, con.APILogger, con.Directory)
 	default:
 		return false, false
 	}

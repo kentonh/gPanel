@@ -12,7 +12,6 @@ import (
 	"strings"
 
 	"github.com/Ennovar/gPanel/pkg/api/bundle"
-	"github.com/Ennovar/gPanel/pkg/file"
 	"github.com/Ennovar/gPanel/pkg/gpaccount"
 	"github.com/Ennovar/gPanel/pkg/routing"
 )
@@ -33,12 +32,12 @@ func New() *Controller {
 		fmt.Println("error finding bundles:", err.Error())
 	}
 
-	serverErrorLogger, err := os.OpenFile(file.LOG_SERVER_ERRORS, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	f, err := os.OpenFile("server/logs/server_errors.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
 		fmt.Println("error whilst trying to start server logging instance:", err.Error())
 	}
 
-	apiLogger := log.New(serverErrorLogger, "API :: ", 3)
+	apiLogger := log.New(f, "API :: ", 3)
 
 	for _, dir := range dirs {
 		if dir.Name() == "default_bundle" || !dir.IsDir() {
@@ -49,7 +48,7 @@ func New() *Controller {
 			dirPath := "bundles/" + dir.Name() + "/"
 			err, accPort, pubPort := bundle.GetPorts(dirPath)
 
-			curBundle := gpaccount.New(dirPath, accPort, pubPort, apiLogger)
+			curBundle := gpaccount.New(dirPath, accPort, pubPort)
 
 			err = curBundle.Start()
 			err2 := curBundle.Public.Start()
@@ -65,7 +64,7 @@ func New() *Controller {
 		Directory:    "server/",
 		DocumentRoot: "document_root/",
 		Bundles:      bundles,
-		ServerLogger: log.New(serverErrorLogger, "SERVER :: ", 3),
+		ServerLogger: log.New(f, "SERVER :: ", 3),
 		APILogger:    apiLogger,
 	}
 }

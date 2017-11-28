@@ -4,12 +4,12 @@ package public
 import (
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"os"
 	"strconv"
 	"time"
 
-	"github.com/Ennovar/gPanel/pkg/file"
 	"github.com/Ennovar/gPanel/pkg/routing"
 )
 
@@ -18,8 +18,8 @@ type Controller struct {
 	Port                    int
 	GracefulShutdownTimeout time.Duration
 	Status                  int
-	PublicLogger            *file.Handler
-	LoadTimeLogger          *file.Handler
+	PublicLogger            *log.Logger
+	LoadTimeLogger          *log.Logger
 }
 
 var controller Controller
@@ -27,23 +27,26 @@ var server http.Server
 
 // New function returns a new PublicWeb type.
 func New(dir string, port int) *Controller {
-	publicErrorHandler, err := file.Open(dir+"logs/"+file.LOG_PUBLIC_ERRORS, true)
+	f, err := os.OpenFile(dir+"logs/public_errors.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
 		fmt.Errorf("Error whilst trying to start public logging instance: %v\n", err.Error())
 	}
 
-	loadLogHandler, err := file.Open(dir+"logs/"+file.LOG_PUBLIC_LOAD, true)
+	fh, err := os.OpenFile(dir+"logs/public_load_time.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
 		fmt.Errorf("Error whilst trying to start public load time logging instance: %v\n", err.Error())
 	}
+
+	publicLogger := log.New(f, "PUBLIC :: ", 3)
+	loadLogger := log.New(fh, "LOAD :: ", 3)
 
 	controller = Controller{
 		DocumentRoot: dir + "public/",
 		Port:         port,
 		GracefulShutdownTimeout: 5 * time.Second,
 		Status:                  0,
-		PublicLogger:            publicErrorHandler,
-		LoadTimeLogger:          loadLogHandler,
+		PublicLogger:            publicLogger,
+		LoadTimeLogger:          loadLogger,
 	}
 
 	server = http.Server{
@@ -86,7 +89,7 @@ func (con *Controller) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 	f, err := os.Open(path)
 
 	if err != nil {
-		con.PublicLogger.Write(path + "::" + strconv.Itoa(http.StatusNotFound) + "::" + err.Error())
+		con.PublicLogger.Println(path + "::" + strconv.Itoa(http.StatusNotFound) + "::" + err.Error())
 		routing.HttpThrowStatus(http.StatusNotFound, res)
 		return
 	}
@@ -94,7 +97,7 @@ func (con *Controller) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 	contentType, err := routing.GetContentType(path)
 
 	if err != nil {
-		con.PublicLogger.Write(path + "::" + strconv.Itoa(http.StatusUnsupportedMediaType) + "::" + err.Error())
+		con.PublicLogger.Println(path + "::" + strconv.Itoa(http.StatusUnsupportedMediaType) + "::" + err.Error())
 		routing.HttpThrowStatus(http.StatusUnsupportedMediaType, res)
 		return
 	}
@@ -103,11 +106,11 @@ func (con *Controller) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 	_, err = io.Copy(res, f)
 
 	if err != nil {
-		con.PublicLogger.Write(path + "::" + strconv.Itoa(http.StatusInternalServerError) + "::" + err.Error())
+		con.PublicLogger.Println(path + "::" + strconv.Itoa(http.StatusInternalServerError) + "::" + err.Error())
 		routing.HttpThrowStatus(http.StatusInternalServerError, res)
 		return
 	}
 
 	elapsedTime := time.Since(startTime)
-	con.LoadTimeLogger.Write(path + " rendered in " + strconv.FormatFloat(elapsedTime.Seconds(), 'f', 6, 64) + " seconds")
+	con.LoadTimeLogger.Println(path + " rendered in " + strconv.FormatFloat(elapsedTime.Seconds(), 'f', 6, 64) + " seconds")
 }

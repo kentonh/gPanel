@@ -9,7 +9,7 @@ import (
 	"strings"
 
 	"github.com/Ennovar/gPanel/pkg/api/bundle"
-	"github.com/Ennovar/gPanel/pkg/api/log"
+	logapi "github.com/Ennovar/gPanel/pkg/api/log"
 	"github.com/Ennovar/gPanel/pkg/api/server"
 	"github.com/Ennovar/gPanel/pkg/api/user"
 )
@@ -56,9 +56,9 @@ func (con *Controller) apiHandler(res http.ResponseWriter, req *http.Request) (b
 			case "/server/restart":
 				return true, server.Restart(res, req, con.APILogger, specific.Public)
 			case "/log/read":
-				return true, log.Read(res, req, con.APILogger, specific.Directory)
-			case "/log/delete":
-				return true, log.Delete(res, req, con.APILogger, specific.Directory)
+				return true, logapi.Read(res, req, con.APILogger, specific.Directory)
+			case "/log/truncate":
+				return true, logapi.Truncate(res, req, con.APILogger, specific.Directory)
 			default:
 				return false, false
 			}
@@ -77,9 +77,9 @@ func (con *Controller) apiHandler(res http.ResponseWriter, req *http.Request) (b
 	case "/bundle/list":
 		return true, bundle.List(res, req, con.APILogger, con.Bundles)
 	case "/log/read":
-		return true, log.Read(res, req, con.APILogger, con.Directory)
+		return true, logapi.Read(res, req, con.APILogger, con.Directory)
 	case "/log/delete":
-		return true, log.Delete(res, req, con.APILogger, con.Directory)
+		return true, logapi.Truncate(res, req, con.APILogger, con.Directory)
 	default:
 		return false, false
 	}
