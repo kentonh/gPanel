@@ -19,10 +19,9 @@ jQuery('._js_bundles-manage').on('click', function(e){
       else {
         manageBundlesModal.find('.modal-body').html("An error has occurred. Please try again. If problem persists contact server administrator.")
       }
-      manageBundlesModal.modal('show');
     }
     else if(xhr.status == 204) {
-      manageBundlesModal.modal('show');
+      manageBundlesModal.find('.modal-body').html("<p>No bundles current exist on the server.</p>")
     }
     else {
       if(xhr.response != undefined && xhr.response.length != 0) {
@@ -31,7 +30,8 @@ jQuery('._js_bundles-manage').on('click', function(e){
       else {
         manageBundlesModal.find('.modal-body').html(xhr.status + " Error!")
       }
-      manageBundlesModal.modal('show');
     }
   }
+
+  manageBundlesModal.modal('show');
 });

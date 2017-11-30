@@ -17,7 +17,6 @@ func List(res http.ResponseWriter, req *http.Request, logger *log.Logger, bundle
 	}
 
 	if len(bundles) <= 0 {
-		logger.Println("no bundles :: http response returns no content")
 		res.WriteHeader(http.StatusNoContent)
 		return true
 	}
