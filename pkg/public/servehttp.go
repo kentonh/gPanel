@@ -15,6 +15,11 @@ import (
 func (con *Controller) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 	startTime := time.Now()
 
+	if con.Filter(req, "block") {
+		http.Error(res, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+		return
+	}
+
 	switch con.Status {
 	case 0: // This will actually never show because this function won't run if the server is off
 		http.Error(res, "The server is currently down and not serving requests.", http.StatusServiceUnavailable)
@@ -22,8 +27,10 @@ func (con *Controller) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 	case 1: // Normal
 		break
 	case 2: // Maintenance mode
-		http.Error(res, "The server is currently maintenance mode and not serving requests.", http.StatusServiceUnavailable)
-		return
+		if !con.Filter(req, "maintenance") {
+			http.Error(res, "The server is currently maintenance mode and not serving requests.", http.StatusServiceUnavailable)
+			return
+		}
 	case 3: // This will actually never show because this function won't run if the server is off
 		http.Error(res, "The server is currently restarting.", http.StatusServiceUnavailable)
 		return
@@ -31,9 +38,9 @@ func (con *Controller) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 
 	path := req.URL.Path[1:]
 	if len(path) == 0 {
-		path = (con.DocumentRoot + "index.html")
+		path = (con.Directory + "public/" + "index.html")
 	} else {
-		path = (con.DocumentRoot + path)
+		path = (con.Directory + "public/" + path)
 	}
 
 	f, err := os.Open(path)

@@ -42,7 +42,6 @@ function listFilteredIPs(type) {
     if(xhr.status == 200) {
       if(xhr.response != undefined && xhr.response.length != 0) {
         jsonResponse = JSON.parse(xhr.response)
-        console.log(xhr.response);
         jQuery.each(jsonResponse, function(k, v) {
           ipModal.find('._js_currently-filtered-ips').append("<li>"+v.ip+"</li>");
         });

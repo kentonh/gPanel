@@ -11,7 +11,7 @@ import (
 )
 
 type Controller struct {
-	DocumentRoot            string
+	Directory               string
 	Port                    int
 	GracefulShutdownTimeout time.Duration
 	Status                  int
@@ -38,8 +38,8 @@ func New(dir string, port int) *Controller {
 	loadLogger := log.New(fh, "LOAD :: ", 3)
 
 	controller = Controller{
-		DocumentRoot: dir + "public/",
-		Port:         port,
+		Directory: dir,
+		Port:      port,
 		GracefulShutdownTimeout: 5 * time.Second,
 		Status:                  0,
 		PublicLogger:            publicLogger,
