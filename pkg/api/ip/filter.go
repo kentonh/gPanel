@@ -29,7 +29,7 @@ func Filter(res http.ResponseWriter, req *http.Request, logger *log.Logger, dir 
 		return false
 	}
 
-	if blockIPRequestData.Type != "maintenance" && blockIPRequestData.Type != "general" {
+	if blockIPRequestData.Type != "maintenance" && blockIPRequestData.Type != "block" {
 		logger.Println(req.URL.Path + "::" + " filtered IP type is invalid")
 		http.Error(res, err.Error(), http.StatusBadRequest)
 		return false

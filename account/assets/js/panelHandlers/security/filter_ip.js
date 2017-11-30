@@ -13,7 +13,7 @@ jQuery('._js_ip-filter-form').on('submit', function(e){
 
   xhr.onloadend = function() {
     if (xhr.status == 204) {
-      ipModal.find('._js_currently-filtered-ips').append('<li>'+requestData["ip"]+'</li>');
+      listFilteredIPs(requestData["type"]);
     }
     else {
       alert("Something went wrong trying to filter that IP, please contact your administrator if problem persists.");

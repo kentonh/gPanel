@@ -5,13 +5,13 @@ jQuery('._js_ip-filtering-open').on('click', function(e){
 
   var title;
   switch(jQuery(this).attr('data')) {
-    case "general":
-      title = "General";
-      ipModal.find('input[name="type"]').attr('value', 'general');
-      ipModal.find('#filterIPHelp').html("Filtering this IP under the general filter type will disallow access to the website for all modes.");
+    case "block":
+      title = "Block";
+      ipModal.find('input[name="type"]').attr('value', 'block');
+      ipModal.find('#filterIPHelp').html("Filtering this IP under the block filter type will disallow access to the website for all modes.");
       break;
     case "maintenance":
-      title = "Maintenance Mode";
+      title = "Maintenance";
       ipModal.find('input[name="type"]').attr('value', 'maintenance');
       ipModal.find('#filterIPHelp').html("Whitelisting this IP under the maintenance filter type will allow access to the website during maintenance mode.");
       break;
@@ -19,7 +19,7 @@ jQuery('._js_ip-filtering-open').on('click', function(e){
       alert("Error, refresh and try again. If problem persists contact server administrator.");
       return;
   }
-  title += " IP Filtering";
+  title = "IP Filtering - " + title;
 
   ipModal.find('.modal-title').html(title);
 
