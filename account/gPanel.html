@@ -59,7 +59,18 @@
             </button>
           </div>
           <div class="modal-body">
-            <p>Coming soon!</p>
+            <form class="_js_ip-filter-form" action="api/ip/filter" method="POST">
+              <div class="form-group">
+                <label for="ip">Filter IP</label>
+                <input name="ip" type="text" class="form-control" id="ip" aria-describedby="filterIPHelp" placeholder="127.0.0.1">
+                <small id="filterIPHelp" class="form-text text-muted"></small>
+              </div>
+              <input type="hidden" name="type" value="">
+              <button type="submit" class="btn btn-primary">Filter IP</button>
+            </form>
+
+            <h4 class="mt-3">Currently Filtered IPs</h4>
+            <ul class="_js_currently-filtered-ips"></ul>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -133,8 +144,8 @@
                     IP Filtering
                   </button>
                   <div class="dropdown-menu" aria-labelledby="ipFilterDropdown">
-                    <a class="dropdown-item _js_ip-filtering-open" href="#general_ip_filter" data="general">General</a>
-                    <a class="dropdown-item _js_ip-filtering-open" href="#maintenance_ip_filter" data="maintenance">Maintenance Mode</a>
+                    <a class="dropdown-item _js_ip-filtering-open" href="#block_ip_filter" data="block">Block</a>
+                    <a class="dropdown-item _js_ip-filtering-open" href="#maintenance_ip_filter" data="maintenance">Maintenance</a>
                   </div>
                 </div>
               </div>
@@ -174,7 +185,8 @@
     <script type="text/javascript" src="assets/js/panelHandlers/log/view.js"></script>
     <script type="text/javascript" src="assets/js/panelHandlers/log/delete.js"></script>
 
-    <script type="text/javascript" src="assets/js/panelHandlers/security/ipFiltering.js"></script>
+    <script type="text/javascript" src="assets/js/panelHandlers/security/ip_list.js"></script>
+    <script type="text/javascript" src="assets/js/panelHandlers/security/filter_ip.js"></script>
     <!-- KEEP AT BOTTOM OF BODY TAGS -->
   </body>
 </html>

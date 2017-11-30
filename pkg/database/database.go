@@ -16,8 +16,18 @@ const (
 
 // Bucket constants
 const (
-	BUCKET_USERS = "users"
-	BUCKET_PORTS = "ports"
+	BUCKET_USERS        = "users"
+	BUCKET_PORTS        = "ports"
+	BUCKET_FILTERED_IPS = "filtered_ips"
+)
+
+// Database Structs
+type (
+	Struct_Filtered_IP struct {
+		ID   int    `json:"id"`
+		Type string `json:"type"`
+		IP   string `json:"ip"`
+	}
 )
 
 // Error codes
@@ -45,12 +55,16 @@ func Open(filepath string) (*Datastore, error) {
 	// Ensure that all top-level buckets exist
 	err = ds.handle.Update(func(tx *bolt.Tx) error {
 		_, err := tx.CreateBucketIfNotExists([]byte(BUCKET_USERS))
-
 		if err != nil {
 			return err
 		}
-		_, err = tx.CreateBucketIfNotExists([]byte(BUCKET_PORTS))
 
+		_, err = tx.CreateBucketIfNotExists([]byte(BUCKET_PORTS))
+		if err != nil {
+			return err
+		}
+
+		_, err = tx.CreateBucketIfNotExists([]byte(BUCKET_FILTERED_IPS))
 		if err != nil {
 			return err
 		}
