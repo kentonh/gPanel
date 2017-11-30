@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/Ennovar/gPanel/pkg/api/ip"
 	logapi "github.com/Ennovar/gPanel/pkg/api/log"
 	"github.com/Ennovar/gPanel/pkg/api/server"
 	"github.com/Ennovar/gPanel/pkg/api/user"
@@ -42,6 +43,10 @@ func (con *Controller) apiHandler(res http.ResponseWriter, req *http.Request) (b
 		return true, logapi.Read(res, req, con.APILogger, con.Directory)
 	case "/log/delete":
 		return true, logapi.Truncate(res, req, con.APILogger, con.Directory)
+	case "/ip/list":
+		return true, ip.List(res, req, con.APILogger, con.Directory)
+	case "/ip/filter":
+		return true, ip.Filter(res, req, con.APILogger, con.Directory)
 	default:
 		return false, false
 	}

@@ -3,22 +3,35 @@
 package networking
 
 import (
-	"bytes"
 	"net/http"
+	"regexp"
+	"strings"
 )
 
-// GetClientIP returns the current client's IP as an array of bytes.
-// BUG(george-e-shaw-iv) Uses an external API
-func GetClientIP() ([]byte, error) {
-	resp, err := http.Get("http://myexternalip.com/raw")
+// GetClientIP returns the current client's IP
+func GetClientIP(req *http.Request) string {
+	var addr string
+	regex := regexp.MustCompile(`(?i)(?:for=)([^(;|,| )]+)`)
 
-	if err != nil {
-		return []byte{}, err
+	if fwd := req.Header.Get(http.CanonicalHeaderKey("X-Forwarded-For")); fwd != "" {
+		s := strings.Index(fwd, ", ")
+
+		if s == -1 {
+			s = len(fwd)
+		}
+
+		addr = fwd[:s]
+	} else if fwd := req.Header.Get(http.CanonicalHeaderKey("X-Real-IP")); fwd != "" {
+		addr = fwd
+	} else if fwd := req.Header.Get(http.CanonicalHeaderKey("Forwarded")); fwd != "" {
+
+		if match := regex.FindStringSubmatch(fwd); len(match) > 1 {
+			addr = strings.Trim(match[1], `"`)
+		}
+
+	} else {
+		addr = strings.Split(req.RemoteAddr, ":")[0]
 	}
-	defer resp.Body.Close()
 
-	buf := new(bytes.Buffer)
-	buf.ReadFrom(resp.Body)
-
-	return buf.Bytes(), nil
+	return addr
 }
