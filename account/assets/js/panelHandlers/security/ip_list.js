@@ -43,7 +43,7 @@ function listFilteredIPs(type) {
       if(xhr.response != undefined && xhr.response.length != 0) {
         jsonResponse = JSON.parse(xhr.response)
         jQuery.each(jsonResponse, function(k, v) {
-          ipModal.find('._js_currently-filtered-ips').append("<li>"+v.ip+"</li>");
+          ipModal.find('._js_currently-filtered-ips').append('<li class="_js_delete-filtered-ip" data="'+v.id+'">'+v.ip+'</li>');
         });
       }
       else {

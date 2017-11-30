@@ -29,3 +29,9 @@ body {
   cursor:pointer;
 }
 /* General End */
+
+/* IP Filter Modal Start */
+._js_delete-filtered-ip {
+  cursor:pointer;
+}
+/* IP Filter Modal End */

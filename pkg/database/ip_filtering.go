@@ -7,6 +7,12 @@ import (
 	"github.com/boltdb/bolt"
 )
 
+func IDtoKey(id int) []byte {
+	key := make([]byte, 8)
+	binary.BigEndian.PutUint64(key, uint64(id))
+	return key
+}
+
 func (ds *Datastore) NewFilteredIP(newip *Struct_Filtered_IP) error {
 	return ds.handle.Update(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte(BUCKET_FILTERED_IPS))
@@ -19,9 +25,7 @@ func (ds *Datastore) NewFilteredIP(newip *Struct_Filtered_IP) error {
 			return err
 		}
 
-		key := make([]byte, 8)
-		binary.BigEndian.PutUint64(key, uint64(newip.ID))
-
+		key := IDtoKey(newip.ID)
 		return b.Put(key, buf)
 	})
 }

@@ -47,6 +47,8 @@ func (con *Controller) apiHandler(res http.ResponseWriter, req *http.Request) (b
 		return true, ip.List(res, req, con.APILogger, con.Directory)
 	case "/ip/filter":
 		return true, ip.Filter(res, req, con.APILogger, con.Directory)
+	case "/ip/unfilter":
+		return true, ip.Unfilter(res, req, con.APILogger, con.Directory)
 	default:
 		return false, false
 	}
