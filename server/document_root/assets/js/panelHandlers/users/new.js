@@ -43,17 +43,23 @@ jQuery('._js_add-user-form').on('submit', function(e){
 
 jQuery('._js_add-user-generate-password').on('click', function(e){
   e.preventDefault();
+
+  var genpass = generatePassword();
+
+  toggleShowPassword(true);
+  passwordInput.prop('value', genpass);
+  passwordInputRetype.prop('value', genpass);
+});
+
+function generatePassword() {
   var gen = "";
   var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-[]:;<>?";
 
   for (var i = 0; i < 32; i++) {
     gen += chars.charAt(Math.floor(Math.random() * chars.length));
   }
-
-  toggleShowPassword(true);
-  passwordInput.prop('value', gen);
-  passwordInputRetype.prop('value', gen);
-});
+  return gen
+}
 
 jQuery('._js_user-management-show-password').on('change', function(e){
   e.preventDefault();
