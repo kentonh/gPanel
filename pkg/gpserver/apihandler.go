@@ -76,6 +76,8 @@ func (con *Controller) apiHandler(res http.ResponseWriter, req *http.Request) (b
 		return true, user.List(res, req, con.APILogger, con.Directory)
 	case "/user/delete":
 		return true, user.Delete(res, req, con.APILogger, con.Directory)
+	case "/user/update_password":
+		return true, user.UpdatePassword(res, req, con.APILogger, con.Directory)
 	case "/bundle/create":
 		return true, bundle.Create(res, req, con.APILogger, con.Bundles)
 	case "/bundle/list":

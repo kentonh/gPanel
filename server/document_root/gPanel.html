@@ -231,6 +231,53 @@
       </div>
     </div>
 
+    <!-- New Pass Modal -->
+    <div class="modal fade new-pass-modal" tabindex="-1" role="dialog" aria-labelledby="new-pass-modal" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title"></h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form class="_js_update-password-form" action="api/user/update_password" method="UPDATE">
+              <div class="form-group">
+                <label class="sr-only" for="updatePassword">New Password</label>
+                <div class="input-group">
+                  <div class="input-group-addon"><i class="fa fa-key" aria-hidden="true"></i></div>
+                  <input name="pass" type="password" class="form-control" id="updatePassword" placeholder="Password">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="sr-only" for="updatePasswordRetype">Re-type New Password</label>
+                <div class="input-group">
+                  <div class="input-group-addon"><i class="fa fa-key" aria-hidden="true"></i></div>
+                  <input name="pass" type="password" class="form-control" id="updatePasswordRetype" placeholder="Re-type Password">
+                </div>
+              </div>
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input type="checkbox" class="form-check-input _js_update-password-show-password">
+                  Show Password
+                </label>
+              </div>
+              <div class="btn-group" role="group">
+                <button type="submit" class="btn btn-primary">Update Password</button>
+                <button type="button" class="btn btn-success _js_update-password-generate-password">Generate Strong Password</button>
+              </div>
+              <input type="hidden" value="" id="updatePasswordUsername">
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-warning _js_back-to-user-management">Back to User Mangement</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="container">
       <div class="row">
         <div class="col-12">
@@ -318,6 +365,7 @@
     <script type="text/javascript" src="assets/js/panelHandlers/users/open.js"></script>
     <script type="text/javascript" src="assets/js/panelHandlers/users/new.js"></script>
     <script type="text/javascript" src="assets/js/panelHandlers/users/delete.js"></script>
+    <script type="text/javascript" src="assets/js/panelHandlers/users/new_password.js"></script>
     <!-- KEEP AT BOTTOM OF BODY TAGS -->
   </body>
 </html>

@@ -3,6 +3,7 @@ jQuery(document).on('click', '._js_user-management-delete', function(e){
 
   if(!jQuery(this).attr('data') || jQuery(this).attr('data') == "") {
     alert("An error has occurred, please refresh and try again. If problem persists please contact your administrator.");
+    return;
   }
 
   var ensure = confirm('Are you sure you want to delete the user "' + jQuery(this).attr('data') + '"?');
