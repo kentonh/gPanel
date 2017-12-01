@@ -23,7 +23,7 @@ function listCurrentUsers() {
       if(xhr.response != undefined && xhr.response.length != 0) {
         jsonResponse = JSON.parse(xhr.response)
         jQuery.each(jsonResponse, function(k, v) {
-          display.append('<div class="row mt-2"><div class="col-6 d-flex align-items-center"><p class="mb-0">'+v+'</p></div><div class="col-6 d-flex justify-content-end"><div class="btn-group" role="group"><button class="btn btn-outline-primary _js_user-management-new-password" data="'+v+'">New Password</button><button class="btn btn-outline-primary _js_user-management-delete" data="'+v+'">Delete</button></div></div></div>');
+          display.append('<div class="row mt-2"><div class="col-6 d-flex align-items-center"><p class="mb-0">'+v+'</p></div><div class="col-6 d-flex justify-content-end"><div class="btn-group" role="group"><button class="btn btn-outline-primary _js_user-management-new-password" data="'+v+'">New Password</button><button class="btn btn-outline-danger _js_user-management-delete" data="'+v+'">Delete</button></div></div></div>');
         });
       }
       else {

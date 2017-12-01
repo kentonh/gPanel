@@ -122,3 +122,20 @@ func (ds *Datastore) Delete(bucket string, key []byte) error {
 		return tx.Bucket([]byte(bucket)).Delete(key)
 	})
 }
+
+func (ds *Datastore) Count(bucket string) (int, error) {
+	count := 0
+
+	ds.handle.View(func(tx *bolt.Tx) error {
+		b := tx.Bucket([]byte(bucket))
+		c := b.Cursor()
+
+		for k, _ := c.First(); k != nil; k, _ = c.Next() {
+			count++
+		}
+
+		return nil
+	})
+
+	return count, nil
+}
