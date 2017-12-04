@@ -80,6 +80,111 @@
       </div>
     </div>
 
+    <!-- User Management Modal -->
+    <div class="modal fade user-management-modal" tabindex="-1" role="dialog" aria-labelledby="user-management-modal" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Manage Server Users</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <h4>Add User</h4>
+            <form class="_js_add-user-form" action="api/user/register" method="POST">
+              <div class="form-group">
+                <label class="sr-only" for="addUserUsername">Username</label>
+                <div class="input-group mb-2">
+                  <div class="input-group-addon"><i class="fa fa-user" aria-hidden="true"></i></div>
+                  <input name="user" type="text" class="form-control" id="addUserUsername" placeholder="Username">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="sr-only" for="addUserPassword">Password</label>
+                <div class="input-group">
+                  <div class="input-group-addon"><i class="fa fa-key" aria-hidden="true"></i></div>
+                  <input name="pass" type="password" class="form-control" id="addUserPassword" placeholder="Password">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="sr-only" for="addUserPasswordRetype">Re-type Password</label>
+                <div class="input-group">
+                  <div class="input-group-addon"><i class="fa fa-key" aria-hidden="true"></i></div>
+                  <input name="pass" type="password" class="form-control" id="addUserPasswordRetype" placeholder="Re-type Password">
+                </div>
+              </div>
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input type="checkbox" class="form-check-input _js_user-management-show-password">
+                  Show Password
+                </label>
+              </div>
+              <div class="btn-group" role="group">
+                <button type="submit" class="btn btn-primary">Add User</button>
+                <button type="button" class="btn btn-success _js_add-user-generate-password">Generate Strong Password</button>
+              </div>
+            </form>
+
+            <h4 class="mt-3 mb-0">Current Users</h4>
+            <div class="container-full _js_current-users">
+
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- New Pass Modal -->
+    <div class="modal fade new-pass-modal" tabindex="-1" role="dialog" aria-labelledby="new-pass-modal" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title"></h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form class="_js_update-password-form" action="api/user/update_password" method="UPDATE">
+              <div class="form-group">
+                <label class="sr-only" for="updatePassword">New Password</label>
+                <div class="input-group">
+                  <div class="input-group-addon"><i class="fa fa-key" aria-hidden="true"></i></div>
+                  <input name="pass" type="password" class="form-control" id="updatePassword" placeholder="Password">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="sr-only" for="updatePasswordRetype">Re-type New Password</label>
+                <div class="input-group">
+                  <div class="input-group-addon"><i class="fa fa-key" aria-hidden="true"></i></div>
+                  <input name="pass" type="password" class="form-control" id="updatePasswordRetype" placeholder="Re-type Password">
+                </div>
+              </div>
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input type="checkbox" class="form-check-input _js_update-password-show-password">
+                  Show Password
+                </label>
+              </div>
+              <div class="btn-group" role="group">
+                <button type="submit" class="btn btn-primary">Update Password</button>
+                <button type="button" class="btn btn-success _js_update-password-generate-password">Generate Strong Password</button>
+              </div>
+              <input type="hidden" value="" id="updatePasswordUsername">
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-warning _js_back-to-user-management">Back to User Mangement</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="container">
       <div class="row">
         <div class="col-12">
@@ -154,6 +259,20 @@
           </div>
         </div>
       </div>
+
+      <div class="row mt-5">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-body">
+              <h4 class="card-title">Account Users</h4>
+              <h6 class="card-subtitle mb-4 text-muted">View, edit, update, and remove users that can access this gPanel Account</h6>
+              <div class="btn-group" role="group">
+                <button type="button" class="btn btn-outline-primary _js_manage-users">Manage Users</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <footer class="sticky-footer">
@@ -189,6 +308,11 @@
     <script type="text/javascript" src="assets/js/panelHandlers/security/ip_list.js"></script>
     <script type="text/javascript" src="assets/js/panelHandlers/security/filter_ip.js"></script>
     <script type="text/javascript" src="assets/js/panelHandlers/security/unfilter_ip.js"></script>
+
+    <script type="text/javascript" src="assets/js/panelHandlers/users/open.js"></script>
+    <script type="text/javascript" src="assets/js/panelHandlers/users/new.js"></script>
+    <script type="text/javascript" src="assets/js/panelHandlers/users/delete.js"></script>
+    <script type="text/javascript" src="assets/js/panelHandlers/users/new_password.js"></script>
     <!-- KEEP AT BOTTOM OF BODY TAGS -->
   </body>
 </html>
