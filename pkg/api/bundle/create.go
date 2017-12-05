@@ -9,6 +9,8 @@ import (
 	"strconv"
 
 	"github.com/Ennovar/gPanel/pkg/database"
+	"github.com/Ennovar/gPanel/pkg/emailer"
+	"github.com/Ennovar/gPanel/pkg/encryption"
 	"github.com/Ennovar/gPanel/pkg/file"
 	"github.com/Ennovar/gPanel/pkg/gpaccount"
 )
@@ -24,6 +26,7 @@ func Create(res http.ResponseWriter, req *http.Request, logger *log.Logger, bund
 		Name    string `json:"name"`
 		AccPort int    `json:"account_port"`
 		PubPort int    `json:"public_port"`
+		Email   string `json:"email"`
 	}
 
 	err := json.NewDecoder(req.Body).Decode(&createBundleRequestData)
@@ -82,10 +85,9 @@ func Create(res http.ResponseWriter, req *http.Request, logger *log.Logger, bund
 	ds, err := database.Open(newBundle + "/" + database.DB_MAIN)
 	if err != nil {
 		logger.Println(req.URL.Path + "::" + err.Error())
-		http.Error(res, err.Error(), http.StatusBadRequest)
+		http.Error(res, err.Error(), http.StatusInternalServerError)
 		return false
 	}
-	defer ds.Close()
 
 	var databaseBundlePorts struct {
 		Account int `json:"account"`
@@ -97,13 +99,74 @@ func Create(res http.ResponseWriter, req *http.Request, logger *log.Logger, bund
 	err = ds.Put(database.BUCKET_PORTS, []byte("bundle_ports"), databaseBundlePorts)
 	if err != nil {
 		logger.Println(req.URL.Path + "::" + err.Error())
-		http.Error(res, err.Error(), http.StatusBadRequest)
+		http.Error(res, err.Error(), http.StatusInternalServerError)
 		return false
 	}
+
+	var defaultBundleUser database.Struct_Users
+
+	defaultBundleUser.Pass, err = encryption.HashPassword("root")
+	if err != nil {
+		logger.Println(req.URL.Path + "::" + err.Error())
+		http.Error(res, err.Error(), http.StatusInternalServerError)
+		return false
+	}
+
+	defaultBundleUser.Secret = ""
+
+	err = ds.Put(database.BUCKET_USERS, []byte("root"), defaultBundleUser)
+	if err != nil {
+		logger.Println(req.URL.Path + "::" + err.Error())
+		http.Error(res, err.Error(), http.StatusInternalServerError)
+		return false
+	}
+	ds.Close()
 
 	bundles[createBundleRequestData.Name] = gpaccount.New(newBundle+"/", databaseBundlePorts.Account, databaseBundlePorts.Public)
 	_ = bundles[createBundleRequestData.Name].Start()
 	_ = bundles[createBundleRequestData.Name].Public.Start()
+
+	ds, err = database.Open("server/" + database.DB_SETTINGS)
+	if err != nil {
+		logger.Println(req.URL.Path + "::" + err.Error())
+		http.Error(res, err.Error(), http.StatusInternalServerError)
+		return false
+	}
+	defer ds.Close()
+
+	var smtpSettings database.Struct_SMTP
+
+	err = ds.Get(database.BUCKET_GENERAL, []byte("smtp"), &smtpSettings)
+	if err != nil {
+		logger.Println(req.URL.Path + "::" + err.Error())
+		http.Error(res, err.Error(), http.StatusInternalServerError)
+		return false
+	}
+
+	mail, err := emailer.New(smtpSettings.Type, emailer.Credentials{
+		Username: smtpSettings.Username,
+		Password: smtpSettings.Password,
+		Server:   smtpSettings.Server,
+		Port:     smtpSettings.Port,
+	})
+	if err != nil {
+		logger.Println(req.URL.Path + "::" + err.Error())
+		http.Error(res, err.Error(), http.StatusInternalServerError)
+		return false
+	}
+
+	msg := string("Your new gPanel Bundle has been successfully registered.\r\n\n" +
+		"Account Port: " + strconv.Itoa(createBundleRequestData.AccPort) + "\r\n" +
+		"Public Port: " + strconv.Itoa(createBundleRequestData.PubPort) + "\r\n\n" +
+		"Default account username: root\r\n" +
+		"Default account password: root")
+
+	err = mail.SendSimple(createBundleRequestData.Email, "New gPanel Bundle - "+createBundleRequestData.Name, msg)
+	if err != nil {
+		logger.Println(req.URL.Path + "::" + err.Error())
+		http.Error(res, err.Error(), http.StatusInternalServerError)
+		return false
+	}
 
 	res.WriteHeader(http.StatusOK)
 	res.Write([]byte(createBundleRequestData.Name))
