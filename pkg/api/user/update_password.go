@@ -37,10 +37,7 @@ func UpdatePassword(res http.ResponseWriter, req *http.Request, logger *log.Logg
 	}
 	defer ds.Close()
 
-	var userDatabaseData struct {
-		Pass   string `json:"pass"`
-		Secret string `json:"secret"`
-	}
+	var userDatabaseData database.Struct_Users
 
 	userDatabaseData.Pass, err = encryption.HashPassword(updatePasswordRequestData.Pass)
 	if err != nil {

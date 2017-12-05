@@ -2,6 +2,11 @@ package database
 
 import "github.com/boltdb/bolt"
 
+type Struct_Users struct {
+	Pass   string `json:"pass"`
+	Secret string `json:"secret"`
+}
+
 func (ds *Datastore) ListAllUsers() ([]string, error) {
 	users := []string{}
 

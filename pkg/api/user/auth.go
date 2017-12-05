@@ -45,10 +45,7 @@ func Auth(res http.ResponseWriter, req *http.Request, logger *log.Logger, dir st
 	}
 	defer ds.Close()
 
-	var userDatabaseData struct {
-		Pass   string `json:"pass"`
-		Secret string `json:"secret"`
-	}
+	var userDatabaseData database.Struct_Users
 
 	err = ds.Get(database.BUCKET_USERS, []byte(userRequestData.User), &userDatabaseData)
 
