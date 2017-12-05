@@ -29,6 +29,12 @@ func (con *Controller) apiHandler(res http.ResponseWriter, req *http.Request) (b
 		return true, user.Register(res, req, con.APILogger, con.Directory)
 	case "/user/logout":
 		return true, user.Logout(res, req, con.APILogger, con.Directory)
+	case "/user/list":
+		return true, user.List(res, req, con.APILogger, con.Directory)
+	case "/user/delete":
+		return true, user.Delete(res, req, con.APILogger, con.Directory)
+	case "/user/update_password":
+		return true, user.UpdatePassword(res, req, con.APILogger, con.Directory)
 	case "/server/status":
 		return true, server.Status(res, req, con.APILogger, con.Public)
 	case "/server/start":
