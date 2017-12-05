@@ -35,6 +35,6 @@ func (con *Controller) setDefaults() {
 		return
 	}
 
-	fmt.Println("Since there are no stored users for the server upon startup the default user \"root\" has been set with the password \"root\"\n")
-	fmt.Println("Upon your first time logging into the gPanel Server please either create a new user and delete the user root, or change the user root's password to something more secure.\n")
+	fmt.Print("Since there are no stored users for the server upon startup the default user \"root\" has been set with the password \"root\"\n\n")
+	fmt.Print("Upon your first time logging into the gPanel Server please either create a new user and delete the user root, or change the user root's password to something more secure.\n\n")
 }
