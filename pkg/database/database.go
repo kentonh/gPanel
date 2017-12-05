@@ -21,15 +21,6 @@ const (
 	BUCKET_FILTERED_IPS = "filtered_ips"
 )
 
-// Database Structs
-type (
-	Struct_Filtered_IP struct {
-		ID   int    `json:"id"`
-		Type string `json:"type"`
-		IP   string `json:"ip"`
-	}
-)
-
 // Error codes
 var (
 	ErrKeyNotExist = errors.New("key does not exist")

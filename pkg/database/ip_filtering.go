@@ -7,6 +7,12 @@ import (
 	"github.com/boltdb/bolt"
 )
 
+type Struct_Filtered_IP struct {
+	ID   int    `json:"id"`
+	Type string `json:"type"`
+	IP   string `json:"ip"`
+}
+
 func IDtoKey(id int) []byte {
 	key := make([]byte, 8)
 	binary.BigEndian.PutUint64(key, uint64(id))
