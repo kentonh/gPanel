@@ -45,6 +45,11 @@
                 <small id="newBundleNameHelp" class="form-text text-muted">Bundle name must be unqiue in terms of your current bundle collection.</small>
               </div>
               <div class="form-group">
+                <label for="newBundleEmail">Bundle Client Email</label>
+                <input name="email" type="text" class="form-control" id="newBundleEmail" aria-describedby="newBundleEmailHelp" placeholder="Bundle Client Email">
+                <small id="newBundleEmailHelp" class="form-text text-muted">The client whose bundle this is will recieve an email with instructions and default username/password.</small>
+              </div>
+              <div class="form-group">
                 <label for="newBundleAccountPort">Bundle Account Port</label>
                 <input name="account_port" type="number" class="form-control" id="newBundleAccountPort" aria-describedby="newBundleAccountPortHelp" min="2000" max="4000" value="2083">
                 <small id="newBundleAccountPortHelp" class="form-text text-muted">Bundle account port must be unique in terms of your current bundle collection.</small>

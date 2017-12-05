@@ -17,13 +17,7 @@ func SetSMTP(res http.ResponseWriter, req *http.Request, logger *log.Logger, dir
 		return false
 	}
 
-	var smtpRequestData struct {
-		Type     string `json:"type"`
-		Username string `json:"username"`
-		Password string `json:"password"`
-		Server   string `json:"server"`
-		Port     int    `json:"port"`
-	}
+	var smtpRequestData database.Struct_SMTP
 
 	err := json.NewDecoder(req.Body).Decode(&smtpRequestData)
 	if err != nil {

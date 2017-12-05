@@ -24,13 +24,7 @@ func GetSMTP(res http.ResponseWriter, req *http.Request, logger *log.Logger, dir
 	}
 	defer ds.Close()
 
-	var smtpDbData struct {
-		Type     string `json:"type"`
-		Username string `json:"username"`
-		// Password string `json:"password"`
-		Server string `json:"server"`
-		Port   int    `json:"port"`
-	}
+	var smtpDbData database.Struct_SMTP
 
 	err = ds.Get(database.BUCKET_GENERAL, []byte("smtp"), &smtpDbData)
 	if err != nil {
@@ -38,6 +32,9 @@ func GetSMTP(res http.ResponseWriter, req *http.Request, logger *log.Logger, dir
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 		return false
 	}
+
+	// Remove password
+	smtpDbData.Password = ""
 
 	b, err := json.Marshal(smtpDbData)
 	if err != nil {
