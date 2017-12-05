@@ -4,6 +4,7 @@ package database
 import (
 	"encoding/json"
 	"errors"
+	"strings"
 	"time"
 
 	"github.com/boltdb/bolt"
@@ -11,14 +12,19 @@ import (
 
 // Database constants
 const (
-	DB_MAIN = "datastore.db"
+	DB_MAIN     = "datastore.db"
+	DB_SETTINGS = "settings.db"
 )
 
 // Bucket constants
 const (
+	// DB_MAIN BUCKETS
 	BUCKET_USERS        = "users"
 	BUCKET_PORTS        = "ports"
 	BUCKET_FILTERED_IPS = "filtered_ips"
+
+	// DB_SETTINGS BUCKETS
+	BUCKET_GENERAL = "general"
 )
 
 // Error codes
@@ -45,19 +51,28 @@ func Open(filepath string) (*Datastore, error) {
 
 	// Ensure that all top-level buckets exist
 	err = ds.handle.Update(func(tx *bolt.Tx) error {
-		_, err := tx.CreateBucketIfNotExists([]byte(BUCKET_USERS))
-		if err != nil {
-			return err
+		if strings.HasSuffix(filepath, DB_MAIN) {
+			_, err := tx.CreateBucketIfNotExists([]byte(BUCKET_USERS))
+			if err != nil {
+				return err
+			}
+
+			_, err = tx.CreateBucketIfNotExists([]byte(BUCKET_PORTS))
+			if err != nil {
+				return err
+			}
+
+			_, err = tx.CreateBucketIfNotExists([]byte(BUCKET_FILTERED_IPS))
+			if err != nil {
+				return err
+			}
 		}
 
-		_, err = tx.CreateBucketIfNotExists([]byte(BUCKET_PORTS))
-		if err != nil {
-			return err
-		}
-
-		_, err = tx.CreateBucketIfNotExists([]byte(BUCKET_FILTERED_IPS))
-		if err != nil {
-			return err
+		if strings.HasSuffix(filepath, DB_SETTINGS) {
+			_, err = tx.CreateBucketIfNotExists([]byte(BUCKET_GENERAL))
+			if err != nil {
+				return err
+			}
 		}
 
 		return nil

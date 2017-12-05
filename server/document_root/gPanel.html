@@ -278,6 +278,53 @@
       </div>
     </div>
 
+    <!-- SMTP Settings Modal -->
+    <div class="modal fade smtp-settings-modal" tabindex="-1" role="dialog" aria-labelledby="smtp-settings-modal" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">SMTP Settings</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form class="_js_smtp-settings-form" action="api/email/set_smtp" method="POST">
+              <div class="form-group">
+                <label for="smtpType">Authentication Type</label>
+                <select class="form-control" id="smtpType">
+                  <option selected value="plain">Plain</option>
+                  <option value="crammd5">CRAM-MD5</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="smtpUsername">Username</label>
+                <input type="text" class="form-control" id="smtpUsername" placeholder="Username" value="">
+              </div>
+              <div class="form-group">
+                <label for="smtpPassword">Password</label>
+                <input type="password" class="form-control" id="smtpPassword" placeholder="Password" value="">
+              </div>
+              <div class="form-group">
+                <label for="smtpServer">Server</label>
+                <input type="text" class="form-control" id="smtpServer" placeholder="Server" value="">
+              </div>
+              <div class="form-group">
+                <label for="smtpPort">Port</label>
+                <input type="number" class="form-control" id="smtpPort" aria-describedby="newBundleAccountPortHelp" min="0" max="65535" value="587">
+              </div>
+              <div class="btn-group" role="group">
+                <button type="submit" class="btn btn-primary">Test & Set SMTP Settings</button>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="container">
       <div class="row">
         <div class="col-12">
@@ -316,6 +363,20 @@
               <h6 class="card-subtitle mb-4 text-muted">View, edit, update, and remove users that can access the gPanel Server</h6>
               <div class="btn-group" role="group">
                 <button type="button" class="btn btn-outline-primary _js_manage-users">Manage Users</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mt-5">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-body">
+              <h4 class="card-title">Server Settings</h4>
+              <h6 class="card-subtitle mb-4 text-muted">Set or update various settings, such as smtp credentials, that the server uses</h6>
+              <div class="btn-group" role="group">
+                <button type="button" class="btn btn-outline-primary _js_smtp-credentials">SMTP Credentials</button>
               </div>
             </div>
           </div>
@@ -366,6 +427,8 @@
     <script type="text/javascript" src="assets/js/panelHandlers/users/new.js"></script>
     <script type="text/javascript" src="assets/js/panelHandlers/users/delete.js"></script>
     <script type="text/javascript" src="assets/js/panelHandlers/users/new_password.js"></script>
+
+    <script type="text/javascript" src="assets/js/panelHandlers/settings/smtp.js"></script>
     <!-- KEEP AT BOTTOM OF BODY TAGS -->
   </body>
 </html>
