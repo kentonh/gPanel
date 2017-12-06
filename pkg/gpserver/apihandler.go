@@ -60,6 +60,8 @@ func (con *Controller) apiHandler(res http.ResponseWriter, req *http.Request) (b
 				return true, logapi.Read(res, req, con.APILogger, specific.Directory)
 			case "/log/truncate":
 				return true, logapi.Truncate(res, req, con.APILogger, specific.Directory)
+			case "/bundle/delete":
+				return true, bundle.Delete(res, req, con.APILogger, con.Bundles, specific.Directory)
 			default:
 				return false, false
 			}

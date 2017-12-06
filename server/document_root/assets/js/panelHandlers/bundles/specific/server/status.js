@@ -5,7 +5,6 @@ function getPublicServerStatus(name) {
 
   var requestData = {};
   requestData["bundle_name"] = name;
-  console.log(requestData);
 
   xhr.open('POST', 'api/server/status', true);
   xhr.send(JSON.stringify(requestData));
