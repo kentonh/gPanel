@@ -1,13 +1,12 @@
-package email
+package settings
 
 import (
-	"encoding/json"
-	"log"
 	"net/http"
+	"log"
 	"strconv"
-
-	"github.com/Ennovar/gPanel/pkg/database"
+	"encoding/json"
 	"github.com/Ennovar/gPanel/pkg/emailer"
+	"github.com/Ennovar/gPanel/pkg/database"
 )
 
 func SetSMTP(res http.ResponseWriter, req *http.Request, logger *log.Logger, dir string) bool {
