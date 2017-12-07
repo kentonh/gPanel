@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/Ennovar/gPanel/pkg/routing"
+	"strings"
 )
 
 func (con *Controller) ServeHTTP(res http.ResponseWriter, req *http.Request) {
@@ -15,6 +16,12 @@ func (con *Controller) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 		path = (con.Directory + con.DocumentRoot + "index.html")
 	} else {
 		path = (con.Directory + con.DocumentRoot + path)
+	}
+
+	if strings.HasSuffix(path, "index.html") {
+		if con.checkAuth(res, req) == true {
+			http.Redirect(res, req, "gPanel.html", http.StatusFound)
+		}
 	}
 
 	if reqAuth(path) {
