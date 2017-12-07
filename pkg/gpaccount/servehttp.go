@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/Ennovar/gPanel/pkg/routing"
+	"strings"
 )
 
 // ServeHTTP function routes all requests for the private webhost server. It is used in the main
@@ -17,6 +18,12 @@ func (con *Controller) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 		path = (con.DocumentRoot + "index.html")
 	} else {
 		path = (con.DocumentRoot + path)
+	}
+
+	if strings.HasSuffix(path, "index.html") {
+		if con.checkAuth(res, req) == true {
+			http.Redirect(res, req, "gPanel.html", http.StatusFound)
+		}
 	}
 
 	if reqAuth(path) {
