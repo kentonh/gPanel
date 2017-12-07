@@ -66,7 +66,7 @@ Key: __Implemented__ | __*Implemented, but needs work*__ | *Unimplemented* | ~~R
   * Accessibility
     * __Using a special port:2082__
     * __Authentication__
-    * __*User system*__
+    * __User system__
   * Clients
     * __Multi-client support__
     * __Configuration of new clients__
@@ -75,12 +75,12 @@ Key: __Implemented__ | __*Implemented, but needs work*__ | *Unimplemented* | ~~R
   * Accessibility
     * __Using ports defined during configuration__
     * __Authentication__
-    * __*User system*__
+    * __User system__
   * Public Website Control
     * __Startup__
     * __Graceful/forceful shutdown__
     * __Maintenance mode__
-    * *IP Filtering*
+    * __*IP Filtering*__
   * Statistics
     * *Various graphs for usage, bandwidth, etc*
     * *Click heat maps*
@@ -109,8 +109,6 @@ Key: __Implemented__ | __*Implemented, but needs work*__ | *Unimplemented* | ~~R
     * *.go*
     * *.php*
 * General
-  * Load Balancing and Routing Requests to the Correct Ports
-    * *Undecided on implementation, possibly NGINX*
   * Deployment
     * *Binary*
     * *GUI Installation Helper*
