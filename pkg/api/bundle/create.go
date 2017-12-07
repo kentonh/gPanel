@@ -104,8 +104,9 @@ func Create(res http.ResponseWriter, req *http.Request, logger *log.Logger, bund
 	}
 
 	var defaultBundleUser database.Struct_Users
+	var tempPass = encryption.RandomString(16)
 
-	defaultBundleUser.Pass, err = encryption.HashPassword("root")
+	defaultBundleUser.Pass, err = encryption.HashPassword(tempPass)
 	if err != nil {
 		logger.Println(req.URL.Path + "::" + err.Error())
 		http.Error(res, err.Error(), http.StatusInternalServerError)
@@ -135,8 +136,16 @@ func Create(res http.ResponseWriter, req *http.Request, logger *log.Logger, bund
 	defer ds.Close()
 
 	var smtpSettings database.Struct_SMTP
+	var adminSettings database.Struct_Admin
 
 	err = ds.Get(database.BUCKET_GENERAL, []byte("smtp"), &smtpSettings)
+	if err != nil {
+		logger.Println(req.URL.Path + "::" + err.Error())
+		http.Error(res, err.Error(), http.StatusInternalServerError)
+		return false
+	}
+
+	err = ds.Get(database.BUCKET_GENERAL, []byte("admin"), &adminSettings)
 	if err != nil {
 		logger.Println(req.URL.Path + "::" + err.Error())
 		http.Error(res, err.Error(), http.StatusInternalServerError)
@@ -159,9 +168,18 @@ func Create(res http.ResponseWriter, req *http.Request, logger *log.Logger, bund
 		"Account Port: " + strconv.Itoa(createBundleRequestData.AccPort) + "\r\n" +
 		"Public Port: " + strconv.Itoa(createBundleRequestData.PubPort) + "\r\n\n" +
 		"Default account username: root\r\n" +
-		"Default account password: root")
+		"Default account password: " + tempPass + "\r\n\n" +
+		"Any questions, comments, or concerns can be directed toward your server administrator " + adminSettings.Name +
+		" at " + adminSettings.Email)
 
 	err = mail.SendSimple(createBundleRequestData.Email, "New gPanel Bundle - "+createBundleRequestData.Name, msg)
+	if err != nil {
+		logger.Println(req.URL.Path + "::" + err.Error())
+		http.Error(res, err.Error(), http.StatusInternalServerError)
+		return false
+	}
+
+	err = mail.SendSimple(adminSettings.Email, "New gPanel Bundle - "+createBundleRequestData.Name, msg)
 	if err != nil {
 		logger.Println(req.URL.Path + "::" + err.Error())
 		http.Error(res, err.Error(), http.StatusInternalServerError)

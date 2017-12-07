@@ -1,18 +1,26 @@
-package email
+package settings
 
 import (
-	"encoding/json"
-	"log"
 	"net/http"
+	"log"
 	"strconv"
-
 	"github.com/Ennovar/gPanel/pkg/database"
+	"encoding/json"
 )
 
-func GetSMTP(res http.ResponseWriter, req *http.Request, logger *log.Logger, dir string) bool {
-	if req.Method != "GET" {
+func SetAdmin(res http.ResponseWriter, req *http.Request, logger *log.Logger, dir string) bool {
+	if req.Method != "POST" {
 		logger.Println(req.URL.Path + "::" + req.Method + "::" + strconv.Itoa(http.StatusMethodNotAllowed) + "::" + http.StatusText(http.StatusMethodNotAllowed))
 		http.Error(res, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
+		return false
+	}
+
+	var adminSettingsRequestData database.Struct_Admin
+
+	err := json.NewDecoder(req.Body).Decode(&adminSettingsRequestData)
+	if err != nil {
+		logger.Println(req.URL.Path + "::" + err.Error())
+		http.Error(res, err.Error(), http.StatusBadRequest)
 		return false
 	}
 
@@ -24,26 +32,13 @@ func GetSMTP(res http.ResponseWriter, req *http.Request, logger *log.Logger, dir
 	}
 	defer ds.Close()
 
-	var smtpDbData database.Struct_SMTP
-
-	err = ds.Get(database.BUCKET_GENERAL, []byte("smtp"), &smtpDbData)
+	err = ds.Put(database.BUCKET_GENERAL, []byte("admin"), adminSettingsRequestData)
 	if err != nil {
 		logger.Println(req.URL.Path + "::" + err.Error())
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 		return false
 	}
 
-	// Remove password
-	smtpDbData.Password = ""
-
-	b, err := json.Marshal(smtpDbData)
-	if err != nil {
-		logger.Println(req.URL.Path + "::" + err.Error())
-		http.Error(res, err.Error(), http.StatusInternalServerError)
-		return false
-	}
-
-	res.WriteHeader(http.StatusOK)
-	res.Write(b)
+	res.WriteHeader(http.StatusNoContent)
 	return true
 }

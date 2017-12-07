@@ -295,7 +295,7 @@
             </button>
           </div>
           <div class="modal-body">
-            <form class="_js_smtp-settings-form" action="api/email/set_smtp" method="POST">
+            <form class="_js_smtp-settings-form" action="api/settings/set_smtp" method="POST">
               <div class="form-group">
                 <label for="smtpType">Authentication Type</label>
                 <select class="form-control" id="smtpType">
@@ -329,6 +329,40 @@
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- Administrator Settings Modal -->
+    <div class="modal fade admin-settings-modal" tabindex="-1" role="dialog" aria-labelledby="admin-settings-modal" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Administrator Settings</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form class="_js_admin-settings-form" action="api/settings/set_admin" method="POST">
+                        <div class="form-group">
+                            <label for="adminName">Administrator Name</label>
+                            <input type="text" class="form-control" id="adminName" placeholder="Administrator Name" value="">
+                            <small class="form-text text-muted">This will be used in auto-generated emails sent to bundle clients.</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminEmail">Administrator Email</label>
+                            <input type="email" class="form-control" id="adminEmail" placeholder="admin@domain.com" value="">
+                            <small class="form-text text-muted">A copy of each important email (auto-generated credentials, etc.) sent to bundle clients will also be sent to this email.</small>
+                        </div>
+                        <div class="btn-group" role="group">
+                            <button type="submit" class="btn btn-primary">Set Administrator Settings</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="container">
@@ -383,6 +417,7 @@
               <h6 class="card-subtitle mb-4 text-muted">Set or update various settings, such as smtp credentials, that the server uses</h6>
               <div class="btn-group" role="group">
                 <button type="button" class="btn btn-outline-primary _js_smtp-credentials">SMTP Credentials</button>
+                <button type="button" class="btn btn-outline-primary _js_admin-settings">Administrator Settings</button>
               </div>
             </div>
           </div>
@@ -436,6 +471,7 @@
     <script type="text/javascript" src="assets/js/panelHandlers/users/new_password.js"></script>
 
     <script type="text/javascript" src="assets/js/panelHandlers/settings/smtp.js"></script>
+    <script type="text/javascript" src="assets/js/panelHandlers/settings/admin.js"></script>
     <!-- KEEP AT BOTTOM OF BODY TAGS -->
   </body>
 </html>

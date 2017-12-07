@@ -4,7 +4,7 @@ jQuery('._js_smtp-credentials').on('click', function(e){
   e.preventDefault();
 
   var xhr = new XMLHttpRequest();
-  xhr.open('GET', 'api/email/get_smtp', true);
+  xhr.open('GET', 'api/settings/get_smtp', true);
   xhr.send();
 
   xhr.onloadend = function() {

@@ -7,3 +7,8 @@ type Struct_SMTP struct {
 	Server   string `json:"server"`
 	Port     int    `json:"port"`
 }
+
+type Struct_Admin struct {
+	Name string `json:"name"`
+	Email string `json:"email"`
+}

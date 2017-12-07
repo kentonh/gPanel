@@ -9,10 +9,10 @@ import (
 	"strings"
 
 	"github.com/Ennovar/gPanel/pkg/api/bundle"
-	"github.com/Ennovar/gPanel/pkg/api/email"
 	logapi "github.com/Ennovar/gPanel/pkg/api/log"
 	"github.com/Ennovar/gPanel/pkg/api/server"
 	"github.com/Ennovar/gPanel/pkg/api/user"
+	"github.com/Ennovar/gPanel/pkg/api/settings"
 )
 
 func (con *Controller) apiHandler(res http.ResponseWriter, req *http.Request) (bool, bool) {
@@ -89,10 +89,14 @@ func (con *Controller) apiHandler(res http.ResponseWriter, req *http.Request) (b
 		return true, logapi.Read(res, req, con.APILogger, con.Directory)
 	case "/log/delete":
 		return true, logapi.Truncate(res, req, con.APILogger, con.Directory)
-	case "/email/set_smtp":
-		return true, email.SetSMTP(res, req, con.APILogger, con.Directory)
-	case "/email/get_smtp":
-		return true, email.GetSMTP(res, req, con.APILogger, con.Directory)
+	case "/settings/set_smtp":
+		return true, settings.SetSMTP(res, req, con.APILogger, con.Directory)
+	case "/settings/get_smtp":
+		return true, settings.GetSMTP(res, req, con.APILogger, con.Directory)
+	case "/settings/set_admin":
+		return true, settings.SetAdmin(res, req, con.APILogger, con.Directory)
+	case "/settings/get_admin":
+		return true, settings.GetAdmin(res, req, con.APILogger, con.Directory)
 	default:
 		return false, false
 	}

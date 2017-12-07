@@ -15,3 +15,6 @@ bundles/*
 
 # IGNORE OSX FINDER FILES
 **.DS_Store
+
+# IGNORE GOLAND IDE DIRECTORY
+.idea/
