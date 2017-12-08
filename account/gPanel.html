@@ -185,6 +185,40 @@
       </div>
     </div>
 
+    <!-- Domain Management Modal -->
+    <div class="modal fade domain-management-modal" tabindex="-1" role="dialog" aria-labelledby="domain-management-modal" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Domain Management</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="api/domain/link" class="_js_link-domain-form">
+                        <div class="form-group">
+                            <label for="linkDomain" class="sr-only">Register Domain</label>
+                            <div class="input-group">
+                                <input type="text" id="linkDomain" class="form-control" placeholder="Domain">
+                            </div>
+                        </div>
+                        <div class="btn-group" role="group">
+                            <button type="submit" class="btn btn-primary">Register Domain</button>
+                        </div>
+                    </form>
+                    <h4 class="mt-3 mb-0">Registered Domains</h4>
+                    <div class="container-full _js_registered-domains">
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="container">
       <div class="row">
         <div class="col-12">
@@ -273,6 +307,20 @@
           </div>
         </div>
       </div>
+
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Domains & Sub-domains</h4>
+                        <h6 class="card-subtitle mb-4 text-muted">View registered domains, register new domains, and set up or manage existing document roots for sub-domains.</h6>
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-outline-primary _js_domain-management">Domain Management</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <footer class="sticky-footer">
@@ -292,6 +340,8 @@
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+
+    <script type="text/javascript" src="assets/js/init.js"></script>
 
     <script type="text/javascript" src="assets/js/formHandlers/search.js"></script>
     <script type="text/javascript" src="assets/js/formHandlers/logout.js"></script>
@@ -313,6 +363,10 @@
     <script type="text/javascript" src="assets/js/panelHandlers/users/new.js"></script>
     <script type="text/javascript" src="assets/js/panelHandlers/users/delete.js"></script>
     <script type="text/javascript" src="assets/js/panelHandlers/users/new_password.js"></script>
+
+    <script type="text/javascript" src="assets/js/panelHandlers/domains_subdomains/domain_management.js"></script>
+    <script type="text/javascript" src="assets/js/panelHandlers/domains_subdomains/domain_link.js"></script>
+    <script type="text/javascript" src="assets/js/panelHandlers/domains_subdomains/domain_unlink.js"></script>
     <!-- KEEP AT BOTTOM OF BODY TAGS -->
   </body>
 </html>

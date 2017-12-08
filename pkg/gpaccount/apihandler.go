@@ -9,6 +9,8 @@ import (
 	logapi "github.com/Ennovar/gPanel/pkg/api/log"
 	"github.com/Ennovar/gPanel/pkg/api/server"
 	"github.com/Ennovar/gPanel/pkg/api/user"
+	"github.com/Ennovar/gPanel/pkg/api/domain"
+	"github.com/Ennovar/gPanel/pkg/api/settings"
 )
 
 func (con *Controller) apiHandler(res http.ResponseWriter, req *http.Request) (bool, bool) {
@@ -23,6 +25,8 @@ func (con *Controller) apiHandler(res http.ResponseWriter, req *http.Request) (b
 	suspectApi := strings.ToLower(splitUrl[len(splitUrl)-1])
 
 	switch suspectApi {
+	case "/settings/name":
+		return true, settings.BundleName(res, req, con.APILogger, con.Directory)
 	case "/user/auth":
 		return true, user.Auth(res, req, con.APILogger, con.Directory)
 	case "/user/register":
@@ -55,6 +59,12 @@ func (con *Controller) apiHandler(res http.ResponseWriter, req *http.Request) (b
 		return true, ip.Filter(res, req, con.APILogger, con.Directory)
 	case "/ip/unfilter":
 		return true, ip.Unfilter(res, req, con.APILogger, con.Directory)
+	case "/domain/list":
+		return true, domain.List(res, req, con.APILogger)
+	case "/domain/link":
+		return true, domain.Link(res, req, con.APILogger)
+	case "/domain/unlink":
+		return true, domain.Unlink(res, req, con.APILogger)
 	default:
 		return false, false
 	}
