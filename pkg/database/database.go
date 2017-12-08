@@ -14,6 +14,7 @@ import (
 const (
 	DB_MAIN     = "datastore.db"
 	DB_SETTINGS = "settings.db"
+	DB_DOMAINS = "domains.db"
 )
 
 // Bucket constants
@@ -25,6 +26,9 @@ const (
 
 	// DB_SETTINGS BUCKETS
 	BUCKET_GENERAL = "general"
+
+	// DB_DOMAINS BUCKETS
+	BUCKET_DOMAINS = "domains"
 )
 
 // Error codes
@@ -70,6 +74,13 @@ func Open(filepath string) (*Datastore, error) {
 
 		if strings.HasSuffix(filepath, DB_SETTINGS) {
 			_, err = tx.CreateBucketIfNotExists([]byte(BUCKET_GENERAL))
+			if err != nil {
+				return err
+			}
+		}
+
+		if strings.HasSuffix(filepath, DB_DOMAINS) {
+			_, err = tx.CreateBucketIfNotExists([]byte(BUCKET_DOMAINS))
 			if err != nil {
 				return err
 			}

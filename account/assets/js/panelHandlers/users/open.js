@@ -27,7 +27,7 @@ function listCurrentUsers() {
         });
       }
       else {
-        display.html('<p>An error has occurred, please refresh. If problem persists please contact your administrator.</p>');
+        display.html('<div class="row mt-2"><div class="col-6 d-flex align-items-center"><p>An error has occurred, please refresh. If problem persists please contact your administrator.</p></div></div>');
       }
     }
     else if(xhr.status == 204) {
