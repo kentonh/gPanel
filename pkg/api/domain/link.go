@@ -8,7 +8,7 @@ import (
 	"encoding/json"
 )
 
-func Link(res http.ResponseWriter, req *http.Request, logger *log.Logger) bool {
+func Link(res http.ResponseWriter, req *http.Request, logger *log.Logger, PublicPort int) bool {
 	if req.Method != "POST" {
 		logger.Println(req.URL.Path + "::" + req.Method + "::" + strconv.Itoa(http.StatusMethodNotAllowed) + "::" + http.StatusText(http.StatusMethodNotAllowed))
 		http.Error(res, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
@@ -37,6 +37,7 @@ func Link(res http.ResponseWriter, req *http.Request, logger *log.Logger) bool {
 
 	var domainDatabaseData database.Struct_Domain
 	domainDatabaseData.BundleName = linkDomainReqData.Bundle
+	domainDatabaseData.PublicPort = PublicPort
 
 	err = ds.Put(database.BUCKET_DOMAINS, []byte(linkDomainReqData.Domain), domainDatabaseData)
 	if err != nil {

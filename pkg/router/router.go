@@ -5,6 +5,7 @@ import (
 	"strconv"
 	"time"
 	"github.com/Ennovar/gPanel/pkg/database"
+	"net/url"
 )
 
 type Router struct {
@@ -33,7 +34,9 @@ func (r *Router) Start() {
 	go server.ListenAndServe()
 }
 
-func (r *Router) Route(domain string, res http.ResponseWriter) {
+func (r *Router) ServeHTTP(res http.ResponseWriter, req *http.Request) {
+	domain := req.Host
+
 	ds, err := database.Open("server/" + database.DB_DOMAINS)
 	if err != nil {
 		http.Error(res, err.Error(), http.StatusInternalServerError)
@@ -48,12 +51,12 @@ func (r *Router) Route(domain string, res http.ResponseWriter) {
 		return
 	}
 
+	cURL, err := url.Parse("localhost:"+strconv.Itoa(client.PublicPort)+"/"+req.URL.Path[1:])
+	if err != nil {
+		http.Error(res, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
 	res.WriteHeader(http.StatusOK)
-	res.Write([]byte(domain + " is linked to bundle " + client.BundleName))
-}
-
-func (r *Router) ServeHTTP(res http.ResponseWriter, req *http.Request) {
-	d := req.Host
-
-	r.Route(d, res)
+	res.Write([]byte(cURL.String()))
 }

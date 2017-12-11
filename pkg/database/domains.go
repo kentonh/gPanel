@@ -7,10 +7,11 @@ import (
 
 type Struct_Domain struct {
 	BundleName string `json:"name"`
+	PublicPort int `json:"port"`
 }
 
-func (ds *Datastore) ListDomains(bundle string) (map[string]string, error) {
-	filtered := make(map[string]string)
+func (ds *Datastore) ListDomains(bundle string) (map[string]Struct_Domain, error) {
+	filtered := make(map[string]Struct_Domain)
 	var holder Struct_Domain
 
 	ds.handle.View(func(tx *bolt.Tx) error {
@@ -21,7 +22,7 @@ func (ds *Datastore) ListDomains(bundle string) (map[string]string, error) {
 			json.Unmarshal(v, &holder)
 
 			if bundle == "*" || holder.BundleName == bundle {
-				filtered[holder.BundleName] = string(k)
+				filtered[string(k)] = holder
 			}
 		}
 

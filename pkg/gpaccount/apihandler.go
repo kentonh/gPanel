@@ -62,7 +62,7 @@ func (con *Controller) apiHandler(res http.ResponseWriter, req *http.Request) (b
 	case "/domain/list":
 		return true, domain.List(res, req, con.APILogger)
 	case "/domain/link":
-		return true, domain.Link(res, req, con.APILogger)
+		return true, domain.Link(res, req, con.APILogger, con.Public.Port)
 	case "/domain/unlink":
 		return true, domain.Unlink(res, req, con.APILogger)
 	default:

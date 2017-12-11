@@ -22,7 +22,7 @@ function ListDomains(bundle_name) {
         if(xhr.status == 200) {
             jsonResponse = JSON.parse(xhr.response)
             jQuery.each(jsonResponse, function(k, v) {
-                list.append('<div class="row mt-2"><div class="col-6 d-flex align-items-center"><p class="mb-0">'+v+'</p></div><div class="col-6 d-flex justify-content-end"><div class="btn-group" role="group"><button class="btn btn-outline-danger _js_delete-registered-domain" data="'+v+'">Delete</button></div></div></div>');
+                list.append('<div class="row mt-2"><div class="col-6 d-flex align-items-center"><p class="mb-0">'+k+'</p></div><div class="col-6 d-flex justify-content-end"><div class="btn-group" role="group"><button class="btn btn-outline-danger _js_delete-registered-domain" data="'+k+'">Delete</button></div></div></div>');
             });
         }
         else if(xhr.status == 204) {
