@@ -8,7 +8,7 @@ import (
 	"encoding/json"
 )
 
-func SetAdmin(res http.ResponseWriter, req *http.Request, logger *log.Logger, dir string) bool {
+func SetAdmin(res http.ResponseWriter, req *http.Request, logger *log.Logger) bool {
 	if req.Method != "POST" {
 		logger.Println(req.URL.Path + "::" + req.Method + "::" + strconv.Itoa(http.StatusMethodNotAllowed) + "::" + http.StatusText(http.StatusMethodNotAllowed))
 		http.Error(res, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
@@ -24,7 +24,7 @@ func SetAdmin(res http.ResponseWriter, req *http.Request, logger *log.Logger, di
 		return false
 	}
 
-	ds, err := database.Open(dir + database.DB_SETTINGS)
+	ds, err := database.Open("server/" + database.DB_SETTINGS)
 	if err != nil || ds == nil {
 		logger.Println(req.URL.Path + "::" + err.Error())
 		http.Error(res, err.Error(), http.StatusInternalServerError)

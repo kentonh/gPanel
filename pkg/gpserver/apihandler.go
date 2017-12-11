@@ -90,13 +90,19 @@ func (con *Controller) apiHandler(res http.ResponseWriter, req *http.Request) (b
 	case "/log/delete":
 		return true, logapi.Truncate(res, req, con.APILogger, con.Directory)
 	case "/settings/set_smtp":
-		return true, settings.SetSMTP(res, req, con.APILogger, con.Directory)
+		return true, settings.SetSMTP(res, req, con.APILogger)
 	case "/settings/get_smtp":
-		return true, settings.GetSMTP(res, req, con.APILogger, con.Directory)
+		return true, settings.GetSMTP(res, req, con.APILogger)
 	case "/settings/set_admin":
-		return true, settings.SetAdmin(res, req, con.APILogger, con.Directory)
+		return true, settings.SetAdmin(res, req, con.APILogger)
 	case "/settings/get_admin":
-		return true, settings.GetAdmin(res, req, con.APILogger, con.Directory)
+		return true, settings.GetAdmin(res, req, con.APILogger)
+	case "/settings/add_nameserver":
+		return true, settings.AddNameserver(res, req, con.APILogger)
+	case "/settings/get_nameservers":
+		return true, settings.GetNameservers(res, req, con.APILogger)
+	case "/settings/remove_nameserver":
+		return true, settings.RemoveNameserver(res, req, con.APILogger)
 	default:
 		return false, false
 	}

@@ -4,7 +4,7 @@ package public
 import (
 	"context"
 	"errors"
-	"fmt"
+	"log"
 )
 
 // Start function starts listening on the public server
@@ -15,7 +15,7 @@ func (con *Controller) Start() error {
 
 	con.Status = 1
 	go server.ListenAndServe()
-	fmt.Printf("Public server now serving out of %s on port %d\n", con.Directory+"public/", con.Port)
+	log.Printf("Public server now serving out of %s on port %d\n", con.Directory+"public/", con.Port)
 	return nil
 }
 
@@ -30,7 +30,7 @@ func (con *Controller) Stop(graceful bool) error {
 			return nil
 		}
 
-		fmt.Printf("Graceful shutdown failed attempting forced: %v\n", err)
+		log.Printf("Graceful shutdown failed attempting forced: %v\n", err)
 	}
 
 	if err := server.Close(); err != nil {

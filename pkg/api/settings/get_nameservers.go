@@ -1,33 +1,21 @@
-package domain
+package settings
 
 import (
-	"encoding/json"
-	"log"
 	"net/http"
+	"log"
 	"strconv"
-
 	"github.com/Ennovar/gPanel/pkg/database"
+	"encoding/json"
 )
 
-func Unlink(res http.ResponseWriter, req *http.Request, logger *log.Logger) bool {
-	if req.Method != "DELETE" {
+func GetNameservers(res http.ResponseWriter, req *http.Request, logger *log.Logger) bool {
+	if req.Method != "GET" {
 		logger.Println(req.URL.Path + "::" + req.Method + "::" + strconv.Itoa(http.StatusMethodNotAllowed) + "::" + http.StatusText(http.StatusMethodNotAllowed))
 		http.Error(res, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
 		return false
 	}
 
-	var unlinkDomainRequestData struct {
-		Domain string `json:"domain"`
-	}
-
-	err := json.NewDecoder(req.Body).Decode(&unlinkDomainRequestData)
-	if err != nil {
-		logger.Println(req.URL.Path + "::" + err.Error())
-		http.Error(res, err.Error(), http.StatusBadRequest)
-		return false
-	}
-
-	ds, err := database.Open("server/" + database.DB_DOMAINS)
+	ds, err := database.Open("server/" + database.DB_SETTINGS)
 	if err != nil || ds == nil {
 		logger.Println(req.URL.Path + "::" + err.Error())
 		http.Error(res, err.Error(), http.StatusInternalServerError)
@@ -35,11 +23,24 @@ func Unlink(res http.ResponseWriter, req *http.Request, logger *log.Logger) bool
 	}
 	defer ds.Close()
 
-	err = ds.Delete(database.BUCKET_DOMAINS, []byte(unlinkDomainRequestData.Domain))
+	nameservers, err := ds.ListNameservers()
 	if err != nil {
 		logger.Println(req.URL.Path + "::" + err.Error())
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 		return false
+	}
+
+	if len(nameservers) > 0 {
+		b, err := json.Marshal(nameservers)
+		if err != nil {
+			logger.Println(req.URL.Path + "::" + err.Error())
+			http.Error(res, err.Error(), http.StatusInternalServerError)
+			return false
+		}
+
+		res.WriteHeader(http.StatusOK)
+		res.Write(b)
+		return true
 	}
 
 	res.WriteHeader(http.StatusNoContent)

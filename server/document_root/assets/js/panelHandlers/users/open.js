@@ -27,23 +27,18 @@ function listCurrentUsers() {
         });
       }
       else {
-        display.html('<p>An error has occurred, please refresh. If problem persists please contact your administrator.</p>');
+        display.html('<p class="mt-2">An error has occurred, please refresh. If problem persists please contact your administrator.</p>');
       }
     }
     else if(xhr.status == 204) {
-      if(xhr.response != undefined && xhr.response.length != 0) {
-        display.html('<p>There are no users in the server. This is a problem, this shouldn\'t be like this.</p>');
-      }
-      else {
-        display.html('<p>An error has occurred, please refresh. If problem persists please contact your administrator.</p>');
-      }
+      display.html('<p class="mt-2">There are no users in the server. This is a problem, this shouldn\'t be like this.</p>');
     }
     else {
       if(xhr.response != undefined && xhr.response.length != 0) {
-        display.html('<p>Error: ' + xhr.response + '</p>');
+        display.html('<p class="mt-2">Error: ' + xhr.response + '</p>');
       }
       else {
-        display.html('<p>An error has occurred, please refresh. If problem persists please contact your administrator.</p>');
+        display.html('<p class="mt-2">An error has occurred, please refresh. If problem persists please contact your administrator.</p>');
       }
     }
   }

@@ -26,6 +26,7 @@ const (
 
 	// DB_SETTINGS BUCKETS
 	BUCKET_GENERAL = "general"
+	BUCKET_NAMESERVERS = "nameservers"
 
 	// DB_DOMAINS BUCKETS
 	BUCKET_DOMAINS = "domains"
@@ -74,6 +75,11 @@ func Open(filepath string) (*Datastore, error) {
 
 		if strings.HasSuffix(filepath, DB_SETTINGS) {
 			_, err = tx.CreateBucketIfNotExists([]byte(BUCKET_GENERAL))
+			if err != nil {
+				return err
+			}
+
+			_, err = tx.CreateBucketIfNotExists([]byte(BUCKET_NAMESERVERS))
 			if err != nil {
 				return err
 			}
