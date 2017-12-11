@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"time"
 	"github.com/Ennovar/gPanel/pkg/database"
-	"net/url"
+	"net/http/httputil"
 )
 
 type Router struct {
@@ -13,15 +13,49 @@ type Router struct {
 }
 
 var server http.Server
+var domainToPort = make(map[string]int)
+
+func RefreshMap() bool {
+	ds, err := database.Open("server/" + database.DB_DOMAINS)
+	if err != nil {
+		return false
+	}
+	defer ds.Close()
+
+	var client map[string]database.Struct_Domain
+
+	client, err = ds.ListDomains("*")
+	if err != nil {
+		return false
+	}
+
+	for k, v := range client {
+		domainToPort[k] = v.PublicPort
+	}
+
+	return true
+}
 
 func New() *Router {
+	if !RefreshMap() {
+		return nil
+	}
+
 	r := Router{
 		Port: 2080,
 	}
 
 	server = http.Server{
 		Addr:           "localhost:" + strconv.Itoa(r.Port),
-		Handler:        &r,
+		Handler:        &httputil.ReverseProxy{
+			Director: func(req *http.Request) {
+				if d, ok := domainToPort[req.Host]; ok {
+					req.Header.Set("Host", req.Host)
+					req.URL.Scheme = "http"
+					req.URL.Host = "127.0.0.1:"+strconv.Itoa(d)
+				}
+			},
+		},
 		ReadTimeout:    5 * time.Second,
 		WriteTimeout:   5 * time.Second,
 		MaxHeaderBytes: 0,
@@ -32,31 +66,4 @@ func New() *Router {
 
 func (r *Router) Start() {
 	go server.ListenAndServe()
-}
-
-func (r *Router) ServeHTTP(res http.ResponseWriter, req *http.Request) {
-	domain := req.Host
-
-	ds, err := database.Open("server/" + database.DB_DOMAINS)
-	if err != nil {
-		http.Error(res, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	defer ds.Close()
-
-	var client database.Struct_Domain
-	err = ds.Get(database.BUCKET_DOMAINS, []byte(domain), &client)
-	if err != nil {
-		http.Error(res, err.Error(), http.StatusNotFound)
-		return
-	}
-
-	cURL, err := url.Parse("localhost:"+strconv.Itoa(client.PublicPort)+"/"+req.URL.Path[1:])
-	if err != nil {
-		http.Error(res, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	res.WriteHeader(http.StatusOK)
-	res.Write([]byte(cURL.String()))
 }

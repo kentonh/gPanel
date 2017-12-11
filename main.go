@@ -13,6 +13,9 @@ func main() {
 	mains := gpserver.New()
 	router := router.New()
 
+	if router == nil {
+		log.Fatal("Error starting router")
+	}
 	router.Start()
 
 	log.Print("To Exit: CTRL+C")
