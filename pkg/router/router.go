@@ -2,10 +2,13 @@ package router
 
 import (
 	"net/http"
+	"net/http/httputil"
 	"strconv"
 	"time"
+
 	"github.com/Ennovar/gPanel/pkg/database"
-	"net/http/httputil"
+	"log"
+	"sync"
 )
 
 type Router struct {
@@ -13,7 +16,9 @@ type Router struct {
 }
 
 var server http.Server
-var domainToPort = make(map[string]int)
+var domainToPort map[string]int
+
+var mutex = &sync.Mutex{}
 
 func RefreshMap() bool {
 	ds, err := database.Open("server/" + database.DB_DOMAINS)
@@ -29,9 +34,12 @@ func RefreshMap() bool {
 		return false
 	}
 
+	mutex.Lock()
+	domainToPort = make(map[string]int)
 	for k, v := range client {
 		domainToPort[k] = v.PublicPort
 	}
+	mutex.Unlock()
 
 	return true
 }
@@ -46,13 +54,13 @@ func New() *Router {
 	}
 
 	server = http.Server{
-		Addr:           "localhost:" + strconv.Itoa(r.Port),
-		Handler:        &httputil.ReverseProxy{
+		Addr: "localhost:" + strconv.Itoa(r.Port),
+		Handler: &httputil.ReverseProxy{
 			Director: func(req *http.Request) {
 				if d, ok := domainToPort[req.Host]; ok {
 					req.Header.Set("Host", req.Host)
 					req.URL.Scheme = "http"
-					req.URL.Host = "127.0.0.1:"+strconv.Itoa(d)
+					req.URL.Host = "127.0.0.1:" + strconv.Itoa(d)
 				}
 			},
 		},
@@ -60,6 +68,22 @@ func New() *Router {
 		WriteTimeout:   5 * time.Second,
 		MaxHeaderBytes: 0,
 	}
+
+	// Start scheduled map refresher
+	ticker := time.NewTicker(15 * time.Second)
+	go func() {
+		for {
+			select {
+			case <- ticker.C:
+				if !RefreshMap() {
+					ticker.Stop()
+					log.Fatal("Error refreshing domain/bundle pairing for router")
+					return
+				}
+				log.Print("Successfully refreshed domain/bundle pairing map")
+			}
+		}
+	}()
 
 	return &r
 }

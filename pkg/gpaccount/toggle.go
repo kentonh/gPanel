@@ -4,7 +4,7 @@ package gpaccount
 import (
 	"context"
 	"errors"
-	"fmt"
+	"log"
 )
 
 func (con *Controller) Start() error {
@@ -14,7 +14,7 @@ func (con *Controller) Start() error {
 
 	con.Status = 1
 	go httpserver.ListenAndServe()
-	fmt.Printf("gPanel account server now serving out of %s%s on port %d\n", con.Directory, con.DocumentRoot, con.Port)
+	log.Printf("gPanel account server now serving out of %s%s on port %d\n", con.Directory, con.DocumentRoot, con.Port)
 	return nil
 }
 
@@ -28,7 +28,7 @@ func (con *Controller) Stop(graceful bool) error {
 			return nil
 		}
 
-		fmt.Printf("Graceful shutdown failed attempting forced: %v\n", err)
+		log.Printf("Graceful shutdown failed attempting forced: %v\n", err)
 	}
 
 	if err := httpserver.Close(); err != nil {

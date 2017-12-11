@@ -1,11 +1,12 @@
 package domain
 
 import (
-	"net/http"
-	"log"
-	"strconv"
-	"github.com/Ennovar/gPanel/pkg/database"
 	"encoding/json"
+	"log"
+	"net/http"
+	"strconv"
+
+	"github.com/Ennovar/gPanel/pkg/database"
 )
 
 func Link(res http.ResponseWriter, req *http.Request, logger *log.Logger, PublicPort int) bool {
@@ -27,7 +28,7 @@ func Link(res http.ResponseWriter, req *http.Request, logger *log.Logger, Public
 		return false
 	}
 
-	ds, err := database.Open("server/"+database.DB_DOMAINS)
+	ds, err := database.Open("server/" + database.DB_DOMAINS)
 	if err != nil || ds == nil {
 		logger.Println(req.URL.Path + "::" + err.Error())
 		http.Error(res, err.Error(), http.StatusInternalServerError)

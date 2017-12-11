@@ -1,10 +1,11 @@
 package domain
 
 import (
-	"net/http"
-	"log"
-	"strconv"
 	"encoding/json"
+	"log"
+	"net/http"
+	"strconv"
+
 	"github.com/Ennovar/gPanel/pkg/database"
 )
 
@@ -26,7 +27,7 @@ func Unlink(res http.ResponseWriter, req *http.Request, logger *log.Logger) bool
 		return false
 	}
 
-	ds, err := database.Open("server/"+database.DB_DOMAINS)
+	ds, err := database.Open("server/" + database.DB_DOMAINS)
 	if err != nil || ds == nil {
 		logger.Println(req.URL.Path + "::" + err.Error())
 		http.Error(res, err.Error(), http.StatusInternalServerError)
