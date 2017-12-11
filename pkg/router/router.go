@@ -59,11 +59,11 @@ func New() *Router {
 			Director: func(req *http.Request) {
 				mutex.Lock()
 				if d, ok := domainToPort[req.Host]; ok {
+					mutex.Unlock()
 					req.Header.Set("Host", req.Host)
 					req.URL.Scheme = "http"
 					req.URL.Host = "127.0.0.1:" + strconv.Itoa(d)
 				}
-				mutex.Unlock()
 			},
 		},
 		ReadTimeout:    5 * time.Second,
