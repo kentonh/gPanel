@@ -8,6 +8,7 @@ import (
 	"strconv"
 
 	"github.com/Ennovar/gPanel/pkg/gpaccount"
+	"github.com/Ennovar/gPanel/pkg/database"
 )
 
 func Delete(res http.ResponseWriter, req *http.Request, logger *log.Logger, bundles map[string]*gpaccount.Controller, dir string) bool {
@@ -31,6 +32,21 @@ func Delete(res http.ResponseWriter, req *http.Request, logger *log.Logger, bund
 	if _, ok := bundles[rqData.Name]; !ok {
 		logger.Println(req.URL.Path + ":: bundle does not exist")
 		http.Error(res, err.Error(), http.StatusBadRequest)
+		return false
+	}
+
+	ds, err := database.Open("server/" + database.DB_DOMAINS)
+	if err != nil {
+		logger.Println(req.URL.Path + "::" + err.Error())
+		http.Error(res, err.Error(), http.StatusInternalServerError)
+		return false
+	}
+	defer ds.Close()
+
+	err = ds.RemoveInstances(rqData.Name)
+	if err != nil {
+		logger.Println(req.URL.Path + "::" + err.Error())
+		http.Error(res, err.Error(), http.StatusInternalServerError)
 		return false
 	}
 

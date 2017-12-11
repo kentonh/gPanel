@@ -65,6 +65,8 @@ func (con *Controller) apiHandler(res http.ResponseWriter, req *http.Request) (b
 		return true, domain.Link(res, req, con.APILogger, con.Public.Port)
 	case "/domain/unlink":
 		return true, domain.Unlink(res, req, con.APILogger)
+	case "/settings/get_nameservers":
+		return true, settings.GetNameservers(res, req, con.APILogger)
 	default:
 		return false, false
 	}

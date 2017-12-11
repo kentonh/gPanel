@@ -4,14 +4,23 @@ import (
 	"net/http"
 	"log"
 	"strconv"
-	"encoding/json"
 	"github.com/Ennovar/gPanel/pkg/database"
+	"encoding/json"
 )
 
-func GetSMTP(res http.ResponseWriter, req *http.Request, logger *log.Logger) bool {
-	if req.Method != "GET" {
+func RemoveNameserver(res http.ResponseWriter, req *http.Request, logger *log.Logger) bool {
+	if req.Method != "DELETE" {
 		logger.Println(req.URL.Path + "::" + req.Method + "::" + strconv.Itoa(http.StatusMethodNotAllowed) + "::" + http.StatusText(http.StatusMethodNotAllowed))
 		http.Error(res, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
+		return false
+	}
+
+	var nameserverRequestData database.Struct_Nameserver
+
+	err := json.NewDecoder(req.Body).Decode(&nameserverRequestData)
+	if err != nil {
+		logger.Println(req.URL.Path + "::" + err.Error())
+		http.Error(res, err.Error(), http.StatusBadRequest)
 		return false
 	}
 
@@ -23,26 +32,13 @@ func GetSMTP(res http.ResponseWriter, req *http.Request, logger *log.Logger) boo
 	}
 	defer ds.Close()
 
-	var smtpDbData database.Struct_SMTP
-
-	err = ds.Get(database.BUCKET_GENERAL, []byte("smtp"), &smtpDbData)
+	err = ds.Delete(database.BUCKET_NAMESERVERS, []byte(nameserverRequestData.Nameserver))
 	if err != nil {
 		logger.Println(req.URL.Path + "::" + err.Error())
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 		return false
 	}
 
-	// Remove password
-	smtpDbData.Password = ""
-
-	b, err := json.Marshal(smtpDbData)
-	if err != nil {
-		logger.Println(req.URL.Path + "::" + err.Error())
-		http.Error(res, err.Error(), http.StatusInternalServerError)
-		return false
-	}
-
-	res.WriteHeader(http.StatusOK)
-	res.Write(b)
+	res.WriteHeader(http.StatusNoContent)
 	return true
 }

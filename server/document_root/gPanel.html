@@ -365,6 +365,40 @@
         </div>
     </div>
 
+    <!-- Nameserver Configuration Modal -->
+    <div class="modal fade nameserver-config-modal" tabindex="-1" role="dialog" aria-labelledby="nameserver-config-modal" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Nameserver Configuration</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form class="_js_add-nameserver-form" action="api/settings/add_nameserver" method="POST">
+                        <div class="form-group">
+                            <label for="addNameserver">Nameserver</label>
+                            <input type="text" class="form-control" id="addNameserver" placeholder="Nameserver" value="">
+                            <small class="form-text text-muted">This will be displayed to clients in order for them to point their domains toward the server.</small>
+                        </div>
+                        <div class="btn-group" role="group">
+                            <button type="submit" class="btn btn-primary">Add Nameserver</button>
+                        </div>
+                    </form>
+
+                    <h4 class="mt-3 mb-0">Current Nameservers</h4>
+                    <div class="container-full _js_current-nameservers">
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="container">
       <div class="row">
         <div class="col-12">
@@ -418,6 +452,7 @@
               <div class="btn-group" role="group">
                 <button type="button" class="btn btn-outline-primary _js_smtp-credentials">SMTP Credentials</button>
                 <button type="button" class="btn btn-outline-primary _js_admin-settings">Administrator Settings</button>
+                <button type="button" class="btn btn-outline-primary _js_nameserver-config">Nameserver Configuration</button>
               </div>
             </div>
           </div>
@@ -472,6 +507,9 @@
 
     <script type="text/javascript" src="assets/js/panelHandlers/settings/smtp.js"></script>
     <script type="text/javascript" src="assets/js/panelHandlers/settings/admin.js"></script>
+    <script type="text/javascript" src="assets/js/panelHandlers/settings/nameserver_config.js"></script>
+    <script type="text/javascript" src="assets/js/panelHandlers/settings/add_nameserver.js"></script>
+    <script type="text/javascript" src="assets/js/panelHandlers/settings/remove_nameserver.js"></script>
     <!-- KEEP AT BOTTOM OF BODY TAGS -->
   </body>
 </html>

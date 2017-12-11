@@ -164,13 +164,36 @@ func Create(res http.ResponseWriter, req *http.Request, logger *log.Logger, bund
 		return false
 	}
 
-	msg := string("Your new gPanel Bundle has been successfully registered.\r\n\n" +
-		"Account Port: " + strconv.Itoa(createBundleRequestData.AccPort) + "\r\n" +
-		"Public Port: " + strconv.Itoa(createBundleRequestData.PubPort) + "\r\n\n" +
-		"Default account username: root\r\n" +
-		"Default account password: " + tempPass + "\r\n\n" +
-		"Any questions, comments, or concerns can be directed toward your server administrator " + adminSettings.Name +
-		" at " + adminSettings.Email)
+	nameservers, err := ds.ListNameservers()
+	if err != nil {
+		logger.Println(req.URL.Path + "::" + err.Error())
+		http.Error(res, err.Error(), http.StatusInternalServerError)
+		return false
+	}
+
+	var msg string
+	if len(nameservers) > 0 {
+		var nameserversString string
+		for _, v := range nameservers {
+			nameserversString += "- " + v + "\r\n"
+		}
+
+		msg = string("Your new gPanel Bundle has been successfully registered.\r\n\n" +
+			"Account Port: " + strconv.Itoa(createBundleRequestData.AccPort) + "\r\n" +
+			"Public Port: " + strconv.Itoa(createBundleRequestData.PubPort) + "\r\n\n" +
+			"Default account username: root\r\n" +
+			"Default account password: " + tempPass + "\r\n\n" +
+			"Any questions, comments, or concerns can be directed toward your server administrator " + adminSettings.Name +
+			" at " + adminSettings.Email + "\r\n\n" + "This server impliments the following nameservers:\r\n" + nameserversString)
+	} else {
+		msg = string("Your new gPanel Bundle has been successfully registered.\r\n\n" +
+			"Account Port: " + strconv.Itoa(createBundleRequestData.AccPort) + "\r\n" +
+			"Public Port: " + strconv.Itoa(createBundleRequestData.PubPort) + "\r\n\n" +
+			"Default account username: root\r\n" +
+			"Default account password: " + tempPass + "\r\n\n" +
+			"Any questions, comments, or concerns can be directed toward your server administrator " + adminSettings.Name +
+			" at " + adminSettings.Email)
+	}
 
 	err = mail.SendSimple(createBundleRequestData.Email, "New gPanel Bundle - "+createBundleRequestData.Name, msg)
 	if err != nil {

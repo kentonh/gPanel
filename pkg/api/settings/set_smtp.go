@@ -9,7 +9,7 @@ import (
 	"github.com/Ennovar/gPanel/pkg/database"
 )
 
-func SetSMTP(res http.ResponseWriter, req *http.Request, logger *log.Logger, dir string) bool {
+func SetSMTP(res http.ResponseWriter, req *http.Request, logger *log.Logger) bool {
 	if req.Method != "POST" && req.Method != "UPDATE" {
 		logger.Println(req.URL.Path + "::" + req.Method + "::" + strconv.Itoa(http.StatusMethodNotAllowed) + "::" + http.StatusText(http.StatusMethodNotAllowed))
 		http.Error(res, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
@@ -39,7 +39,7 @@ func SetSMTP(res http.ResponseWriter, req *http.Request, logger *log.Logger, dir
 		return false
 	}
 
-	ds, err := database.Open(dir + database.DB_SETTINGS)
+	ds, err := database.Open("server/" + database.DB_SETTINGS)
 	if err != nil || ds == nil {
 		logger.Println(req.URL.Path + "::" + err.Error())
 		http.Error(res, err.Error(), http.StatusInternalServerError)
