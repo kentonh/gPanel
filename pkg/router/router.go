@@ -57,11 +57,13 @@ func New() *Router {
 		Addr: "localhost:" + strconv.Itoa(r.Port),
 		Handler: &httputil.ReverseProxy{
 			Director: func(req *http.Request) {
+				mutex.Lock()
 				if d, ok := domainToPort[req.Host]; ok {
 					req.Header.Set("Host", req.Host)
 					req.URL.Scheme = "http"
 					req.URL.Host = "127.0.0.1:" + strconv.Itoa(d)
 				}
+				mutex.Unlock()
 			},
 		},
 		ReadTimeout:    5 * time.Second,
@@ -70,7 +72,7 @@ func New() *Router {
 	}
 
 	// Start scheduled map refresher
-	ticker := time.NewTicker(15 * time.Second)
+	ticker := time.NewTicker(15 * time.Minute)
 	go func() {
 		for {
 			select {
