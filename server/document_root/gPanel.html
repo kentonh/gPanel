@@ -399,6 +399,28 @@
         </div>
     </div>
 
+    <!-- Registered Client Domains Modal -->
+    <div class="modal fade registered-client-domains-modal" tabindex="-1" role="dialog" aria-labelledby="registered-client-domains-modal" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Registered Client Domains</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-full _js_current-registered-client-domains">
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="container">
       <div class="row">
         <div class="col-12">
@@ -453,6 +475,7 @@
                 <button type="button" class="btn btn-outline-primary _js_smtp-credentials">SMTP Credentials</button>
                 <button type="button" class="btn btn-outline-primary _js_admin-settings">Administrator Settings</button>
                 <button type="button" class="btn btn-outline-primary _js_nameserver-config">Nameserver Configuration</button>
+                <button type="button" class="btn btn-outline-primary _js_registered-domains">Registered Client Domains</button>
               </div>
             </div>
           </div>
@@ -510,6 +533,7 @@
     <script type="text/javascript" src="assets/js/panelHandlers/settings/nameserver_config.js"></script>
     <script type="text/javascript" src="assets/js/panelHandlers/settings/add_nameserver.js"></script>
     <script type="text/javascript" src="assets/js/panelHandlers/settings/remove_nameserver.js"></script>
+    <script type="text/javascript" src="assets/js/panelHandlers/settings/client_domains.js"></script>
     <!-- KEEP AT BOTTOM OF BODY TAGS -->
   </body>
 </html>

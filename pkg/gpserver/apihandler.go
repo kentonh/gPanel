@@ -13,6 +13,7 @@ import (
 	"github.com/Ennovar/gPanel/pkg/api/server"
 	"github.com/Ennovar/gPanel/pkg/api/user"
 	"github.com/Ennovar/gPanel/pkg/api/settings"
+	"github.com/Ennovar/gPanel/pkg/api/domain"
 )
 
 func (con *Controller) apiHandler(res http.ResponseWriter, req *http.Request) (bool, bool) {
@@ -103,6 +104,10 @@ func (con *Controller) apiHandler(res http.ResponseWriter, req *http.Request) (b
 		return true, settings.GetNameservers(res, req, con.APILogger)
 	case "/settings/remove_nameserver":
 		return true, settings.RemoveNameserver(res, req, con.APILogger)
+	case "/domain/list":
+		return true, domain.List(res, req, con.APILogger)
+	case "/domain/unlink":
+		return true, domain.Unlink(res, req, con.APILogger)
 	default:
 		return false, false
 	}
