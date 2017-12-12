@@ -38,6 +38,7 @@ func (ds *Datastore) ListDomains(bundle string) (map[string]Struct_Domain, error
 
 func (ds *Datastore) RemoveInstances(bundle string) error {
 	var holder Struct_Domain
+	var toDelete []string
 
 	ds.handle.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte(BUCKET_DOMAINS))
@@ -47,15 +48,19 @@ func (ds *Datastore) RemoveInstances(bundle string) error {
 			json.Unmarshal(v, &holder)
 
 			if holder.BundleName == bundle {
-				err := ds.Delete(BUCKET_DOMAINS, k)
-				if err != nil {
-					return err
-				}
+				toDelete = append(toDelete, string(k))
 			}
 		}
 
 		return nil
 	})
+
+	for _, v := range toDelete {
+		err := ds.Delete(BUCKET_DOMAINS, []byte(v))
+		if err != nil && err != ErrKeyNotExist {
+			return err
+		}
+	}
 
 	return nil
 }
