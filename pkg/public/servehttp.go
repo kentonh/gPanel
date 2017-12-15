@@ -7,10 +7,17 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/Ennovar/gPanel/pkg/routing"
-	"strings"
+	"bufio"
+	"net/textproto"
 	"os/exec"
+	"strings"
+
+	"regexp"
+
+	"github.com/Ennovar/gPanel/pkg/routing"
 )
+
+var reg = regexp.MustCompile("[0-9]+")
 
 // ServeHTTP function routes all requests for the public web server. It is used in the main
 // function inside of the http.ListenAndServe() function for the public host.
@@ -51,10 +58,35 @@ func (con *Controller) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 		var out []byte
 
 		if strings.HasSuffix(path, ".php") {
-			if out, err = exec.Command("php", path).Output(); err != nil {
+			if out, err = exec.Command("php-cgi", path).Output(); err != nil {
 				con.PublicLogger.Println(path + "::" + strconv.Itoa(http.StatusInternalServerError) + "::" + err.Error())
 				routing.HttpThrowStatus(http.StatusInternalServerError, res)
 				return
+			}
+			cgiRes := string(out)
+			pos := strings.Index(cgiRes, "; charset=UTF-8") + len("; charset=UTF-8")
+			out = []byte(strings.Trim(cgiRes[pos:], "\n"))
+
+			headers := strings.Replace(cgiRes[0:pos], "\n", "\r\n", -1)
+			reader := bufio.NewReader(strings.NewReader(headers + "\r\n\r\n"))
+			tp := textproto.NewReader(reader)
+
+			mimeHeader, err := tp.ReadMIMEHeader()
+			if err != nil {
+				con.PublicLogger.Println(path + "::" + strconv.Itoa(http.StatusInternalServerError) + "::" + err.Error())
+				routing.HttpThrowStatus(http.StatusInternalServerError, res)
+				return
+			}
+
+			httpHeader := http.Header(mimeHeader)
+			for k, v := range httpHeader {
+				if k == "Status" {
+					if code, err := strconv.Atoi(string(reg.Find([]byte(v[0])))); err == nil {
+						res.WriteHeader(code)
+					}
+					continue
+				}
+				res.Header().Add(k, v[0])
 			}
 		} else {
 			con.PublicLogger.Println(path + "::" + strconv.Itoa(http.StatusUnsupportedMediaType) + "::" + err.Error())
@@ -62,7 +94,6 @@ func (con *Controller) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 			return
 		}
 
-		res.Header().Add("Content-Type", "text/html")
 		res.Write(out)
 	} else {
 		f, err := os.Open(path)
