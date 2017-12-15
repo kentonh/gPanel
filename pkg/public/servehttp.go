@@ -8,6 +8,8 @@ import (
 	"time"
 
 	"github.com/Ennovar/gPanel/pkg/routing"
+	"strings"
+	"os/exec"
 )
 
 // ServeHTTP function routes all requests for the public web server. It is used in the main
@@ -38,34 +40,47 @@ func (con *Controller) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 
 	path := req.URL.Path[1:]
 	if len(path) == 0 {
-		path = (con.Directory + "public/" + "index.html")
+		path = con.Directory + "public/" + "index.html"
 	} else {
-		path = (con.Directory + "public/" + path)
-	}
-
-	f, err := os.Open(path)
-
-	if err != nil {
-		con.PublicLogger.Println(path + "::" + strconv.Itoa(http.StatusNotFound) + "::" + err.Error())
-		routing.HttpThrowStatus(http.StatusNotFound, res)
-		return
+		path = con.Directory + "public/" + path
 	}
 
 	contentType, err := routing.GetContentType(path)
 
 	if err != nil {
-		con.PublicLogger.Println(path + "::" + strconv.Itoa(http.StatusUnsupportedMediaType) + "::" + err.Error())
-		routing.HttpThrowStatus(http.StatusUnsupportedMediaType, res)
-		return
-	}
+		var out []byte
 
-	res.Header().Add("Content-Type", contentType)
-	_, err = io.Copy(res, f)
+		if strings.HasSuffix(path, ".php") {
+			if out, err = exec.Command("php", path).Output(); err != nil {
+				con.PublicLogger.Println(path + "::" + strconv.Itoa(http.StatusInternalServerError) + "::" + err.Error())
+				routing.HttpThrowStatus(http.StatusInternalServerError, res)
+				return
+			}
+		} else {
+			con.PublicLogger.Println(path + "::" + strconv.Itoa(http.StatusUnsupportedMediaType) + "::" + err.Error())
+			routing.HttpThrowStatus(http.StatusUnsupportedMediaType, res)
+			return
+		}
 
-	if err != nil {
-		con.PublicLogger.Println(path + "::" + strconv.Itoa(http.StatusInternalServerError) + "::" + err.Error())
-		routing.HttpThrowStatus(http.StatusInternalServerError, res)
-		return
+		res.Header().Add("Content-Type", "text/html")
+		res.Write(out)
+	} else {
+		f, err := os.Open(path)
+
+		if err != nil {
+			con.PublicLogger.Println(path + "::" + strconv.Itoa(http.StatusNotFound) + "::" + err.Error())
+			routing.HttpThrowStatus(http.StatusNotFound, res)
+			return
+		}
+
+		res.Header().Add("Content-Type", contentType)
+
+		_, err = io.Copy(res, f)
+		if err != nil {
+			con.PublicLogger.Println(path + "::" + strconv.Itoa(http.StatusInternalServerError) + "::" + err.Error())
+			routing.HttpThrowStatus(http.StatusInternalServerError, res)
+			return
+		}
 	}
 
 	elapsedTime := time.Since(startTime)
