@@ -1,23 +1,69 @@
 package public
 
 import (
+	"bufio"
+	"bytes"
 	"io"
 	"net/http"
 	"os"
-	"strconv"
-	"time"
-
-	"bufio"
-	"net/textproto"
 	"os/exec"
-	"strings"
-
 	"regexp"
+	"strconv"
+	"strings"
+	"time"
 
 	"github.com/Ennovar/gPanel/pkg/routing"
 )
 
-var reg = regexp.MustCompile("[0-9]+")
+func (con *Controller) ServePHP(res http.ResponseWriter, path string) {
+	if out, err := exec.Command("php-cgi", path).Output(); err == nil {
+		reg := regexp.MustCompile(`Status: (\d{3})`)
+		b := bytes.NewReader(out)
+		s := bufio.NewScanner(b)
+		var status, split int
+
+		for s.Scan() {
+			line := s.Text()
+			split++
+
+			// Status will be first line
+			if status == 0 {
+				m := reg.FindStringSubmatch(line)
+
+				var err error
+				status, err = strconv.Atoi(m[1])
+				if err != nil {
+					status = 200
+				}
+				continue
+			}
+
+			// Blank line between headers and body
+			if line == "" {
+				split++
+				break
+			}
+
+			sep := strings.Index(line, ": ")
+			res.Header().Add(line[:sep], line[sep+2:])
+			continue
+		}
+
+		if err := s.Err(); err != nil {
+			con.PublicLogger.Println(path + "::" + strconv.Itoa(http.StatusInternalServerError) + "::" + err.Error())
+			routing.HttpThrowStatus(http.StatusInternalServerError, res)
+			return
+		}
+
+		res.WriteHeader(status)
+		res.Write([]byte(strings.SplitAfterN(string(out), "\n", split)[split-1]))
+		return
+	} else {
+		con.PublicLogger.Println(path + "::" + strconv.Itoa(http.StatusInternalServerError) + "::" + err.Error())
+		routing.HttpThrowStatus(http.StatusInternalServerError, res)
+		return
+	}
+}
 
 // ServeHTTP function routes all requests for the public web server. It is used in the main
 // function inside of the http.ListenAndServe() function for the public host.
@@ -55,46 +101,13 @@ func (con *Controller) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 	contentType, err := routing.GetContentType(path)
 
 	if err != nil {
-		var out []byte
-
 		if strings.HasSuffix(path, ".php") {
-			if out, err = exec.Command("php-cgi", path).Output(); err != nil {
-				con.PublicLogger.Println(path + "::" + strconv.Itoa(http.StatusInternalServerError) + "::" + err.Error())
-				routing.HttpThrowStatus(http.StatusInternalServerError, res)
-				return
-			}
-			cgiRes := string(out)
-			pos := strings.Index(cgiRes, "; charset=UTF-8") + len("; charset=UTF-8")
-			out = []byte(strings.Trim(cgiRes[pos:], "\n"))
-
-			headers := strings.Replace(cgiRes[0:pos], "\n", "\r\n", -1)
-			reader := bufio.NewReader(strings.NewReader(headers + "\r\n\r\n"))
-			tp := textproto.NewReader(reader)
-
-			mimeHeader, err := tp.ReadMIMEHeader()
-			if err != nil {
-				con.PublicLogger.Println(path + "::" + strconv.Itoa(http.StatusInternalServerError) + "::" + err.Error())
-				routing.HttpThrowStatus(http.StatusInternalServerError, res)
-				return
-			}
-
-			httpHeader := http.Header(mimeHeader)
-			for k, v := range httpHeader {
-				if k == "Status" {
-					if code, err := strconv.Atoi(string(reg.Find([]byte(v[0])))); err == nil {
-						res.WriteHeader(code)
-					}
-					continue
-				}
-				res.Header().Add(k, v[0])
-			}
+			con.ServePHP(res, path)
 		} else {
 			con.PublicLogger.Println(path + "::" + strconv.Itoa(http.StatusUnsupportedMediaType) + "::" + err.Error())
 			routing.HttpThrowStatus(http.StatusUnsupportedMediaType, res)
 			return
 		}
-
-		res.Write(out)
 	} else {
 		f, err := os.Open(path)
 

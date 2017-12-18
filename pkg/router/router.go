@@ -63,6 +63,8 @@ func New() *Router {
 					req.Header.Set("Host", req.Host)
 					req.URL.Scheme = "http"
 					req.URL.Host = "127.0.0.1:" + strconv.Itoa(d)
+				} else {
+					mutex.Unlock()
 				}
 			},
 		},
