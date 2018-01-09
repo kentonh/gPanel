@@ -9,27 +9,32 @@ jQuery('._js_add-user-form').on('submit', function(e){
 
   if((usernameInput && usernameInput.val()) && (passwordInput && passwordInput.val()) && (passwordInputRetype && passwordInputRetype.val())) {
     if(passwordInput.val() == passwordInputRetype.val()) {
-      var requestData = {};
-      requestData["user"] = usernameInput.val();
-      requestData["pass"] = passwordInput.val();
+      if (passwordInput.val().length >= 8) {
+        var requestData = {};
+        requestData["user"] = usernameInput.val();
+        requestData["pass"] = passwordInput.val();
 
-      var xhr = new XMLHttpRequest();
-      xhr.open(jQuery(this).attr('method'), jQuery(this).attr('action'), true);
-      xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-      xhr.send(JSON.stringify(requestData));
+        var xhr = new XMLHttpRequest();
+        xhr.open(jQuery(this).attr('method'), jQuery(this).attr('action'), true);
+        xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+        xhr.send(JSON.stringify(requestData));
 
-      xhr.onloadend = function() {
-        if(xhr.status == 204) {
-          listCurrentUsers();
-        }
-        else {
-          if(xhr.response != undefined && xhr.response.length != 0) {
-            alert('Error: ' + xhr.response);
+        xhr.onloadend = function() {
+          if(xhr.status == 204) {
+            listCurrentUsers();
           }
           else {
-            alert('An error has occurred, refresh and try again. If problem persists please contact your administrator.');
+            if(xhr.response != undefined && xhr.response.length != 0) {
+              alert('Error: ' + xhr.response);
+            }
+            else {
+              alert('An error has occurred, refresh and try again. If problem persists please contact your administrator.');
+            }
           }
         }
+      }
+      else {
+        alert('Password must be at least 8 characters');
       }
     }
     else {

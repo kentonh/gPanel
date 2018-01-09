@@ -50,6 +50,9 @@ jQuery('._js_update-password-form').on('submit', function(e){
           xhr.onloadend = function() {
             if(xhr.status == 204) {
               alert("Password successfully updated.");
+              $('input[type=password]').each(function() {
+                $(this).val('');
+              });
               newPassModal.modal('hide');
               userModal.modal('show');
             }
