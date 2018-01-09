@@ -13,6 +13,7 @@ import (
 	"github.com/Ennovar/gPanel/pkg/encryption"
 	"github.com/Ennovar/gPanel/pkg/file"
 	"github.com/Ennovar/gPanel/pkg/gpaccount"
+	"github.com/Ennovar/gPanel/pkg/system"
 )
 
 func Create(res http.ResponseWriter, req *http.Request, logger *log.Logger, bundles map[string]*gpaccount.Controller) bool {
@@ -122,6 +123,13 @@ func Create(res http.ResponseWriter, req *http.Request, logger *log.Logger, bund
 		return false
 	}
 	ds.Close()
+
+	err, err2 := system.CreateBundleUser(createBundleRequestData.Name)
+	if err != nil {
+		logger.Println(req.URL.Path + "::" + err.Error() + " AND " + err2.Error())
+		http.Error(res, err2.Error(), http.StatusInternalServerError)
+		return false
+	}
 
 	bundles[createBundleRequestData.Name] = gpaccount.New(newBundle+"/", databaseBundlePorts.Account, databaseBundlePorts.Public)
 	_ = bundles[createBundleRequestData.Name].Start()
