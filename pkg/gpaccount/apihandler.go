@@ -5,12 +5,13 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/Ennovar/gPanel/pkg/api/domain"
 	"github.com/Ennovar/gPanel/pkg/api/ip"
 	logapi "github.com/Ennovar/gPanel/pkg/api/log"
 	"github.com/Ennovar/gPanel/pkg/api/server"
-	"github.com/Ennovar/gPanel/pkg/api/user"
-	"github.com/Ennovar/gPanel/pkg/api/domain"
 	"github.com/Ennovar/gPanel/pkg/api/settings"
+	"github.com/Ennovar/gPanel/pkg/api/ssh"
+	"github.com/Ennovar/gPanel/pkg/api/user"
 )
 
 func (con *Controller) apiHandler(res http.ResponseWriter, req *http.Request) (bool, bool) {
@@ -67,6 +68,10 @@ func (con *Controller) apiHandler(res http.ResponseWriter, req *http.Request) (b
 		return true, domain.Unlink(res, req, con.APILogger)
 	case "/settings/get_nameservers":
 		return true, settings.GetNameservers(res, req, con.APILogger)
+	case "/ssh/addkey":
+		return true, ssh.AddKey(res, req, con.APILogger)
+	case "/ssh/deletekey":
+		return true, ssh.DeleteKey(res, req, con.APILogger)
 	default:
 		return false, false
 	}

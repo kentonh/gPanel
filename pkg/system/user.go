@@ -58,14 +58,6 @@ func CreateBundleUser(username string) (error, error) {
 		return err, errors.New(cerr.String())
 	}
 
-	// Correct permissions on authorized_keys file
-	cmd = exec.Command("chmod", "600", "/home/"+username+"/.ssh/authorized_keys")
-	cmd.Stderr = &cerr
-
-	if err = cmd.Run(); err != nil {
-		return err, errors.New(cerr.String())
-	}
-
 	// Create the host key-pair for said user
 	cmd = exec.Command("ssh-keygen", keygenArgs...)
 	cmd.Stderr = &cerr
@@ -82,16 +74,85 @@ func CreateBundleUser(username string) (error, error) {
 		return err, errors.New(cerr.String())
 	}
 
+	/* OWNERSHIP AND FILE PERMISSIONS START */
+	cmd = exec.Command("chmod", "700", "/home/"+username+"/.ssh")
+	cmd.Stderr = &cerr
+
+	if err = cmd.Run(); err != nil {
+		return err, errors.New(cerr.String())
+	}
+
+	cmd = exec.Command("chmod", "600", "/home/"+username+"/.ssh/id_rsa")
+	cmd.Stderr = &cerr
+
+	if err = cmd.Run(); err != nil {
+		return err, errors.New(cerr.String())
+	}
+
+	cmd = exec.Command("chmod", "644", "/home/"+username+"/.ssh/id_rsa.pub")
+	cmd.Stderr = &cerr
+
+	if err = cmd.Run(); err != nil {
+		return err, errors.New(cerr.String())
+	}
+
+	cmd = exec.Command("chmod", "644", "/home/"+username+"/.ssh/authorized_keys")
+	cmd.Stderr = &cerr
+
+	if err = cmd.Run(); err != nil {
+		return err, errors.New(cerr.String())
+	}
+
+	cmd = exec.Command("chown", username+":", "/home/"+username+"/.ssh")
+	cmd.Stderr = &cerr
+
+	if err = cmd.Run(); err != nil {
+		return err, errors.New(cerr.String())
+	}
+
+	cmd = exec.Command("chown", username+":", "/home/"+username+"/.ssh/id_rsa")
+	cmd.Stderr = &cerr
+
+	if err = cmd.Run(); err != nil {
+		return err, errors.New(cerr.String())
+	}
+
+	cmd = exec.Command("chown", username+":", "/home/"+username+"/.ssh/id_rsa.pub")
+	cmd.Stderr = &cerr
+
+	if err = cmd.Run(); err != nil {
+		return err, errors.New(cerr.String())
+	}
+
+	cmd = exec.Command("chown", username+":", "/home/"+username+"/.ssh/authorized_keys")
+	cmd.Stderr = &cerr
+
+	if err = cmd.Run(); err != nil {
+		return err, errors.New(cerr.String())
+	}
+	/* OWNERSHIP AND FILE PERMISSIONS END */
+
 	return nil, nil
 }
 
 func DeleteBundleUser(username string) (error, error) {
 	var cerr bytes.Buffer
+	var err error
 
-	cmd := exec.Command("deluser", "--remove-all-files", username)
+	// Delete the user and try to remove all files associated
+	cmd := exec.Command("deluser", "--quiet", username)
 	cmd.Stderr = &cerr
 
-	if err := cmd.Run(); err != nil {
+	if err = cmd.Run(); err != nil {
+		return err, errors.New(cerr.String())
+	}
+
+	// Forcefully remove the users home directory if it has not already been done
+	// (sometimes deluser doesn't do its job even with the flag)
+	cmd = exec.Command("rm", "-rf", "/home/"+username)
+	cmd.Stderr = &cerr
+
+	if err = cmd.Run(); err != nil {
 		return err, errors.New(cerr.String())
 	}
 
