@@ -22,6 +22,9 @@ jQuery('._js_add-user-form').on('submit', function(e){
         xhr.onloadend = function() {
           if(xhr.status == 204) {
             listCurrentUsers();
+            $('input[type=password]').each(function() {
+                $(this).val('');
+              });
           }
           else {
             if(xhr.response != undefined && xhr.response.length != 0) {
