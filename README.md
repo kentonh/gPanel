@@ -4,7 +4,7 @@ A web-hosting control panel written in Go.
 
 ## Stack
 
-Backend: __[Go](https://golang.org/)__  
+Backend: __[Go (1.8+)](https://golang.org/)__  
 Database: __[Bolt](https://github.com/boltdb/bolt)__  
 CSS Toolkit(s): __[Bootstrap 4](http://getbootstrap.com/) & [Font Awesome](http://fontawesome.io/)__  
 JS Toolkit(s): __[jQuery](https://jquery.com/)__
@@ -35,6 +35,9 @@ git remote rename fork origin
 To deploy...
 
 ```shell
-# Starting gPanel
-go run main.go
+# Build the binary
+go build gpanel.go
+
+# Execute binary as root (root access is needed for functions within the system package)
+sudo ./gpanel
 ```

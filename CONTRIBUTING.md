@@ -70,7 +70,7 @@ Key: __Implemented__ | __*Implemented, but needs work*__ | *Unimplemented* | ~~R
   * Clients
     * __Multi-client support__
     * __Configuration of new clients__
-    * __*Configuration of existing hosts*__
+    * __Configuration of existing hosts__
 * gPanel Account (Upper level of bundles)
   * Accessibility
     * __Using ports defined during configuration__
@@ -89,12 +89,12 @@ Key: __Implemented__ | __*Implemented, but needs work*__ | *Unimplemented* | ~~R
     * *Alert system for fatal errors*
   * Mail Servers
   * Domains
-    * *Configuration of domains*
+    * __Configuration of domains__
     * *Configuration of sub-domains*
     * *TLS/SSL certificate support*
-    * *Multi-domain support*
+    * __Multi-domain support__
   * Remote Access
-    * *SSH Access*
+    * __*SSH Access*__
   * File Manager
     * *CRUD*
     * *Inline Editor*
@@ -107,15 +107,15 @@ Key: __Implemented__ | __*Implemented, but needs work*__ | *Unimplemented* | ~~R
   * Supported content types
     * __All of the obvious ones (.jpg/.html/.css/etc)__
     * *.go*
-    * *.php*
+    * __*.php*__
 * General
   * Deployment
-    * *Binary*
+    * __Binary__
     * *GUI Installation Helper*
   * Multi-infrastructure Support
-    * __Windows__
+    * ~~Windows~~ (No native solution for SSH exists within Windows OS)
     * __Linux__
-    * __Mac__
+    * *Mac* (This is possible, but OS detection and refactoring within the system package needs done)
     * *Amazon Web Services*
     * *DigitalOcean*
     * *Google Cloud Platform*
