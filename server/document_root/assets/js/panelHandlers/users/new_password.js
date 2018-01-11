@@ -35,32 +35,41 @@ jQuery('._js_update-password-form').on('submit', function(e){
 
   if((newPassword && newPassword.val()) && (newPasswordRetype && newPasswordRetype.val()) && (newPasswordUsername && newPasswordUsername.val())) {
     if(newPassword.val() == newPasswordRetype.val()) {
-      var ensure = confirm("Are you sure you want to change the password of user \"" + newPasswordUsername.val() + "\"?");
-      if(ensure) {
-        var requestData = {};
-        requestData["user"] = newPasswordUsername.val();
-        requestData["pass"] = newPassword.val();
+      if (newPassword.val().length >= 8) {
+        var ensure = confirm("Are you sure you want to change the password of user \"" + newPasswordUsername.val() + "\"?");
+        if(ensure) {
+          var requestData = {};
+          requestData["user"] = newPasswordUsername.val();
+          requestData["pass"] = newPassword.val();
 
-        var xhr = new XMLHttpRequest();
-        xhr.open(jQuery(this).attr('method'), jQuery(this).attr('action'), true);
-        xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-        xhr.send(JSON.stringify(requestData));
+          var xhr = new XMLHttpRequest();
+          xhr.open(jQuery(this).attr('method'), jQuery(this).attr('action'), true);
+          xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+          xhr.send(JSON.stringify(requestData));
 
-        xhr.onloadend = function() {
-          if(xhr.status == 204) {
-            alert("Password successfully updated.");
-            newPassModal.modal('hide');
-            userModal.modal('show');
-          }
-          else {
-            if(xhr.response != undefined && xhr.response.length != 0) {
-              alert('Error: ' + xhr.response);
+          xhr.onloadend = function() {
+            if(xhr.status == 204) {
+              alert("Password successfully updated.");
+              $('input[type=password]').each(function() {
+                $(this).val('');
+              });
+              newPassModal.modal('hide');
+              userModal.modal('show');
             }
             else {
-              alert('An error has occurred, refresh and try again. If problem persists please contact your administrator.');
+              if(xhr.response != undefined && xhr.response.length != 0) {
+                alert('Error: ' + xhr.response);
+              }
+              else {
+                alert('An error has occurred, refresh and try again. If problem persists please contact your administrator.');
+              }
             }
           }
         }
+      }  
+      else {
+        console.log(newPassword.val());
+        alert("Password must be at least 8 characters");
       }
     }
     else {

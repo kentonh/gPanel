@@ -33,42 +33,47 @@ jQuery('._js_back-to-user-management').on('click', function(e){
 jQuery('._js_update-password-form').on('submit', function(e){
   e.preventDefault();
 
-  if((newPassword && newPassword.val()) && (newPasswordRetype && newPasswordRetype.val()) && (newPasswordUsername && newPasswordUsername.val())) {
-    if(newPassword.val() == newPasswordRetype.val()) {
-      var ensure = confirm("Are you sure you want to change the password of user \"" + newPasswordUsername.val() + "\"?");
-      if(ensure) {
-        var requestData = {};
-        requestData["user"] = newPasswordUsername.val();
-        requestData["pass"] = newPassword.val();
+  if(newPassword.length >= 8) { 
+    if((newPassword && newPassword.val()) && (newPasswordRetype && newPasswordRetype.val()) && (newPasswordUsername && newPasswordUsername.val())) {
+      if(newPassword.val() == newPasswordRetype.val()) {
+        var ensure = confirm("Are you sure you want to change the password of user \"" + newPasswordUsername.val() + "\"?");
+        if(ensure) {
+          var requestData = {};
+          requestData["user"] = newPasswordUsername.val();
+          requestData["pass"] = newPassword.val();
 
-        var xhr = new XMLHttpRequest();
-        xhr.open(jQuery(this).attr('method'), jQuery(this).attr('action'), true);
-        xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-        xhr.send(JSON.stringify(requestData));
+          var xhr = new XMLHttpRequest();
+          xhr.open(jQuery(this).attr('method'), jQuery(this).attr('action'), true);
+          xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+          xhr.send(JSON.stringify(requestData));
 
-        xhr.onloadend = function() {
-          if(xhr.status == 204) {
-            alert("Password successfully updated.");
-            newPassModal.modal('hide');
-            userModal.modal('show');
-          }
-          else {
-            if(xhr.response != undefined && xhr.response.length != 0) {
-              alert('Error: ' + xhr.response);
+          xhr.onloadend = function() {
+            if(xhr.status == 204) {
+              alert("Password successfully updated.");
+              newPassModal.modal('hide');
+              userModal.modal('show');
             }
             else {
-              alert('An error has occurred, refresh and try again. If problem persists please contact your administrator.');
+              if(xhr.response != undefined && xhr.response.length != 0) {
+                alert('Error: ' + xhr.response);
+              }
+              else {
+                alert('An error has occurred, refresh and try again. If problem persists please contact your administrator.');
+              }
             }
           }
         }
       }
+      else {
+        alert("Passwords must match.");
+      }
     }
     else {
-      alert("Passwords must match.");
+      alert("All fields need to be filled out");
     }
   }
   else {
-    alert("All fields need to be filled out");
+    alert("Password must be at least 8 characters");
   }
 });
 
