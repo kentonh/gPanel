@@ -12,7 +12,7 @@ func AddAuthorizedKey(username, key string) error {
 		return err
 	}
 
-	if _, err = f.WriteString(key); err != nil {
+	if _, err = f.WriteString(key + "\n"); err != nil {
 		return err
 	}
 

@@ -14,7 +14,7 @@ jQuery('._js_add-key-form').on('submit', function(e){
   if(key && key.val()) {
     var requestData = {};
     requestData["username"] = BUNDLE_NAME;
-    requestData["publicKey"] = key.val();
+    requestData["publickey"] = key.val();
 
     var xhr = new XMLHttpRequest();
     xhr.open(jQuery(this).attr('method'), jQuery(this).attr('action'), true);
@@ -23,8 +23,8 @@ jQuery('._js_add-key-form').on('submit', function(e){
 
     xhr.onloadend = function() {
       if(xhr.status == 204) {
-        PopulateKeyList();
         alert("Successfully added authorized public key.");
+        PopulateKeyList();
       }
       else {
         if(xhr.response != undefined && xhr.response.length != 0) {

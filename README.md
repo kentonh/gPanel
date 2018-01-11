@@ -1,6 +1,8 @@
 # gPanel ![TravisCI gPanel Build](https://travis-ci.org/Ennovar/gPanel.svg?branch=master)
 
-A web-hosting control panel written in Go. *Note:* This software currently only works on Debian based Linux systems.
+A web-hosting control panel written in Go.
+
+*__Note:__ This software currently only runs on Debian based Linux systems.*
 
 ## Stack
 
