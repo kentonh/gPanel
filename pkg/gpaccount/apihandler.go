@@ -72,6 +72,8 @@ func (con *Controller) apiHandler(res http.ResponseWriter, req *http.Request) (b
 		return true, ssh.AddKey(res, req, con.APILogger)
 	case "/ssh/deletekey":
 		return true, ssh.DeleteKey(res, req, con.APILogger)
+	case "/ssh/getkeys":
+		return true, ssh.GetKeys(res, req, con.APILogger)
 	default:
 		return false, false
 	}

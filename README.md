@@ -2,6 +2,8 @@
 
 A web-hosting control panel written in Go.
 
+*__Note:__ This software currently only runs on Debian based Linux systems.*
+
 ## Stack
 
 Backend: __[Go (1.8+)](https://golang.org/)__  

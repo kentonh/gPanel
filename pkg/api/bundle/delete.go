@@ -7,8 +7,9 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/Ennovar/gPanel/pkg/gpaccount"
 	"github.com/Ennovar/gPanel/pkg/database"
+	"github.com/Ennovar/gPanel/pkg/gpaccount"
+	"github.com/Ennovar/gPanel/pkg/system"
 )
 
 func Delete(res http.ResponseWriter, req *http.Request, logger *log.Logger, bundles map[string]*gpaccount.Controller, dir string) bool {
@@ -61,6 +62,13 @@ func Delete(res http.ResponseWriter, req *http.Request, logger *log.Logger, bund
 	}
 
 	delete(bundles, rqData.Name)
+
+	err, err2 := system.DeleteBundleUser(rqData.Name)
+	if err != nil {
+		logger.Println(req.URL.Path + "::" + err.Error() + " AND " + err2.Error())
+		http.Error(res, err2.Error(), http.StatusInternalServerError)
+		return false
+	}
 
 	res.WriteHeader(http.StatusNoContent)
 	return true

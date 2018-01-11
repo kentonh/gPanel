@@ -237,7 +237,110 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                  <p>Todo: use /api/ssh/addkey and /api/ssh/deletekey in some way in this modal</p>
+                  <h4>Add Public Key to Authorized Keys for this Account</h4>
+                  <form method="UPDATE" action="api/ssh/addkey" class="_js_add-key-form">
+                      <div class="form-group">
+                          <label for="addKey" class="sr-only">Public Key</label>
+                          <div class="input-group">
+                              <input type="text" id="addKey" class="form-control" placeholder="ssh-rsa ...">
+                          </div>
+                      </div>
+                      <div class="btn-group" role="group">
+                          <button type="submit" class="btn btn-primary">Authorize Public Key</button>
+                      </div>
+                  </form>
+
+                  <div id="accordionSSH" role="tablist" class="mt-4 mb-4">
+                    <div class="card">
+                      <div class="card-header" role="tab" id="headingOne">
+                        <h5 class="mb-0">
+                          <a data-toggle="collapse" href="#collapseOne" role="button" aria-expanded="true" aria-controls="collapseOne">
+                          How to Generate an SSH Key-Pair
+                          </a>
+                        </h5>
+                      </div>
+                      <div id="collapseOne" class="collapse" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordionSSH">
+                        <div class="card-body">
+                          <ol>
+                            <li>Linux/OSX</li>
+                            <ol>
+                              <li>Open terminal</li>
+                              <li>Run the command: ssh-keygen -t rsa</li>
+                              <li>Answer the prompts (pressing enter without any input uses default values)</li>
+                            </ol>
+                            <li>Windows</li>
+                            <ol>
+                              <li>NEED TO FIGURE THIS OUT USING PuTTYgen</li>
+                            </ol>
+                          </ol>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card">
+                      <div class="card-header" role="tab" id="headingTwo">
+                        <h5 class="mb-0">
+                          <a class="collapsed" data-toggle="collapse" href="#collapseTwo" role="button" aria-expanded="false" aria-controls="collapseTwo">
+                          How to Retrieve a Generated Public Key
+                          </a>
+                        </h5>
+                      </div>
+                      <div id="collapseTwo" class="collapse" role="tabpanel" aria-labelledby="headingTwo" data-parent="#accordionSSH">
+                        <div class="card-body">
+                          <ol>
+                            <li>Linux</li>
+                            <ol>
+                              <li>Open terminal</li>
+                              <li>Run the command: cat ~/.ssh/id_rsa.pub</li>
+                              <li>Manually copy the key and paste it into the input field</li>
+                            </ol>
+                            <li>OSX</li>
+                            <ol>
+                              <li>Open terminal</li>
+                              <li>Run the command: pbcopy ~/.ssh/id_rsa.pub</li>
+                              <li>Paste the contents into the input field</li>
+                            </ol>
+                            <li>Windows</li>
+                            <ol>
+                              <li>NEED TO FIGURE THIS OUT USING PuTTYgen</li>
+                            </ol>
+                          </ol>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card">
+                      <div class="card-header" role="tab" id="headingThree">
+                        <h5 class="mb-0">
+                          <a class="collapsed" data-toggle="collapse" href="#collapseThree" role="button" aria-expanded="false" aria-controls="collapseThree">
+                          How to Access the Server
+                          </a>
+                        </h5>
+                      </div>
+                      <div id="collapseThree" class="collapse" role="tabpanel" aria-labelledby="headingThree" data-parent="#accordionSSH">
+                        <div class="card-body">
+                          <ol>
+                            <li>Linux/OSX</li>
+                            <ol>
+                              <li>Open terminal</li>
+                              <li>Run the command: ssh account_name@server_name</li>
+                            </ol>
+                            <li>Windows</li>
+                            <ol>
+                              <li>Download <a href="http://www.putty.org/" target="_blank">PuTTY</a></li>
+                              <li>Open PuTTY</li>
+                              <li>NEEDS REVISION: Input your account name in the username input field</li>
+                              <li>NEEDS REVISION: Input the server address in the server address field</li>
+                              <li>NEEDS REVISION: Go to the SSH tab on the side</li>
+                              <li>NEEDS REVISION: Input your private key</li>
+                              <li>NEEDS REVISION: Click connect</li>
+                            </ol>
+                          </ol>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <h4>Current Authorized Keys</h4>
+                  <div class="_js_current-authorized-keys"></div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -391,6 +494,7 @@
     <script type="text/javascript" src="assets/js/panelHandlers/users/new.js"></script>
     <script type="text/javascript" src="assets/js/panelHandlers/users/delete.js"></script>
     <script type="text/javascript" src="assets/js/panelHandlers/users/new_password.js"></script>
+    <script type="text/javascript" src="assets/js/panelHandlers/users/getkeys.js"></script>
     <script type="text/javascript" src="assets/js/panelHandlers/users/addkey.js"></script>
     <script type="text/javascript" src="assets/js/panelHandlers/users/deletekey.js"></script>
 
