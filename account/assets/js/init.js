@@ -8,6 +8,7 @@ xhr.send();
 xhr.onloadend = function() {
     if(xhr.status == 200) {
         BUNDLE_NAME = xhr.response;
+        jQuery('.navbar-brand').append(' - ' + BUNDLE_NAME);
     }
     else {
         if (xhr.response != undefined && xhr.response.length != 0) {

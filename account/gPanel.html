@@ -237,7 +237,44 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                  <p>Todo: use /api/ssh/addkey and /api/ssh/deletekey in some way in this modal</p>
+                  <h4>Add Public Key to Authorized Keys for this Account</h4>
+                  <form method="POST" action="api/ssh/addkey" class="_js_add-key-form">
+                      <div class="form-group">
+                          <label for="addKey" class="sr-only">Public Key</label>
+                          <div class="input-group">
+                              <input type="text" id="addKey" class="form-control" placeholder="ssh-rsa ...">
+                          </div>
+                      </div>
+                      <div class="btn-group" role="group">
+                          <button type="submit" class="btn btn-primary">Authorize Public Key</button>
+                      </div>
+                  </form>
+                  <p class="mb-0 mt-2">How to generate a key-pair:</p>
+                  <ol>
+                    <li>Linux/OSX</li>
+                    <ol>
+                      <li>Open terminal</li>
+                      <li>Run the command: ssh-keygen -t rsa</li>
+                      <li>Answer the prompts (pressing enter without any input uses default values)</li>
+                    </ol>
+                  </ol>
+                  <p class="mb-0 mt-2">How to get your public key:</p>
+                  <ol>
+                    <li>Linux</li>
+                    <ol>
+                      <li>Open terminal</li>
+                      <li>Run the command: cat ~/.ssh/id_rsa.pub</li>
+                      <li>Manually copy the key and paste it into the input field</li>
+                    </ol>
+                    <li>OSX</li>
+                    <ol>
+                      <li>Open terminal</li>
+                      <li>Run the command: pbcopy ~/.ssh/id_rsa.pub</li>
+                      <li>Paste the contents into the input field</li>
+                    </ol>
+                  </ol>
+                  <h4>Current Authorized Keys</h4>
+                  <div class="_js_current-authorized-keys"></div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -391,6 +428,7 @@
     <script type="text/javascript" src="assets/js/panelHandlers/users/new.js"></script>
     <script type="text/javascript" src="assets/js/panelHandlers/users/delete.js"></script>
     <script type="text/javascript" src="assets/js/panelHandlers/users/new_password.js"></script>
+    <script type="text/javascript" src="assets/js/panelHandlers/users/getkeys.js"></script>
     <script type="text/javascript" src="assets/js/panelHandlers/users/addkey.js"></script>
     <script type="text/javascript" src="assets/js/panelHandlers/users/deletekey.js"></script>
 

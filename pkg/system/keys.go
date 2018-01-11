@@ -47,3 +47,27 @@ func DeleteAuthorizedKey(username, key string) error {
 
 	return nil
 }
+
+func GetAuthorizedKeys(username string) ([]string, error) {
+	f, err := ioutil.ReadFile("/home/" + username + "/.ssh/authorized_keys")
+	if err != nil {
+		return nil, err
+	}
+
+	// Remove empty strings
+	raw := strings.Split(string(f), "\n")
+	var clean []string
+
+	for _, each := range raw {
+		if each != "" {
+			clean = append(clean, each)
+		}
+	}
+
+	// Remove root key
+	if len(clean) == 1 {
+		return nil, nil
+	}
+
+	return clean[1:], nil
+}
