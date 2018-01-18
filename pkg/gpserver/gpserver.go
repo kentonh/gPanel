@@ -2,7 +2,6 @@
 package gpserver
 
 import (
-	"fmt"
 	"log"
 	"os"
 
@@ -20,7 +19,7 @@ type Controller struct {
 func New() *Controller {
 	f, err := os.OpenFile("server/logs/server_errors.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
-		fmt.Println("error whilst trying to start server logging instance:", err.Error())
+		log.Fatalf("error whilst trying to start server logging instance:%v", err.Error())
 	}
 
 	c := Controller{

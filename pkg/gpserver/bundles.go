@@ -3,7 +3,6 @@ package gpserver
 import (
 	"fmt"
 	"io/ioutil"
-	"strings"
 
 	"github.com/Ennovar/gPanel/pkg/api/bundle"
 	"github.com/Ennovar/gPanel/pkg/gpaccount"
@@ -18,15 +17,11 @@ func (con *Controller) detectBundles() {
 	}
 
 	for _, dir := range dirs {
-		if dir.Name() == "default_bundle" || !dir.IsDir() {
-			continue
-		}
-
-		if strings.HasPrefix(dir.Name(), "bundle_") {
+		if dir.IsDir() {
 			dirPath := "bundles/" + dir.Name() + "/"
 			err, accPort, pubPort := bundle.GetPorts(dirPath)
 
-			curBundle := gpaccount.New(dirPath, accPort, pubPort)
+			curBundle := gpaccount.New(dirPath, dir.Name(), accPort, pubPort)
 
 			err = curBundle.Start()
 			err2 := curBundle.Public.Start()
@@ -34,7 +29,7 @@ func (con *Controller) detectBundles() {
 				fmt.Println("error starting bundle:", dir.Name())
 			}
 
-			bundles[strings.Replace(dir.Name(), "bundle_", "", 1)] = curBundle
+			bundles[dir.Name()] = curBundle
 		}
 	}
 

@@ -93,9 +93,9 @@ func (con *Controller) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 
 	path := req.URL.Path[1:]
 	if len(path) == 0 {
-		path = con.Directory + "public/" + "index.html"
+		path = con.Directory + "document_root/" + "index.html"
 	} else {
-		path = con.Directory + "public/" + path
+		path = con.Directory + "document_root/" + path
 	}
 
 	contentType, err := routing.GetContentType(path)
