@@ -2,6 +2,7 @@
 package user
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"log"
 	"net/http"
@@ -11,7 +12,6 @@ import (
 
 	"github.com/Ennovar/gPanel/pkg/database"
 	"github.com/Ennovar/gPanel/pkg/encryption"
-	"github.com/Ennovar/gPanel/pkg/networking"
 	jwt "github.com/dgrijalva/jwt-go"
 )
 
@@ -48,7 +48,6 @@ func Auth(res http.ResponseWriter, req *http.Request, logger *log.Logger, dir st
 	var userDatabaseData database.Struct_Users
 
 	err = ds.Get(database.BUCKET_USERS, []byte(userRequestData.User), &userDatabaseData)
-
 	if err == database.ErrKeyNotExist {
 		logger.Println(req.URL.Path + "::user does not exist.")
 		http.Error(res, "User does not exist.", http.StatusUnauthorized)
@@ -87,20 +86,32 @@ func Auth(res http.ResponseWriter, req *http.Request, logger *log.Logger, dir st
 		return false
 	}
 
-	var store networking.Store
+	var sessionName string
 	if strings.Contains(dir, "bundles/") {
-		store = networking.GetStore(networking.ACCOUNT_USER_AUTH)
+		sessionName = "gpanel-account-user-auth"
 	} else {
-		store = networking.GetStore(networking.SERVER_USER_AUTH)
+		sessionName = "gpanel-server-user-auth"
 	}
 
-	err = store.Set(res, req, "token", token, (60 * 60 * 24))
-	err2 := store.Set(res, req, "user", userRequestData.User, (60 * 60 * 24))
-	if err != nil || err2 != nil {
-		logger.Println(req.URL.Path + "::" + err.Error() + "::" + err2.Error())
-		http.Error(res, http.StatusText(500), http.StatusInternalServerError)
+	var sessionData struct {
+		Username string `json:"Username"`
+		Token    string `json:"Token"`
+	}
+	sessionData.Username = userRequestData.User
+	sessionData.Token = token
+
+	b, err := json.Marshal(sessionData)
+	if err != nil {
+		logger.Println(req.URL.Path + "::" + err.Error())
+		http.Error(res, err.Error(), http.StatusInternalServerError)
 		return false
 	}
+
+	http.SetCookie(res, &http.Cookie{
+		Name:  sessionName,
+		Value: base64.StdEncoding.EncodeToString(b),
+		Path:  "/",
+	})
 
 	res.WriteHeader(http.StatusNoContent)
 	return true

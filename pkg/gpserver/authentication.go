@@ -2,11 +2,12 @@
 package gpserver
 
 import (
+	"encoding/base64"
+	"encoding/json"
 	"net/http"
 	"strings"
 
 	"github.com/Ennovar/gPanel/pkg/api/user"
-	"github.com/Ennovar/gPanel/pkg/networking"
 	jwt "github.com/dgrijalva/jwt-go"
 )
 
@@ -39,48 +40,46 @@ func reqAuth(path string) bool {
 // checkAuth function returns a boolean based on whether or not the current
 // caller is authenticated based off of encrypted sessions using JWT values.
 func (con *Controller) checkAuth(res http.ResponseWriter, req *http.Request) bool {
-	store := networking.GetStore(networking.SERVER_USER_AUTH)
-
-	session_value, err := store.Read(res, req, "user")
-	if err != nil || session_value == nil {
+	c, err := req.Cookie("gpanel-server-user-auth")
+	if err != nil {
 		return false
 	}
 
-	username, ok := session_value.(string)
-	if !ok {
+	data, err := base64.StdEncoding.DecodeString(c.Value)
+	if err != nil {
 		return false
 	}
 
-	stored_secret, err := user.GetSecret(username, con.Directory)
-	if stored_secret == "" {
+	var sessionData struct {
+		Username string `json:"Username"`
+		Token    string `json:"Token"`
+	}
+
+	err = json.Unmarshal(data, &sessionData)
+	if err != nil {
 		return false
 	}
 
-	session_value, err = store.Read(res, req, "token")
-	if err != nil || session_value == nil {
-		return false
-	}
-
-	tokenString, ok := session_value.(string)
-	if !ok {
+	storedSecret, err := user.GetSecret(sessionData.Username, con.Directory)
+	if storedSecret == "" || err != nil {
 		return false
 	}
 
 	keyfunc := func(t *jwt.Token) (interface{}, error) {
-		return []byte(stored_secret), nil
+		return []byte(storedSecret), nil
 	}
 
 	p := jwt.Parser{
 		ValidMethods: []string{"HS256", "HS384", "HS512"},
 	}
-	t, err := p.ParseWithClaims(tokenString, &jwt.StandardClaims{}, keyfunc)
 
+	t, err := p.ParseWithClaims(sessionData.Token, &jwt.StandardClaims{}, keyfunc)
 	if err != nil {
 		return false
 	}
 
 	claims := t.Claims.(*jwt.StandardClaims)
-	if claims.Subject != username {
+	if claims.Subject != sessionData.Username {
 		return false
 	}
 
