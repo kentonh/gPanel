@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/Ennovar/gPanel/pkg/networking"
+	"time"
 )
 
 // Logout function is accessed by an API call from the webhost root
@@ -20,20 +20,19 @@ func Logout(res http.ResponseWriter, req *http.Request, logger *log.Logger, dir 
 		return false
 	}
 
-	var store networking.Store
+	var sessionName string
 	if strings.Contains(dir, "bundles/") {
-		store = networking.GetStore(networking.ACCOUNT_USER_AUTH)
+		sessionName = "gpanel-account-user-auth"
 	} else {
-		store = networking.GetStore(networking.SERVER_USER_AUTH)
+		sessionName = "gpanel-server-user-auth"
 	}
 
-	err := store.Delete(res, req)
-
-	if err != nil {
-		logger.Println(req.URL.Path + "::" + err.Error())
-		http.Error(res, http.StatusText(500), http.StatusInternalServerError)
-		return false
-	}
+	http.SetCookie(res, &http.Cookie{
+		Name:    sessionName,
+		Value:   "",
+		Path:    "/",
+		Expires: time.Unix(0, 0),
+	})
 
 	res.WriteHeader(http.StatusNoContent)
 	return true

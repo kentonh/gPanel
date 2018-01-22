@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"github.com/Ennovar/gPanel/pkg/gpserver"
-	"github.com/gorilla/context"
 	"github.com/Ennovar/gPanel/pkg/router"
 )
 
@@ -21,5 +20,5 @@ func main() {
 	log.Print("To Exit: CTRL+C")
 	log.Print("Domain router is listening on localhost:2080")
 	log.Print("Listening (server) on localhost:2082, serving out of the server/document_root/ directory...")
-	http.ListenAndServe("localhost:2082", context.ClearHandler(mains))
+	http.ListenAndServe("localhost:2082", mains)
 }
