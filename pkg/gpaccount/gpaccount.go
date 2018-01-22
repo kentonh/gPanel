@@ -15,6 +15,7 @@ import (
 type Controller struct {
 	Directory               string
 	DocumentRoot            string
+	Name                    string
 	Port                    int
 	Public                  *public.Controller
 	GracefulShutdownTimeout time.Duration
@@ -39,6 +40,7 @@ func New(dir, name string, accPort, pubPort int) *Controller {
 	controller = Controller{
 		Directory:               dir,
 		DocumentRoot:            "account/",
+		Name:                    name,
 		Port:                    accPort,
 		Public:                  public.New("/home/"+name+"/", pubPort),
 		GracefulShutdownTimeout: 5 * time.Second,

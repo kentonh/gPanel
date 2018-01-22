@@ -84,6 +84,13 @@ func Create(res http.ResponseWriter, req *http.Request, logger *log.Logger, bund
 		return false
 	}
 
+	err = os.Mkdir(newBundle+"/logs", 0777)
+	if err != nil {
+		logger.Println(req.URL.Path + "::" + err.Error())
+		http.Error(res, err.Error(), http.StatusInternalServerError)
+		return false
+	}
+
 	ds, err := database.Open(newBundle + "/" + database.DB_MAIN)
 	if err != nil {
 		logger.Println(req.URL.Path + "::" + err.Error())

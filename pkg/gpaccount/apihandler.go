@@ -51,9 +51,9 @@ func (con *Controller) apiHandler(res http.ResponseWriter, req *http.Request) (b
 	case "/server/maintenance":
 		return true, server.Maintenance(res, req, con.APILogger, con.Public)
 	case "/log/read":
-		return true, logapi.Read(res, req, con.APILogger, con.Directory)
+		return true, logapi.Read(res, req, con.APILogger, "/home/"+con.Name+"/")
 	case "/log/delete":
-		return true, logapi.Truncate(res, req, con.APILogger, con.Directory)
+		return true, logapi.Truncate(res, req, con.APILogger, "/home/"+con.Name+"/")
 	case "/ip/list":
 		return true, ip.List(res, req, con.APILogger, con.Directory)
 	case "/ip/filter":
