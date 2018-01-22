@@ -2,9 +2,9 @@
 main
 gpanel
 
-# IGNORE ALL BUNDLES EXCEPT FOR DEFAULT_BUNDLE
+# IGNORE ALL BUNDLES
 bundles/*
-!bundles/default_bundle
+!bundles/README.md
 
 # IGNORE ALL FILES IN /LOG EXCEPT README
 **/logs/*

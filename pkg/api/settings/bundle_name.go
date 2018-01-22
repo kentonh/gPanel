@@ -1,10 +1,10 @@
 package settings
 
 import (
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
-	"log"
 )
 
 func BundleName(res http.ResponseWriter, req *http.Request, logger *log.Logger, dir string) bool {
@@ -14,7 +14,7 @@ func BundleName(res http.ResponseWriter, req *http.Request, logger *log.Logger, 
 		return false
 	}
 
-	dir = strings.Replace(dir, "bundles/bundle_", "", 1)
+	dir = strings.Replace(dir, "bundles/", "", 1)
 	dir = strings.Replace(dir, "/", "", 1)
 
 	res.WriteHeader(http.StatusOK)

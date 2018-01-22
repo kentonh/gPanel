@@ -8,10 +8,11 @@ import (
 	"net/http"
 	"strconv"
 
+	"os"
+
 	"github.com/Ennovar/gPanel/pkg/database"
 	"github.com/Ennovar/gPanel/pkg/emailer"
 	"github.com/Ennovar/gPanel/pkg/encryption"
-	"github.com/Ennovar/gPanel/pkg/file"
 	"github.com/Ennovar/gPanel/pkg/gpaccount"
 	"github.com/Ennovar/gPanel/pkg/system"
 )
@@ -75,8 +76,15 @@ func Create(res http.ResponseWriter, req *http.Request, logger *log.Logger, bund
 		return false
 	}
 
-	newBundle := "bundles/bundle_" + createBundleRequestData.Name
-	err = file.CopyDir("bundles/default_bundle", newBundle)
+	newBundle := "bundles/" + createBundleRequestData.Name
+	err = os.Mkdir(newBundle, 0777)
+	if err != nil {
+		logger.Println(req.URL.Path + "::" + err.Error())
+		http.Error(res, err.Error(), http.StatusInternalServerError)
+		return false
+	}
+
+	err = os.Mkdir(newBundle+"/logs", 0777)
 	if err != nil {
 		logger.Println(req.URL.Path + "::" + err.Error())
 		http.Error(res, err.Error(), http.StatusInternalServerError)
@@ -131,7 +139,7 @@ func Create(res http.ResponseWriter, req *http.Request, logger *log.Logger, bund
 		return false
 	}
 
-	bundles[createBundleRequestData.Name] = gpaccount.New(newBundle+"/", databaseBundlePorts.Account, databaseBundlePorts.Public)
+	bundles[createBundleRequestData.Name] = gpaccount.New(newBundle+"/", createBundleRequestData.Name, databaseBundlePorts.Account, databaseBundlePorts.Public)
 	_ = bundles[createBundleRequestData.Name].Start()
 	_ = bundles[createBundleRequestData.Name].Public.Start()
 

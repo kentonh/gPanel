@@ -2,10 +2,10 @@
 package public
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strconv"
 	"time"
 )
@@ -24,26 +24,18 @@ var server http.Server
 
 // New function returns a new PublicWeb type.
 func New(dir string, port int) *Controller {
-	f, err := os.OpenFile(dir+"logs/public_errors.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	ph, lh, err := getLogHandles(dir)
 	if err != nil {
-		fmt.Errorf("Error whilst trying to start public logging instance: %v\n", err.Error())
+		log.Fatalf("Error trying to start logging instances within %v: %v", dir, err.Error())
 	}
-
-	fh, err := os.OpenFile(dir+"logs/public_load_time.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
-	if err != nil {
-		fmt.Errorf("Error whilst trying to start public load time logging instance: %v\n", err.Error())
-	}
-
-	publicLogger := log.New(f, "PUBLIC :: ", 3)
-	loadLogger := log.New(fh, "LOAD :: ", 3)
 
 	controller = Controller{
 		Directory: dir,
 		Port:      port,
 		GracefulShutdownTimeout: 5 * time.Second,
 		Status:                  0,
-		PublicLogger:            publicLogger,
-		LoadTimeLogger:          loadLogger,
+		PublicLogger:            ph,
+		LoadTimeLogger:          lh,
 	}
 
 	server = http.Server{
@@ -55,4 +47,39 @@ func New(dir string, port int) *Controller {
 	}
 
 	return &controller
+}
+
+// Function getLogHandles returns the handle for the public logger, load logger,
+// and, if applicable, an error all in that order.
+func getLogHandles(dir string) (*log.Logger, *log.Logger, error) {
+	var dirpath, pubpath, loadpath string
+	var err error
+
+	if dirpath, err = filepath.Abs(dir + "logs/"); err != nil {
+		return nil, nil, err
+	}
+	if pubpath, err = filepath.Abs(dir + "logs/public_errors.log"); err != nil {
+		return nil, nil, err
+	}
+	if loadpath, err = filepath.Abs(dir + "logs/public_load_time.log"); err != nil {
+		return nil, nil, err
+	}
+
+	if _, err = os.Stat(dirpath); os.IsNotExist(err) {
+		if err := os.Mkdir(dirpath, 0777); err != nil {
+			return nil, nil, err
+		}
+	}
+
+	f, err := os.OpenFile(pubpath, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0777)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	fh, err := os.OpenFile(loadpath, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0777)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return log.New(f, "PUBLIC :: ", 3), log.New(fh, "LOAD :: ", 3), nil
 }

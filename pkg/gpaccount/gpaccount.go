@@ -15,6 +15,7 @@ import (
 type Controller struct {
 	Directory               string
 	DocumentRoot            string
+	Name                    string
 	Port                    int
 	Public                  *public.Controller
 	GracefulShutdownTimeout time.Duration
@@ -27,7 +28,7 @@ var controller Controller
 var httpserver http.Server
 
 // New returns a new Controller reference.
-func New(dir string, accPort int, pubPort int) *Controller {
+func New(dir, name string, accPort, pubPort int) *Controller {
 	f, err := os.OpenFile(dir+"logs/account_errors.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
 		fmt.Println("error whilst trying to start server logging instance:", err.Error())
@@ -39,8 +40,9 @@ func New(dir string, accPort int, pubPort int) *Controller {
 	controller = Controller{
 		Directory:               dir,
 		DocumentRoot:            "account/",
+		Name:                    name,
 		Port:                    accPort,
-		Public:                  public.New(dir, pubPort),
+		Public:                  public.New("/home/"+name+"/", pubPort),
 		GracefulShutdownTimeout: 5 * time.Second,
 		Status:                  0,
 		AccountLogger:           accountLogger,

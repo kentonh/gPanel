@@ -3,6 +3,8 @@ package system
 import (
 	"bytes"
 	"errors"
+	"fmt"
+	"os"
 	"os/exec"
 )
 
@@ -74,6 +76,15 @@ func CreateBundleUser(username string) (error, error) {
 		return err, errors.New(cerr.String())
 	}
 
+	// Add default index page
+	f, err := os.OpenFile("/home/"+username+"/document_root/index.html", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0777)
+	if err != nil {
+		return err, nil
+	}
+	defer f.Close()
+
+	fmt.Fprintln(f, DEFAULT_INDEX)
+
 	/* OWNERSHIP AND FILE PERMISSIONS START */
 	cmd = exec.Command("chmod", "700", "/home/"+username+"/.ssh")
 	cmd.Stderr = &cerr
@@ -125,6 +136,13 @@ func CreateBundleUser(username string) (error, error) {
 	}
 
 	cmd = exec.Command("chown", username+":", "/home/"+username+"/.ssh/authorized_keys")
+	cmd.Stderr = &cerr
+
+	if err = cmd.Run(); err != nil {
+		return err, errors.New(cerr.String())
+	}
+
+	cmd = exec.Command("chown", username+":", "/home/"+username+"/document_root")
 	cmd.Stderr = &cerr
 
 	if err = cmd.Run(); err != nil {
