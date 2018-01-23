@@ -6,8 +6,9 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/Ennovar/gPanel/pkg/routing"
 	"strings"
+
+	"github.com/Ennovar/gPanel/pkg/routing"
 )
 
 func (con *Controller) ServeHTTP(res http.ResponseWriter, req *http.Request) {
@@ -16,6 +17,11 @@ func (con *Controller) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 		path = (con.Directory + con.DocumentRoot + "index.html")
 	} else {
 		path = (con.Directory + con.DocumentRoot + path)
+	}
+
+	if strings.HasSuffix(path, "throw400") {
+		http.Error(res, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+		return
 	}
 
 	if strings.HasSuffix(path, "index.html") {
