@@ -11,6 +11,7 @@ import (
 	"github.com/Ennovar/gPanel/pkg/api/server"
 	"github.com/Ennovar/gPanel/pkg/api/settings"
 	"github.com/Ennovar/gPanel/pkg/api/ssh"
+	"github.com/Ennovar/gPanel/pkg/api/subdomain"
 	"github.com/Ennovar/gPanel/pkg/api/user"
 )
 
@@ -74,6 +75,12 @@ func (con *Controller) apiHandler(res http.ResponseWriter, req *http.Request) (b
 		return true, ssh.DeleteKey(res, req, con.APILogger)
 	case "/ssh/getkeys":
 		return true, ssh.GetKeys(res, req, con.APILogger)
+	case "/subdomain/list":
+		return true, subdomain.List(res, req, con.APILogger, con.Directory)
+	case "/subdomain/add":
+		return true, subdomain.Add(res, req, con.APILogger, con.Directory)
+	case "/subdomain/remove":
+		return true, subdomain.Remove(res, req, con.APILogger, con.Directory)
 	default:
 		return false, false
 	}
