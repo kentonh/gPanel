@@ -42,7 +42,7 @@ func New(dir, name string, accPort, pubPort int) *Controller {
 		DocumentRoot:            "account/",
 		Name:                    name,
 		Port:                    accPort,
-		Public:                  public.New("/home/"+name+"/", pubPort),
+		Public:                  public.New("/home/"+name+"/", dir, pubPort),
 		GracefulShutdownTimeout: 5 * time.Second,
 		Status:                  0,
 		AccountLogger:           accountLogger,
