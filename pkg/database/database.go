@@ -14,7 +14,7 @@ import (
 const (
 	DB_MAIN     = "datastore.db"
 	DB_SETTINGS = "settings.db"
-	DB_DOMAINS = "domains.db"
+	DB_DOMAINS  = "domains.db"
 )
 
 // Bucket constants
@@ -23,9 +23,10 @@ const (
 	BUCKET_USERS        = "users"
 	BUCKET_PORTS        = "ports"
 	BUCKET_FILTERED_IPS = "filtered_ips"
+	BUCKET_SUBDOMAINS   = "subdomains"
 
 	// DB_SETTINGS BUCKETS
-	BUCKET_GENERAL = "general"
+	BUCKET_GENERAL     = "general"
 	BUCKET_NAMESERVERS = "nameservers"
 
 	// DB_DOMAINS BUCKETS
@@ -68,6 +69,11 @@ func Open(filepath string) (*Datastore, error) {
 			}
 
 			_, err = tx.CreateBucketIfNotExists([]byte(BUCKET_FILTERED_IPS))
+			if err != nil {
+				return err
+			}
+
+			_, err = tx.CreateBucketIfNotExists([]byte(BUCKET_SUBDOMAINS))
 			if err != nil {
 				return err
 			}

@@ -349,6 +349,48 @@
         </div>
     </div>
 
+    <!-- Sub-domain Management Modal -->
+    <div class="modal fade subdomain-management-modal" tabindex="-1" role="dialog" aria-labelledby="subdomain-management-modal" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Sub-domain Management</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h4>Add Sub-domain</h4>
+                    <form method="POST" action="api/subdomain/add" class="_js_add-subdomain-form">
+                        <div class="form-group">
+                            <label for="addSubdomain" class="">Sub-domain</label>
+                            <div class="input-group">
+                                <input type="text" id="addSubdomain" class="form-control" placeholder="Sub-domain">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="subdomainRoot" class="">Sub-domain Root</label>
+                            <div class="input-group">
+                                <input type="text" id="subdomainRoot" aria-describedby="subdomainRootHelp" class="form-control" placeholder="Sub-domain Root">
+                            </div>
+                            <small id="subdomainRootHelp" class="form-text text-muted">A directory within your /home/document_root/ to serve as the root for this sub-domain</small>
+                        </div>
+                        <div class="btn-group" role="group">
+                            <button type="submit" class="btn btn-primary">Add Sub-domain</button>
+                        </div>
+                    </form>
+                    <h4 class="mt-3 mb-0">Registered Sub-domains</h4>
+                    <div class="container-full _js_registered-subdomains">
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="container">
       <div class="row">
         <div class="col-12">
@@ -447,6 +489,7 @@
                         <h6 class="card-subtitle mb-4 text-muted">View registered domains, register new domains, and set up or manage existing document roots for sub-domains.</h6>
                         <div class="btn-group" role="group">
                             <button type="button" class="btn btn-outline-primary _js_domain-management">Domain Management</button>
+                            <button type="button" class="btn btn-outline-primary _js_subdomain-management">Sub-domain Management</button>
                         </div>
                     </div>
                 </div>
@@ -501,6 +544,9 @@
     <script type="text/javascript" src="assets/js/panelHandlers/domains_subdomains/domain_management.js"></script>
     <script type="text/javascript" src="assets/js/panelHandlers/domains_subdomains/domain_link.js"></script>
     <script type="text/javascript" src="assets/js/panelHandlers/domains_subdomains/domain_unlink.js"></script>
+    <script type="text/javascript" src="assets/js/panelHandlers/domains_subdomains/subdomain_management.js"></script>
+    <script type="text/javascript" src="assets/js/panelHandlers/domains_subdomains/subdomain_add.js"></script>
+    <script type="text/javascript" src="assets/js/panelHandlers/domains_subdomains/subdomain_remove.js"></script>
     <!-- KEEP AT BOTTOM OF BODY TAGS -->
   </body>
 </html>

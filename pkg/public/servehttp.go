@@ -12,6 +12,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/Ennovar/gPanel/pkg/database"
 	"github.com/Ennovar/gPanel/pkg/routing"
 )
 
@@ -92,10 +93,46 @@ func (con *Controller) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 	}
 
 	path := req.URL.Path[1:]
-	if len(path) == 0 {
-		path = con.Directory + "document_root/" + "index.html"
+	if strings.HasPrefix(req.Host, "www") {
+		if len(path) == 0 {
+			path = con.Directory + "document_root/" + "index.html"
+		} else {
+			path = con.Directory + "document_root/" + path
+		}
 	} else {
-		path = con.Directory + "document_root/" + path
+		if strings.Count(req.Host, ".") == 2 {
+			subdomain := strings.SplitN(req.Host, ".", 2)[0] //Remove sub-domain
+
+			ds, err := database.Open(con.AccountDirectory + database.DB_MAIN)
+			if err != nil || ds == nil {
+				con.PublicLogger.Println(path + "::" + strconv.Itoa(http.StatusInternalServerError) + "::" + err.Error())
+				routing.HttpThrowStatus(http.StatusInternalServerError, res)
+				return
+			}
+
+			var sdRoot database.StructSubdomain
+
+			err = ds.Get(database.BUCKET_SUBDOMAINS, []byte(subdomain), &sdRoot)
+			if err != nil {
+				con.PublicLogger.Println(path + "::" + strconv.Itoa(http.StatusInternalServerError) + "::" + err.Error())
+				routing.HttpThrowStatus(http.StatusInternalServerError, res)
+				return
+			}
+
+			_ = ds.Close()
+
+			if len(path) == 0 {
+				path = con.Directory + "document_root/" + sdRoot.Root + "/index.html"
+			} else {
+				path = con.Directory + "document_root/" + sdRoot.Root + "/" + path
+			}
+		} else {
+			if len(path) == 0 {
+				path = con.Directory + "document_root/" + "index.html"
+			} else {
+				path = con.Directory + "document_root/" + path
+			}
+		}
 	}
 
 	contentType, err := routing.GetContentType(path)

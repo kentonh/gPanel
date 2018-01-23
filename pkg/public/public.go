@@ -12,6 +12,7 @@ import (
 
 type Controller struct {
 	Directory               string
+	AccountDirectory        string
 	Port                    int
 	GracefulShutdownTimeout time.Duration
 	Status                  int
@@ -23,15 +24,16 @@ var controller Controller
 var server http.Server
 
 // New function returns a new PublicWeb type.
-func New(dir string, port int) *Controller {
+func New(dir, accountDir string, port int) *Controller {
 	ph, lh, err := getLogHandles(dir)
 	if err != nil {
 		log.Fatalf("Error trying to start logging instances within %v: %v", dir, err.Error())
 	}
 
 	controller = Controller{
-		Directory: dir,
-		Port:      port,
+		Directory:        dir,
+		AccountDirectory: accountDir,
+		Port:             port,
 		GracefulShutdownTimeout: 5 * time.Second,
 		Status:                  0,
 		PublicLogger:            ph,
