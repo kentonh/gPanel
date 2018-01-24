@@ -90,11 +90,12 @@ Key: __Implemented__ | __*Implemented, but needs work*__ | *Unimplemented* | ~~R
   * Mail Servers
   * Domains
     * __Configuration of domains__
-    * *Configuration of sub-domains*
+    * __Configuration of sub-domains__
     * *TLS/SSL certificate support*
     * __Multi-domain support__
   * Remote Access
-    * __*SSH Access*__
+    * __SSH Access__
+    * __FTP Access__
   * File Manager
     * *CRUD*
     * *Inline Editor*
