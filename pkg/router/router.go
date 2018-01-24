@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"log"
-	"strings"
 	"sync"
 
 	"github.com/Ennovar/gPanel/pkg/database"
@@ -58,25 +57,8 @@ func New() *Router {
 	server = http.Server{
 		Addr: "localhost:" + strconv.Itoa(r.Port),
 		Handler: &httputil.ReverseProxy{
-			Director: func(req *http.Request) {
-				host := req.Host
-				if strings.Count(host, ".") == 2 {
-					host = strings.SplitN(host, ".", 2)[1] //Remove sub-domain
-				}
-
-				req.Header.Set("Host", req.Host)
-				req.URL.Scheme = "http"
-
-				mutex.Lock()
-				if d, ok := domainToPort[host]; ok {
-					mutex.Unlock()
-					req.URL.Host = "127.0.0.1:" + strconv.Itoa(d)
-				} else {
-					mutex.Unlock()
-					req.URL.Host = "127.0.0.1:2082"
-					req.URL.Path = "/throw400"
-				}
-			},
+			Director:  proxyDirector,
+			Transport: customTrip{},
 		},
 		ReadTimeout:    5 * time.Second,
 		WriteTimeout:   5 * time.Second,
