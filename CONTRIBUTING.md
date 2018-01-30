@@ -117,6 +117,7 @@ Key: __Implemented__ | __*Implemented, but needs work*__ | *Unimplemented* | ~~R
 * General
   * Deployment
     * __Binary__
+    * Shell script to ensure/install required packages
     * *GUI Installation Helper*
   * Multi-infrastructure Support
     * ~~Windows~~ (No native solution for SSH/SFTP exists within Windows OS)
