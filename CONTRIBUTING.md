@@ -87,23 +87,28 @@ Key: __Implemented__ | __*Implemented, but needs work*__ | *Unimplemented* | ~~R
   * Diagnostics
     * __Error Logging__
     * *Alert system for fatal errors*
-  * Mail Servers
+      * *Email alerts*
+      * *Text alerts*
+  * *Mail Servers*
   * Domains
     * __Configuration of domains__
     * __Configuration of sub-domains__
     * *TLS/SSL certificate support*
+      * *Using LetsEncrypt (Certbot)*
     * __Multi-domain support__
   * Remote Access
     * __SSH Access__
-    * __FTP Access__
+    * __SFTP Access__
   * File Manager
     * *CRUD*
     * *Inline Editor*
     * *Managing Permissions*
+  * CRON Jobs
+    * Interface to set an interval for file(s) to be executed automatically
 * Public (Lower level of bundles)
   * Accessibility
     * __Using ports defined during configuration__
-  * __Serve Requests (duh)__
+  * __Serve Requests__
   * __Concurrent Processing__
   * Supported content types
     * __All of the obvious ones (.jpg/.html/.css/etc)__
@@ -112,9 +117,10 @@ Key: __Implemented__ | __*Implemented, but needs work*__ | *Unimplemented* | ~~R
 * General
   * Deployment
     * __Binary__
+    * Shell script to ensure/install required packages
     * *GUI Installation Helper*
   * Multi-infrastructure Support
-    * ~~Windows~~ (No native solution for SSH exists within Windows OS)
+    * ~~Windows~~ (No native solution for SSH/SFTP exists within Windows OS)
     * __Linux__
     * *Mac* (This is possible, but OS detection and refactoring within the system package needs done)
     * *Amazon Web Services*
