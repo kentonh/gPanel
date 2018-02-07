@@ -28,7 +28,26 @@ func (customTrip) RoundTrip(req *http.Request) (*http.Response, error) {
 	return http.DefaultTransport.RoundTrip(req)
 }
 
-func proxyDirector(req *http.Request) {
+func proxyDirectorSecure(req *http.Request) {
+	host := req.Host
+	if strings.Count(host, ".") == 2 {
+		host = strings.SplitN(host, ".", 2)[1] //Remove sub-domain
+	}
+
+	req.Header.Set("Host", req.Host)
+	req.URL.Scheme = "https"
+
+	mutex.Lock()
+	if d, ok := domainToPort[host]; ok {
+		mutex.Unlock()
+		req.URL.Host = "127.0.0.1:" + strconv.Itoa(d.PublicPort)
+	} else {
+		mutex.Unlock()
+		req.URL.Host = "fail"
+	}
+}
+
+func proxyDirectorInsecure(req *http.Request) {
 	host := req.Host
 	if strings.Count(host, ".") == 2 {
 		host = strings.SplitN(host, ".", 2)[1] //Remove sub-domain
@@ -40,7 +59,7 @@ func proxyDirector(req *http.Request) {
 	mutex.Lock()
 	if d, ok := domainToPort[host]; ok {
 		mutex.Unlock()
-		req.URL.Host = "127.0.0.1:" + strconv.Itoa(d)
+		req.URL.Host = "127.0.0.1:" + strconv.Itoa(d.PublicPort)
 	} else {
 		mutex.Unlock()
 		req.URL.Host = "fail"

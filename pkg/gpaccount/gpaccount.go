@@ -22,10 +22,8 @@ type Controller struct {
 	Status                  int
 	AccountLogger           *log.Logger
 	APILogger               *log.Logger
+	Server                  http.Server
 }
-
-var controller Controller
-var httpserver http.Server
 
 // New returns a new Controller reference.
 func New(dir, name string, accPort, pubPort int) *Controller {
@@ -37,7 +35,7 @@ func New(dir, name string, accPort, pubPort int) *Controller {
 	apiLogger := log.New(f, "API :: ", 3)
 	accountLogger := log.New(f, "ACCOUNT :: ", 3)
 
-	controller = Controller{
+	controller := Controller{
 		Directory:               dir,
 		DocumentRoot:            "account/",
 		Name:                    name,
@@ -49,7 +47,7 @@ func New(dir, name string, accPort, pubPort int) *Controller {
 		APILogger:               apiLogger,
 	}
 
-	httpserver = http.Server{
+	controller.Server = http.Server{
 		Addr:           "localhost:" + strconv.Itoa(controller.Port),
 		Handler:        &controller,
 		ReadTimeout:    30 * time.Second,

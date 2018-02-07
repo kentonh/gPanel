@@ -18,9 +18,9 @@ import (
 func (con *Controller) apiHandler(res http.ResponseWriter, req *http.Request) (bool, bool) {
 	path := req.URL.Path[1:]
 	if len(path) == 0 {
-		path = (con.Directory + "index.html")
+		path = con.Directory + "index.html"
 	} else {
-		path = (con.Directory + path)
+		path = con.Directory + path
 	}
 
 	splitUrl := strings.SplitN(path, "api", 2)

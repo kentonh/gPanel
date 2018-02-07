@@ -9,12 +9,12 @@ import (
 
 func (con *Controller) Start() error {
 	if con.Status == 1 {
-		return errors.New("Account server is already on.")
+		return errors.New("account server is already on")
 	}
 
 	con.Status = 1
-	go httpserver.ListenAndServe()
-	log.Printf("gPanel account server now serving out of %s%s on port %d\n", con.Directory, con.DocumentRoot, con.Port)
+	go con.Server.ListenAndServe()
+	log.Printf("gPanel Account %v now serving out of %s on port %d\n", con.Name, con.DocumentRoot, con.Port)
 	return nil
 }
 
@@ -23,7 +23,7 @@ func (con *Controller) Stop(graceful bool) error {
 		context, cancel := context.WithTimeout(context.Background(), con.GracefulShutdownTimeout)
 		defer cancel()
 
-		err := httpserver.Shutdown(context)
+		err := con.Server.Shutdown(context)
 		if err == nil {
 			return nil
 		}
@@ -31,7 +31,7 @@ func (con *Controller) Stop(graceful bool) error {
 		log.Printf("Graceful shutdown failed attempting forced: %v\n", err)
 	}
 
-	if err := httpserver.Close(); err != nil {
+	if err := con.Server.Close(); err != nil {
 		return err
 	}
 

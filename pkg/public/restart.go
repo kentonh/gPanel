@@ -15,24 +15,24 @@ func (con *Controller) Restart(graceful bool) error {
 		context, cancel := context.WithTimeout(context.Background(), con.GracefulShutdownTimeout)
 		defer cancel()
 
-		err := server.Shutdown(context)
+		err := con.Server.Shutdown(context)
 		if err != nil {
 			fmt.Printf("Graceful shutdown failed attempting forced: %v\n", err)
 
-			err = server.Close()
+			err = con.Server.Close()
 			if err != nil {
 				return err
 			}
 		}
 	}
 
-	err := server.Close()
+	err := con.Server.Close()
 	if err != nil {
 		return err
 	}
 
 	con.Status = 1
-	go server.ListenAndServe()
+	go con.Server.ListenAndServe()
 	return nil
 }
 

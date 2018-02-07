@@ -6,8 +6,9 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/Ennovar/gPanel/pkg/routing"
 	"strings"
+
+	"github.com/Ennovar/gPanel/pkg/routing"
 )
 
 // ServeHTTP function routes all requests for the private webhost server. It is used in the main
@@ -15,9 +16,9 @@ import (
 func (con *Controller) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 	path := req.URL.Path[1:]
 	if len(path) == 0 {
-		path = (con.DocumentRoot + "index.html")
+		path = con.DocumentRoot + "index.html"
 	} else {
-		path = (con.DocumentRoot + path)
+		path = con.DocumentRoot + path
 	}
 
 	if strings.HasSuffix(path, "index.html") {

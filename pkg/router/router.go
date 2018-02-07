@@ -13,12 +13,14 @@ import (
 )
 
 type Router struct {
-	Port int
+	InsecurePort int
+	SecurePort   int
 }
 
-var server http.Server
-var domainToPort map[string]int
+var secureServer http.Server
+var insecureServer http.Server
 
+var domainToPort map[string]database.Struct_Domain
 var mutex = &sync.Mutex{}
 
 func RefreshMap() bool {
@@ -36,33 +38,39 @@ func RefreshMap() bool {
 	}
 
 	mutex.Lock()
-	domainToPort = make(map[string]int)
+	domainToPort = make(map[string]database.Struct_Domain)
 	for k, v := range client {
-		domainToPort[k] = v.PublicPort
+		domainToPort[k] = v
 	}
 	mutex.Unlock()
 
 	return true
 }
 
-func New() *Router {
+func New(insecure, secure int) *Router {
 	if !RefreshMap() {
 		return nil
 	}
 
 	r := Router{
-		Port: 2080,
+		InsecurePort: insecure,
+		SecurePort:   secure,
 	}
 
-	server = http.Server{
-		Addr: "localhost:" + strconv.Itoa(r.Port),
+	insecureServer = http.Server{
+		Addr: "localhost:" + strconv.Itoa(r.InsecurePort),
 		Handler: &httputil.ReverseProxy{
-			Director:  proxyDirector,
+			Director:  proxyDirectorInsecure,
 			Transport: customTrip{},
 		},
-		ReadTimeout:    5 * time.Second,
-		WriteTimeout:   5 * time.Second,
-		MaxHeaderBytes: 0,
+	}
+
+	secureServer = http.Server{
+		Addr: "localhost:" + strconv.Itoa(r.SecurePort),
+		Handler: &httputil.ReverseProxy{
+			Director:  proxyDirectorSecure,
+			Transport: customTrip{},
+		},
 	}
 
 	// Start scheduled map refresher
@@ -85,5 +93,6 @@ func New() *Router {
 }
 
 func (r *Router) Start() {
-	go server.ListenAndServe()
+	go insecureServer.ListenAndServe()
+	go secureServer.ListenAndServe()
 }
