@@ -18,10 +18,8 @@ type Controller struct {
 	Status                  int
 	PublicLogger            *log.Logger
 	LoadTimeLogger          *log.Logger
+	Server                  http.Server
 }
-
-var controller Controller
-var server http.Server
 
 // New function returns a new PublicWeb type.
 func New(dir, accountDir string, port int) *Controller {
@@ -30,7 +28,7 @@ func New(dir, accountDir string, port int) *Controller {
 		log.Fatalf("Error trying to start logging instances within %v: %v", dir, err.Error())
 	}
 
-	controller = Controller{
+	controller := Controller{
 		Directory:        dir,
 		AccountDirectory: accountDir,
 		Port:             port,
@@ -40,7 +38,7 @@ func New(dir, accountDir string, port int) *Controller {
 		LoadTimeLogger:          lh,
 	}
 
-	server = http.Server{
+	controller.Server = http.Server{
 		Addr:           "localhost:" + strconv.Itoa(controller.Port),
 		Handler:        &controller,
 		ReadTimeout:    30 * time.Second,

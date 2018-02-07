@@ -10,12 +10,12 @@ import (
 // Start function starts listening on the public server
 func (con *Controller) Start() error {
 	if con.Status == 1 {
-		return errors.New("Public server is already on.")
+		return errors.New("public server is already on")
 	}
 
 	con.Status = 1
-	go server.ListenAndServe()
-	log.Printf("Public server now serving out of %s on port %d\n", con.Directory+"public/", con.Port)
+	go con.Server.ListenAndServe()
+	log.Printf("Public server now serving out of %s on port %d\n", con.Directory+"document_root/", con.Port)
 	return nil
 }
 
@@ -25,7 +25,7 @@ func (con *Controller) Stop(graceful bool) error {
 		context, cancel := context.WithTimeout(context.Background(), con.GracefulShutdownTimeout)
 		defer cancel()
 
-		err := server.Shutdown(context)
+		err := con.Server.Shutdown(context)
 		if err == nil {
 			return nil
 		}
@@ -33,7 +33,7 @@ func (con *Controller) Stop(graceful bool) error {
 		log.Printf("Graceful shutdown failed attempting forced: %v\n", err)
 	}
 
-	if err := server.Close(); err != nil {
+	if err := con.Server.Close(); err != nil {
 		return err
 	}
 
