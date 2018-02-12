@@ -138,7 +138,14 @@ func Create(res http.ResponseWriter, req *http.Request, logger *log.Logger, bund
 		return false
 	}
 
-	bundles[createBundleRequestData.Name] = gpaccount.New(newBundle+"/", createBundleRequestData.Name, databaseBundlePorts.Account, databaseBundlePorts.Public)
+	bundles[createBundleRequestData.Name], err = gpaccount.New(newBundle+"/", createBundleRequestData.Name, databaseBundlePorts.Account, databaseBundlePorts.Public)
+
+	if err != nil {
+		logger.Println(req.URL.Path + "::" + err.Error())
+		http.Error(res, err.Error(), http.StatusInternalServerError)
+		return false
+	}
+
 	_ = bundles[createBundleRequestData.Name].Start()
 	_ = bundles[createBundleRequestData.Name].Public.Start()
 

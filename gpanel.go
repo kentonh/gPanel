@@ -15,7 +15,11 @@ func main() {
 	const insecurePort = 2080
 	const securePort = 2443
 
-	server := gpserver.New()
+	server, err := gpserver.New()
+	if err != nil {
+		log.Printf("\nA non-fatal error has occurred whilst starting the server: %v\n\n", err.Error())
+	}
+
 	router := router.New(insecurePort, securePort)
 
 	if router == nil {

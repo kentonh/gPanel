@@ -26,7 +26,7 @@ type Controller struct {
 }
 
 // New returns a new Controller reference.
-func New(dir, name string, accPort, pubPort int) *Controller {
+func New(dir, name string, accPort, pubPort int) (*Controller, error) {
 	f, err := os.OpenFile(dir+"logs/account_errors.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
 		fmt.Println("error whilst trying to start server logging instance:", err.Error())
@@ -35,12 +35,17 @@ func New(dir, name string, accPort, pubPort int) *Controller {
 	apiLogger := log.New(f, "API :: ", 3)
 	accountLogger := log.New(f, "ACCOUNT :: ", 3)
 
+	pub, err := public.New("/home/"+name+"/", dir, name, pubPort)
+	if err != nil {
+		return nil, err
+	}
+
 	controller := Controller{
 		Directory:               dir,
 		DocumentRoot:            "account/",
 		Name:                    name,
 		Port:                    accPort,
-		Public:                  public.New("/home/"+name+"/", dir, pubPort),
+		Public:                  pub,
 		GracefulShutdownTimeout: 5 * time.Second,
 		Status:                  0,
 		AccountLogger:           accountLogger,
@@ -55,5 +60,5 @@ func New(dir, name string, accPort, pubPort int) *Controller {
 		MaxHeaderBytes: 0,
 	}
 
-	return &controller
+	return &controller, nil
 }

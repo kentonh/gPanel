@@ -8,7 +8,8 @@ import (
 	"github.com/Ennovar/gPanel/pkg/gpaccount"
 )
 
-func (con *Controller) detectBundles() {
+func (con *Controller) detectBundles() error {
+	var err error = nil
 	bundles := make(map[string]*gpaccount.Controller)
 
 	dirs, err := ioutil.ReadDir("bundles/")
@@ -21,7 +22,7 @@ func (con *Controller) detectBundles() {
 			dirPath := "bundles/" + dir.Name() + "/"
 			err, accPort, pubPort := bundle.GetPorts(dirPath)
 
-			curBundle := gpaccount.New(dirPath, dir.Name(), accPort, pubPort)
+			curBundle, err := gpaccount.New(dirPath, dir.Name(), accPort, pubPort)
 
 			err = curBundle.Start()
 			err2 := curBundle.Public.Start()
@@ -34,4 +35,5 @@ func (con *Controller) detectBundles() {
 	}
 
 	con.Bundles = bundles
+	return err
 }
