@@ -54,6 +54,7 @@ sudo ./gpanel
 	- ssh-keygen command (already installed on most debian-based linux systems)
 	- openssh-server installed (installation guide below)
 	- golang (installation guide below)
+	- [php-cgi](http://us3.php.net/downloads.php) IF you want to be able to serve .php files
 - OSX
 	- Currently there is no support for OSX, but it is planned for the future.
 -----------------------------------

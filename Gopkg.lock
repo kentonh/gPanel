@@ -16,7 +16,7 @@
 [[projects]]
   branch = "master"
   name = "golang.org/x/crypto"
-  packages = ["bcrypt","blowfish"]
+  packages = ["acme","acme/autocert","bcrypt","blowfish"]
   revision = "2509b142fb2b797aa7587dad548f113b2c0f20ce"
 
 [[projects]]
@@ -28,6 +28,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "e4b8a6fd1b416960accf57e305df9fb6c1c50fb9aecde348a0735eff39614d0d"
+  inputs-digest = "bc99bfe3269f7f4c24a0166bbfe5fd0cafdee6c803274787bff0ac01b8cb4ed6"
   solver-name = "gps-cdcl"
   solver-version = 1
