@@ -93,8 +93,8 @@ Key: __Implemented__ | __*Implemented, but needs work*__ | *Unimplemented* | ~~R
   * Domains
     * __Configuration of domains__
     * __Configuration of sub-domains__
-    * *TLS/SSL certificate support*
-      * *Using LetsEncrypt (Certbot)*
+    * __TLS/SSL certificate support__
+      * __Using LetsEncrypt (autocert)__
     * __Multi-domain support__
   * Remote Access
     * __SSH Access__
