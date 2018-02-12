@@ -27,16 +27,20 @@ func (con *Controller) ServePHP(res http.ResponseWriter, path string) {
 			line := s.Text()
 			split++
 
-			// Status will be first line
+			// Status will be first line, if it exists
 			if status == 0 {
 				m := reg.FindStringSubmatch(line)
-
-				var err error
-				status, err = strconv.Atoi(m[1])
-				if err != nil {
+				if len(m) == 0 {
+					// Status did not exist, so setting default status
 					status = 200
+				} else {
+					var err error
+					status, err = strconv.Atoi(m[1])
+					if err != nil {
+						status = 200
+					}
+					continue
 				}
-				continue
 			}
 
 			// Blank line between headers and body
@@ -47,7 +51,6 @@ func (con *Controller) ServePHP(res http.ResponseWriter, path string) {
 
 			sep := strings.Index(line, ": ")
 			res.Header().Add(line[:sep], line[sep+2:])
-			continue
 		}
 
 		if err := s.Err(); err != nil {
