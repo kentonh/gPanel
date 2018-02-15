@@ -3,13 +3,36 @@
 A web-hosting control panel written in Go.
 
 *__Note:__ This software currently only runs on Linux systems.*
+<br><br>
 
-## Stack
+##### Table of Contents
+1. [Technology Stack](#technology-stack)
+2. [Preview Images](#preview-images)
+3. [Contribution Set-up & Deployment](#contribution-set-up-&-deployment)
+4. [Installation for Use](#installation-for-use)
+    * [System Requirements](#system-requirements)
+    * [Installing openssh-server](#installing-openssh-server)
+    * [Creating the Host Key-pair](#creating-the-host-key-pair)
+    * [.ssh Folder and Files Permissions Reference](#.ssh-folder-and-files-permissions-reference)
+    * [Getting the Repository and Running](#getting-the-repository-and-running)
+
+## Technology Stack
 
 Backend: __[Go (1.8+)](https://golang.org/)__  
 Database: __[Bolt](https://github.com/boltdb/bolt)__  
 CSS Toolkit(s): __[Bootstrap 4](http://getbootstrap.com/) & [Font Awesome](http://fontawesome.io/)__  
 JS Toolkit(s): __[jQuery](https://jquery.com/)__
+
+## Preview Images
+
+gPanel Structure
+![Image of gPanel Structure](https://nextwavesolutions.io/images/gPanelStructure.png)
+
+gPanel Server
+![Image of gPanel Server](https://user-images.githubusercontent.com/30050545/36277136-9d0cdffc-1255-11e8-8a33-b503087a32f8.png)
+
+gPanel Account
+![Image of gPanel Account](https://user-images.githubusercontent.com/30050545/36277135-9cf4feaa-1255-11e8-8957-9f02a9cfb7e4.png)
 
 ## Contribution Set-up & Deployment
 
@@ -44,9 +67,9 @@ go build gpanel.go
 sudo ./gpanel
 ```
 
-## Installation
+## Installation for Use
 
-#### Requirements
+#### System Requirements
 
 - Linux
 	- adduser command (already installed on most debian-based Linux systems)
@@ -123,7 +146,7 @@ drwx------ 7 root root 4096 Jan 17 14:42 ..
 ```
 
 
-#### Installing and Running gPanel
+#### Getting the Repository and Running
 
 1. go get github.com/Ennovar/gPanel
 2. cd ~/go/src/github.com/Ennovar/gPanel
