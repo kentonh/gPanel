@@ -3,9 +3,8 @@
 A web-hosting control panel written in Go.
 
 *__Note:__ This software currently only runs on Linux systems.*
-<br><br>
 
-##### Table of Contents
+## Table of Contents
 1. [Technology Stack](#technology-stack)
 2. [Preview Images](#preview-images)
 3. [Contribution Set-up & Deployment](#contribution-set-up-&-deployment)
