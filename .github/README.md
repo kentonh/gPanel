@@ -7,12 +7,12 @@ A web-hosting control panel written in Go.
 ## Table of Contents
 1. [Technology Stack](#technology-stack)
 2. [Preview Images](#preview-images)
-3. [Contribution Set-up & Deployment](#contribution-set-up-&-deployment)
+3. [Contribution Set-up & Deployment](#contribution-set-up--deployment)
 4. [Installation for Use](#installation-for-use)
     * [System Requirements](#system-requirements)
     * [Installing openssh-server](#installing-openssh-server)
     * [Creating the Host Key-pair](#creating-the-host-key-pair)
-    * [.ssh Folder and Files Permissions Reference](#.ssh-folder-and-files-permissions-reference)
+    * [.ssh Folder and Files Permissions Reference](#ssh-folder-and-files-permissions-reference)
     * [Getting the Repository and Running](#getting-the-repository-and-running)
 
 ## Technology Stack
