@@ -9,7 +9,7 @@ import (
 
 	"github.com/Ennovar/gPanel/pkg/database"
 	"github.com/Ennovar/gPanel/pkg/gpaccount"
-	"github.com/Ennovar/gPanel/pkg/system"
+	"github.com/george-e-shaw-iv/nixtools"
 )
 
 func Delete(res http.ResponseWriter, req *http.Request, logger *log.Logger, bundles map[string]*gpaccount.Controller, dir string) bool {
@@ -63,10 +63,17 @@ func Delete(res http.ResponseWriter, req *http.Request, logger *log.Logger, bund
 
 	delete(bundles, rqData.Name)
 
-	err, err2 := system.DeleteBundleUser(rqData.Name)
+	sysUser, err := nixtools.GetUser(rqData.Name, false)
 	if err != nil {
-		logger.Println(req.URL.Path + "::" + err.Error() + " AND " + err2.Error())
-		http.Error(res, err2.Error(), http.StatusInternalServerError)
+		logger.Println(req.URL.Path + "::" + err.Error())
+		http.Error(res, err.Error(), http.StatusInternalServerError)
+		return false
+	}
+
+	err = sysUser.Delete(true, false)
+	if err != nil {
+		logger.Println(req.URL.Path + "::" + err.Error())
+		http.Error(res, err.Error(), http.StatusInternalServerError)
 		return false
 	}
 

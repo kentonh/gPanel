@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/Ennovar/gPanel/pkg/system"
+	"github.com/george-e-shaw-iv/nixtools"
 )
 
 func DeleteKey(res http.ResponseWriter, req *http.Request, logger *log.Logger) bool {
@@ -28,7 +28,14 @@ func DeleteKey(res http.ResponseWriter, req *http.Request, logger *log.Logger) b
 		return false
 	}
 
-	if err = system.DeleteAuthorizedKey(requestData.Username, requestData.PublicKey); err != nil {
+	sysUser, err := nixtools.GetUser(requestData.Username, false)
+	if err != nil {
+		logger.Println(req.URL.Path + "::" + err.Error())
+		http.Error(res, err.Error(), http.StatusBadRequest)
+		return false
+	}
+
+	if err = sysUser.DeleteAuthorizedKey(requestData.PublicKey); err != nil {
 		logger.Println(req.URL.Path + "::" + err.Error())
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 		return false

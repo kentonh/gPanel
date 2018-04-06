@@ -1,4 +1,4 @@
-package system
+package bundle
 
 const DEFAULT_INDEX = `<!DOCTYPE html>
 <html lang="en">
