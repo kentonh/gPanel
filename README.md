@@ -4,7 +4,7 @@ A web-hosting control panel written in Go.
 
 *__Note:__ This software currently only runs on Linux systems.*
 
-This project may qualify for Mozilla's 2018 Global Sprint, in efforts to satisfy their rules I am linking their Community Participation Guidelines [here](https://www.mozilla.org/en-US/about/governance/policies/participation/) along with their already being a code of conduct within this project located [here](https://github.com/Ennovar/gPanel/blob/master/.github/CODE_OF_CONDUCT.md).
+This project may qualify for Mozilla's 2018 Global Sprint, in efforts to satisfy their rules I am linking their Community Participation Guidelines [here](https://www.mozilla.org/en-US/about/governance/policies/participation/) along with their already being a code of conduct within this project located [here](https://github.com/Ennovar/gPanel/blob/master/CODE_OF_CONDUCT.md).
 
 ## Table of Contents
 1. [Technology Stack](#technology-stack)
