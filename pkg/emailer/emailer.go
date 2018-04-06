@@ -72,3 +72,7 @@ func (e *Emailer) SendCustom(to string, msg []byte) error {
 
 	return nil
 }
+
+func (e *Emailer) Test() {
+
+}

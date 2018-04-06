@@ -13,7 +13,7 @@ import (
 	"github.com/Ennovar/gPanel/pkg/emailer"
 	"github.com/Ennovar/gPanel/pkg/encryption"
 	"github.com/Ennovar/gPanel/pkg/gpaccount"
-	"github.com/Ennovar/gPanel/pkg/system"
+	"github.com/george-e-shaw-iv/nixtools"
 )
 
 func Create(res http.ResponseWriter, req *http.Request, logger *log.Logger, bundles map[string]*gpaccount.Controller) bool {
@@ -37,7 +37,7 @@ func Create(res http.ResponseWriter, req *http.Request, logger *log.Logger, bund
 		return false
 	}
 
-	// Check if account port is in use by system
+	/* Check if account port is in use by system */
 	check, err := net.Listen("tcp", ":"+strconv.Itoa(createBundleRequestData.AccPort))
 	if err != nil {
 		logger.Println(req.URL.Path + "::" + "a service is already listening on port " + strconv.Itoa(createBundleRequestData.AccPort) + "::" + err.Error())
@@ -46,7 +46,7 @@ func Create(res http.ResponseWriter, req *http.Request, logger *log.Logger, bund
 	}
 	check.Close()
 
-	// Check if public port is in use by system
+	/* Check if public port is in use by system */
 	check, err = net.Listen("tcp", ":"+strconv.Itoa(createBundleRequestData.PubPort))
 	if err != nil {
 		logger.Println(req.URL.Path + "::" + "a service is already listening on port " + strconv.Itoa(createBundleRequestData.PubPort) + "::" + err.Error())
@@ -55,7 +55,7 @@ func Create(res http.ResponseWriter, req *http.Request, logger *log.Logger, bund
 	}
 	check.Close()
 
-	// Check if public/account ports are in use by another bundle
+	/* Check if public/account ports are in use by another bundle */
 	err = nil
 	for k, v := range bundles {
 		if k == createBundleRequestData.Name {
@@ -78,11 +78,33 @@ func Create(res http.ResponseWriter, req *http.Request, logger *log.Logger, bund
 		return false
 	}
 
-	//check mail creds exist and work
-	//check admin settings are set
-	//check if can use username
-	//if those pass, then continue with bundle creation
+	/* Check if admin settings are set and valid */
+	ds, err := database.Open("server/" + database.DB_SETTINGS)
+	if err != nil {
+		logger.Println(req.URL.Path + "::" + err.Error())
+		http.Error(res, err.Error(), http.StatusInternalServerError)
+		return false
+	}
 
+	err = ds.CheckAdminSettings()
+	if err != nil {
+		ds.Close()
+		logger.Println(req.URL.Path + "::" + err.Error())
+		http.Error(res, err.Error(), http.StatusBadRequest)
+		return false
+	}
+	ds.Close()
+
+	/* Check if bundle username can be used within the system */
+	if userExists := nixtools.UserExists(createBundleRequestData.Name); userExists {
+		logger.Println(req.URL.Path + "::username already exists under that bundle name within the system")
+		http.Error(res, err.Error(), http.StatusBadRequest)
+		return false
+	}
+
+	/* IF ALL CHECKS PASSED, start the bundle creation process */
+
+	/* Create the bundle directory within the gPanel directory */
 	newBundle := "bundles/" + createBundleRequestData.Name
 	err = os.Mkdir(newBundle, 0777)
 	if err != nil {
@@ -91,6 +113,7 @@ func Create(res http.ResponseWriter, req *http.Request, logger *log.Logger, bund
 		return false
 	}
 
+	/* Create the log folder within the new bundle directory */
 	err = os.Mkdir(newBundle+"/logs", 0777)
 	if err != nil {
 		logger.Println(req.URL.Path + "::" + err.Error())
@@ -98,13 +121,15 @@ func Create(res http.ResponseWriter, req *http.Request, logger *log.Logger, bund
 		return false
 	}
 
-	ds, err := database.Open(newBundle + "/" + database.DB_MAIN)
+	/* Create and open the newly created bundle's main datastore */
+	ds, err = database.Open(newBundle + "/" + database.DB_MAIN)
 	if err != nil {
 		logger.Println(req.URL.Path + "::" + err.Error())
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 		return false
 	}
 
+	/* Put the new bundle's ports within the datastore */
 	var databaseBundlePorts struct {
 		Account int `json:"account"`
 		Public  int `json:"public"`
@@ -114,16 +139,19 @@ func Create(res http.ResponseWriter, req *http.Request, logger *log.Logger, bund
 
 	err = ds.Put(database.BUCKET_PORTS, []byte("bundle_ports"), databaseBundlePorts)
 	if err != nil {
+		ds.Close()
 		logger.Println(req.URL.Path + "::" + err.Error())
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 		return false
 	}
 
+	/* Create the default bundle username and password */
 	var defaultBundleUser database.Struct_Users
 	var tempPass = encryption.RandomString(16)
 
 	defaultBundleUser.Pass, err = encryption.HashPassword(tempPass)
 	if err != nil {
+		ds.Close()
 		logger.Println(req.URL.Path + "::" + err.Error())
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 		return false
@@ -133,19 +161,46 @@ func Create(res http.ResponseWriter, req *http.Request, logger *log.Logger, bund
 
 	err = ds.Put(database.BUCKET_USERS, []byte("root"), defaultBundleUser)
 	if err != nil {
+		ds.Close()
 		logger.Println(req.URL.Path + "::" + err.Error())
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 		return false
 	}
 	ds.Close()
 
-	err, err2 := system.CreateBundleUser(createBundleRequestData.Name)
+	/* Create a system user for the new bundle */
+	sysUser, err := nixtools.GetUser(createBundleRequestData.Name, true)
 	if err != nil {
-		logger.Println(req.URL.Path + "::" + err.Error() + " AND " + err2.Error())
-		http.Error(res, err2.Error(), http.StatusInternalServerError)
+		logger.Println(req.URL.Path + "::" + err.Error())
+		http.Error(res, err.Error(), http.StatusInternalServerError)
 		return false
 	}
 
+	/* Initialize SSH access for the new user and give the root account access */
+	err = sysUser.InitSSH(true)
+	if err != nil {
+		logger.Println(req.URL.Path + "::" + err.Error())
+		http.Error(res, err.Error(), http.StatusInternalServerError)
+		return false
+	}
+
+	/* Create document_root within new system user's home directory */
+	err = sysUser.CreateDirectory("document_root", 0777)
+	if err != nil {
+		logger.Println(req.URL.Path + "::" + err.Error())
+		http.Error(res, err.Error(), http.StatusInternalServerError)
+		return false
+	}
+
+	/* Write the default index within the document_root */
+	err = sysUser.WriteFile("document_root/index.html", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0777, []byte(DEFAULT_INDEX))
+	if err != nil {
+		logger.Println(req.URL.Path + "::" + err.Error())
+		http.Error(res, err.Error(), http.StatusInternalServerError)
+		return false
+	}
+
+	/* Add newly created bundle to list of current bundles (run-time list) */
 	bundles[createBundleRequestData.Name], err = gpaccount.New(newBundle+"/", createBundleRequestData.Name, databaseBundlePorts.Account, databaseBundlePorts.Public)
 
 	if err != nil {
@@ -154,9 +209,22 @@ func Create(res http.ResponseWriter, req *http.Request, logger *log.Logger, bund
 		return false
 	}
 
-	_ = bundles[createBundleRequestData.Name].Start()
-	_ = bundles[createBundleRequestData.Name].Public.Start()
+	/* Start the account server and public server of the newly created bundle */
+	err = bundles[createBundleRequestData.Name].Start()
+	if err != nil {
+		logger.Println(req.URL.Path + "::" + err.Error())
+		http.Error(res, err.Error(), http.StatusInternalServerError)
+		return false
+	}
 
+	err = bundles[createBundleRequestData.Name].Public.Start()
+	if err != nil {
+		logger.Println(req.URL.Path + "::" + err.Error())
+		http.Error(res, err.Error(), http.StatusInternalServerError)
+		return false
+	}
+
+	/* Get SMTP and Admin general settings for use in the email to be sent to new bundle designated email */
 	ds, err = database.Open("server/" + database.DB_SETTINGS)
 	if err != nil {
 		logger.Println(req.URL.Path + "::" + err.Error())
@@ -182,6 +250,7 @@ func Create(res http.ResponseWriter, req *http.Request, logger *log.Logger, bund
 		return false
 	}
 
+	/* Send email with information about system and bundle account to designated bundle email AND gPanel admin */
 	mail, err := emailer.New(smtpSettings.Type, emailer.Credentials{
 		Username: smtpSettings.Username,
 		Password: smtpSettings.Password,

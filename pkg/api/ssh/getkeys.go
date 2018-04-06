@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/Ennovar/gPanel/pkg/system"
+	"github.com/george-e-shaw-iv/nixtools"
 )
 
 func GetKeys(res http.ResponseWriter, req *http.Request, logger *log.Logger) bool {
@@ -27,8 +27,15 @@ func GetKeys(res http.ResponseWriter, req *http.Request, logger *log.Logger) boo
 		return false
 	}
 
+	sysUser, err := nixtools.GetUser(requestData.Username, false)
+	if err != nil {
+		logger.Println(req.URL.Path + "::" + err.Error())
+		http.Error(res, err.Error(), http.StatusBadRequest)
+		return false
+	}
+
 	var keys []string
-	if keys, err = system.GetAuthorizedKeys(requestData.Username); err != nil {
+	if keys, err = sysUser.GetAuthorizedKeys(true); err != nil {
 		logger.Println(req.URL.Path + "::" + err.Error())
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 		return false

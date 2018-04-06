@@ -15,8 +15,19 @@
 
 [[projects]]
   branch = "master"
+  name = "github.com/george-e-shaw-iv/nixtools"
+  packages = ["."]
+  revision = "a3be4bd706b46bc571b4b34981b06089c6c7158d"
+
+[[projects]]
+  branch = "master"
   name = "golang.org/x/crypto"
-  packages = ["acme","acme/autocert","bcrypt","blowfish"]
+  packages = [
+    "acme",
+    "acme/autocert",
+    "bcrypt",
+    "blowfish"
+  ]
   revision = "2509b142fb2b797aa7587dad548f113b2c0f20ce"
 
 [[projects]]
@@ -28,6 +39,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "bc99bfe3269f7f4c24a0166bbfe5fd0cafdee6c803274787bff0ac01b8cb4ed6"
+  inputs-digest = "95bd56d22992e0d2f4bb1959e7b1b38f5c9716c6c643eff6b6da090d29fb1245"
   solver-name = "gps-cdcl"
   solver-version = 1
