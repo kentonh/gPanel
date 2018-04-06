@@ -37,6 +37,7 @@ func Create(res http.ResponseWriter, req *http.Request, logger *log.Logger, bund
 		return false
 	}
 
+	// Check if account port is in use by system
 	check, err := net.Listen("tcp", ":"+strconv.Itoa(createBundleRequestData.AccPort))
 	if err != nil {
 		logger.Println(req.URL.Path + "::" + "a service is already listening on port " + strconv.Itoa(createBundleRequestData.AccPort) + "::" + err.Error())
@@ -45,6 +46,7 @@ func Create(res http.ResponseWriter, req *http.Request, logger *log.Logger, bund
 	}
 	check.Close()
 
+	// Check if public port is in use by system
 	check, err = net.Listen("tcp", ":"+strconv.Itoa(createBundleRequestData.PubPort))
 	if err != nil {
 		logger.Println(req.URL.Path + "::" + "a service is already listening on port " + strconv.Itoa(createBundleRequestData.PubPort) + "::" + err.Error())
@@ -53,6 +55,7 @@ func Create(res http.ResponseWriter, req *http.Request, logger *log.Logger, bund
 	}
 	check.Close()
 
+	// Check if public/account ports are in use by another bundle
 	err = nil
 	for k, v := range bundles {
 		if k == createBundleRequestData.Name {
@@ -74,6 +77,11 @@ func Create(res http.ResponseWriter, req *http.Request, logger *log.Logger, bund
 		http.Error(res, err.Error(), http.StatusBadRequest)
 		return false
 	}
+
+	//check mail creds exist and work
+	//check admin settings are set
+	//check if can use username
+	//if those pass, then continue with bundle creation
 
 	newBundle := "bundles/" + createBundleRequestData.Name
 	err = os.Mkdir(newBundle, 0777)
