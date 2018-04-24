@@ -31,6 +31,10 @@ func Register(res http.ResponseWriter, req *http.Request, logger *log.Logger, di
 		logger.Println(req.URL.Path + "::" + err.Error())
 		http.Error(res, err.Error(), http.StatusBadRequest)
 		return false
+	} else if len(userRequestData.Pass) < 8  {
+		logger.Println(req.URL.Path + "::password must be at least 8 characters long")
+		http.Error(res, "Password must be at least 8 characters long!", http.StatusBadRequest)
+		return false
 	} else if len(userRequestData.User) == 0 || len(userRequestData.Pass) == 0 {
 		logger.Println(req.URL.Path + "::username or password field cannot be blank")
 		http.Error(res, "Username or password field cannot be blank", http.StatusBadRequest)
