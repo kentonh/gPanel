@@ -16,7 +16,7 @@ import (
 func reqAuth(path string) bool {
 	path = strings.ToLower(path)
 
-	dismissibleTypes := []string{".css", ".js"}
+	dismissibleTypes := []string{".css", ".js", ".jpg", ".png", ".ico"}
 	for _, t := range dismissibleTypes {
 		if strings.HasSuffix(path, t) {
 			return false

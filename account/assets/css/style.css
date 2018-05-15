@@ -28,6 +28,11 @@ body {
 .btn {
   cursor:pointer;
 }
+
+.loginLogo img {
+  width:600px;
+  height:auto;
+}
 /* General End */
 
 /* IP Filter Modal Start */
