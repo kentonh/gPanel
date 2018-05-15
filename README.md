@@ -1,6 +1,8 @@
-# gPanel ![TravisCI gPanel Build](https://travis-ci.org/Ennovar/gPanel.svg?branch=master)
+<p align="center"><img src="logo/gpanel-general.jpg" width="600"></p>
+<p align="center" style="text-size:10px;">Logo by <a href="https://www.github.com/bvhme">@bvhme</a></p>
+<p align="center"><a href="https://travis-ci.org/Ennovar/gPanel"><img src="https://travis-ci.org/Ennovar/gPanel.svg?branch=master"></a></p>
 
-![gPanel Logo](logo/gpanel-general.jpg)
+# gPanel
 
 A web-hosting control panel written in Go.
 
@@ -27,7 +29,7 @@ JS Toolkit(s): __[jQuery](https://jquery.com/)__
 ## Preview Images
 
 gPanel Structure
-![Image of gPanel Structure](https://nextwavesolutions.io/images/gPanelStructure.png)
+![Image of gPanel Structure](https://user-images.githubusercontent.com/30050545/40080488-b1f90d64-5850-11e8-81c4-be95c65eca17.png)
 
 gPanel Server
 ![Image of gPanel Server](https://user-images.githubusercontent.com/30050545/36277136-9d0cdffc-1255-11e8-8a33-b503087a32f8.png)
