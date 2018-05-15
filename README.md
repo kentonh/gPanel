@@ -1,10 +1,12 @@
-# gPanel ![TravisCI gPanel Build](https://travis-ci.org/Ennovar/gPanel.svg?branch=master)
+<p align="center"><img src="logo/gpanel-general.jpg" width="600"></p>
+<p align="center" style="text-size:10px;">Logo by <a href="https://www.github.com/bvhme">@bvhme</a></p>
+<p align="center"><a href="https://travis-ci.org/Ennovar/gPanel"><img src="https://travis-ci.org/Ennovar/gPanel.svg?branch=master"></a></p>
+
+# gPanel
 
 A web-hosting control panel written in Go.
 
 *__Note:__ This software currently only runs on Linux systems.*
-
-This project may qualify for Mozilla's 2018 Global Sprint, in efforts to satisfy their rules I am linking their Community Participation Guidelines [here](https://www.mozilla.org/en-US/about/governance/policies/participation/) along with their already being a code of conduct within this project located [here](https://github.com/Ennovar/gPanel/blob/master/CODE_OF_CONDUCT.md).
 
 ## Table of Contents
 1. [Technology Stack](#technology-stack)
@@ -19,7 +21,7 @@ This project may qualify for Mozilla's 2018 Global Sprint, in efforts to satisfy
 
 ## Technology Stack
 
-Backend: __[Go (1.8+)](https://golang.org/)__  
+Backend: __[Go (1.9.2+)](https://golang.org/)__  
 Database: __[Bolt](https://github.com/boltdb/bolt)__  
 CSS Toolkit(s): __[Bootstrap 4](http://getbootstrap.com/) & [Font Awesome](http://fontawesome.io/)__  
 JS Toolkit(s): __[jQuery](https://jquery.com/)__
@@ -27,7 +29,7 @@ JS Toolkit(s): __[jQuery](https://jquery.com/)__
 ## Preview Images
 
 gPanel Structure
-![Image of gPanel Structure](https://nextwavesolutions.io/images/gPanelStructure.png)
+![Image of gPanel Structure](https://user-images.githubusercontent.com/30050545/40080488-b1f90d64-5850-11e8-81c4-be95c65eca17.png)
 
 gPanel Server
 ![Image of gPanel Server](https://user-images.githubusercontent.com/30050545/36277136-9d0cdffc-1255-11e8-8a33-b503087a32f8.png)
