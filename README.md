@@ -1,5 +1,4 @@
 <p align="center"><img src="logo/gpanel-general.jpg" width="600"></p>
-<p align="center" style="text-size:10px;">Logo by <a href="https://www.github.com/bvhme">@bvhme</a></p>
 <p align="center"><a href="https://travis-ci.org/Ennovar/gPanel"><img src="https://travis-ci.org/Ennovar/gPanel.svg?branch=master"></a></p>
 
 # gPanel
