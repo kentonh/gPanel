@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/Ennovar/gPanel/pkg/public"
+	"github.com/kentonh/gPanel/pkg/public"
 )
 
 type Controller struct {

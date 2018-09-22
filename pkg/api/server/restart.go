@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/Ennovar/gPanel/pkg/public"
+	"github.com/kentonh/gPanel/pkg/public"
 )
 
 // Restart function is called from /api/server/restart and will attempt to shutdown, either gracefully

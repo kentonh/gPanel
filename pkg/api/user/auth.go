@@ -10,8 +10,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Ennovar/gPanel/pkg/database"
-	"github.com/Ennovar/gPanel/pkg/encryption"
+	"github.com/kentonh/gPanel/pkg/database"
+	"github.com/kentonh/gPanel/pkg/encryption"
 	jwt "github.com/dgrijalva/jwt-go"
 )
 

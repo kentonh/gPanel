@@ -8,7 +8,7 @@ import (
 
 	"strings"
 
-	"github.com/Ennovar/gPanel/pkg/routing"
+	"github.com/kentonh/gPanel/pkg/routing"
 )
 
 // ServeHTTP function routes all requests for the private webhost server. It is used in the main

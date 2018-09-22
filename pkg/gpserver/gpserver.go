@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/Ennovar/gPanel/pkg/gpaccount"
+	"github.com/kentonh/gPanel/pkg/gpaccount"
 )
 
 type Controller struct {

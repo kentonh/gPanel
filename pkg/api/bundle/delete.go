@@ -7,8 +7,8 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/Ennovar/gPanel/pkg/database"
-	"github.com/Ennovar/gPanel/pkg/gpaccount"
+	"github.com/kentonh/gPanel/pkg/database"
+	"github.com/kentonh/gPanel/pkg/gpaccount"
 	"github.com/george-e-shaw-iv/nixtools"
 )
 

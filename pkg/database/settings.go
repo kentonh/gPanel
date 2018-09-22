@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 
-	"github.com/Ennovar/gPanel/pkg/emailer"
+	"github.com/kentonh/gPanel/pkg/emailer"
 	"github.com/boltdb/bolt"
 )
 

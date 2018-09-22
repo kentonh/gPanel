@@ -8,7 +8,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 
-	"github.com/Ennovar/gPanel/pkg/api/user"
+	"github.com/kentonh/gPanel/pkg/api/user"
 	jwt "github.com/dgrijalva/jwt-go"
 )
 

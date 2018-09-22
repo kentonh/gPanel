@@ -3,8 +3,8 @@ package public
 import (
 	"net/http"
 
-	"github.com/Ennovar/gPanel/pkg/database"
-	"github.com/Ennovar/gPanel/pkg/networking"
+	"github.com/kentonh/gPanel/pkg/database"
+	"github.com/kentonh/gPanel/pkg/networking"
 )
 
 func (con *Controller) Filter(req *http.Request, ftype string) bool {

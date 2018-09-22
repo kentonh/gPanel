@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/Ennovar/gPanel/pkg/database"
-	"github.com/Ennovar/gPanel/pkg/encryption"
+	"github.com/kentonh/gPanel/pkg/database"
+	"github.com/kentonh/gPanel/pkg/encryption"
 )
 
 func UpdatePassword(res http.ResponseWriter, req *http.Request, logger *log.Logger, dir string) bool {
