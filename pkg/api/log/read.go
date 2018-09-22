@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/Ennovar/gPanel/pkg/file"
+	"github.com/kentonh/gPanel/pkg/file"
 )
 
 // Read function is accessed from api/logs/read and will attempt to read

@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/Ennovar/gPanel/pkg/public"
+	"github.com/kentonh/gPanel/pkg/public"
 )
 
 // Maintenance function is called from /api/server/maintenance and will place the public server into

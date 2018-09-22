@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/Ennovar/gPanel/pkg/gpserver"
-	"github.com/Ennovar/gPanel/pkg/router"
+	"github.com/kentonh/gPanel/pkg/gpserver"
+	"github.com/kentonh/gPanel/pkg/router"
 )
 
 func main() {

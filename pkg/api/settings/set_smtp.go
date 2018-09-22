@@ -5,8 +5,8 @@ import (
 	"log"
 	"strconv"
 	"encoding/json"
-	"github.com/Ennovar/gPanel/pkg/emailer"
-	"github.com/Ennovar/gPanel/pkg/database"
+	"github.com/kentonh/gPanel/pkg/emailer"
+	"github.com/kentonh/gPanel/pkg/database"
 )
 
 func SetSMTP(res http.ResponseWriter, req *http.Request, logger *log.Logger) bool {

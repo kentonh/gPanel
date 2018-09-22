@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/Ennovar/gPanel/pkg/public"
+	"github.com/kentonh/gPanel/pkg/public"
 )
 
 // Shutdown function is called from /api/server/shutdown and will attempt to shutdown, either gracefully

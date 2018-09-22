@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"io/ioutil"
 
-	"github.com/Ennovar/gPanel/pkg/api/bundle"
-	"github.com/Ennovar/gPanel/pkg/gpaccount"
+	"github.com/kentonh/gPanel/pkg/api/bundle"
+	"github.com/kentonh/gPanel/pkg/gpaccount"
 )
 
 func (con *Controller) detectBundles() error {

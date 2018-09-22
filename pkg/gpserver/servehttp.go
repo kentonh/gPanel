@@ -8,7 +8,7 @@ import (
 
 	"strings"
 
-	"github.com/Ennovar/gPanel/pkg/routing"
+	"github.com/kentonh/gPanel/pkg/routing"
 )
 
 func (con *Controller) ServeHTTP(res http.ResponseWriter, req *http.Request) {

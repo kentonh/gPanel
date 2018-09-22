@@ -12,8 +12,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Ennovar/gPanel/pkg/database"
-	"github.com/Ennovar/gPanel/pkg/routing"
+	"github.com/kentonh/gPanel/pkg/database"
+	"github.com/kentonh/gPanel/pkg/routing"
 )
 
 func (con *Controller) ServePHP(res http.ResponseWriter, path string) {

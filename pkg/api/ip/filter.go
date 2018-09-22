@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/Ennovar/gPanel/pkg/database"
+	"github.com/kentonh/gPanel/pkg/database"
 )
 
 func Filter(res http.ResponseWriter, req *http.Request, logger *log.Logger, dir string) bool {

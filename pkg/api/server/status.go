@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/Ennovar/gPanel/pkg/public"
+	"github.com/kentonh/gPanel/pkg/public"
 )
 
 // Status function is called from api/server/status and will return the current status of

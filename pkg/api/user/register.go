@@ -7,8 +7,8 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/Ennovar/gPanel/pkg/database"
-	"github.com/Ennovar/gPanel/pkg/encryption"
+	"github.com/kentonh/gPanel/pkg/database"
+	"github.com/kentonh/gPanel/pkg/encryption"
 )
 
 // Register function is accessed by an API call from the webhost root
