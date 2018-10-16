@@ -1,5 +1,5 @@
 <p align="center"><img src="logo/gpanel-general.jpg" width="600"></p>
-<p align="center"><a href="https://travis-ci.org/Ennovar/gPanel"><img src="https://travis-ci.org/Ennovar/gPanel.svg?branch=master"></a></p>
+<p align="center"><a href="https://travis-ci.org/kenton/gPanel"><img src="https://travis-ci.org/kentonh/gPanel.svg?branch=master"></a></p>
 
 # gPanel
 
@@ -42,10 +42,10 @@ To get the repo...
 
 ```shell
 # Go get the repo and append it to your $GOPATH
-go get github.com/Ennovar/gPanel
+go get github.com/kentonh/gPanel
 
 # Navigate to the directory (replace $GOPATH with your actual $GOPATH)
-cd $GOPATH/github.com/Ennovar/gPanel
+cd $GOPATH/github.com/kentonh/gPanel
 ```
 
 To set your repo up to contribute...
@@ -150,7 +150,7 @@ drwx------ 7 root root 4096 Jan 17 14:42 ..
 
 #### Getting the Repository and Running
 
-1. go get github.com/Ennovar/gPanel
-2. cd ~/go/src/github.com/Ennovar/gPanel
+1. go get github.com/kentonh/gPanel
+2. cd ~/go/src/github.com/kentonh/gPanel
 3. go build gpanel.go
 4. sudo ./gpanel
