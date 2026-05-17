@@ -1,4 +1,3 @@
-// Package gpserver handles the logic of the gPanel server
 package gpserver
 
 import (

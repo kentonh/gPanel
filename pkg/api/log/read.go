@@ -1,4 +1,3 @@
-// Package log is a child of package api to handle api calls concerning log files
 package log
 
 import (
