@@ -1,4 +1,3 @@
-// Package gpaccount handles the logic of the gPanel account server
 package gpaccount
 
 import (

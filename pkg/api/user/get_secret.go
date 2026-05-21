@@ -1,4 +1,3 @@
-// Package user is a child of package api to handle api calls concerning users
 package user
 
 import "github.com/kentonh/gPanel/pkg/database"

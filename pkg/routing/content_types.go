@@ -1,4 +1,3 @@
-// Package routing contains various functions related to HTTP routing
 package routing
 
 import (

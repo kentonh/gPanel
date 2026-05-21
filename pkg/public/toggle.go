@@ -1,4 +1,3 @@
-// Package public handles the logic of the public facing website
 package public
 
 import (
